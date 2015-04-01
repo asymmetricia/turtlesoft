@@ -3,20 +3,19 @@ opts = getopt( args, "" );
 
 base_url = "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/";
 
-files = {
-	["/d"]        = "dome.lua",
-	["/f"]        = "fill.lua",
-	["/hypstruc"] = "hyperboloid-structure.lua",
-	["/m"]        = "mine.lua", 
-	["/recroom"]  = "rectangular-room.lua", 
-	["/r"]        = "roof.lua", 
-	["/sc"]       = "staircase.lua", 
-	["/stdlib"]   = "stdlib.lua", 
-	["/t"]        = "tunnel.lua", 
-	["/unload"]   = "unload.lua", 
-	["/update"]   = "update.lua", 
-	["/w"]        = "wall.lua", 
-}
+files = {}
+files["/d"]        = "dome.lua";
+files["/f"]        = "fill.lua";
+files["/hypstruc"] = "hyperboloid-structure.lua";
+files["/m"]        = "mine.lua";
+files["/recroom"]  = "rectangular-room.lua";
+files["/r"]        = "roof.lua";
+files["/sc"]       = "staircase.lua";
+files["/stdlib"]   = "stdlib.lua";
+files["/t"]        = "tunnel.lua";
+files["/unload"]   = "unload.lua";
+files["/update"]   = "update.lua";
+files["/w"]        = "wall.lua";
 
 for f,u in ipairs( files ) do
 	if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
