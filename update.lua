@@ -1,5 +1,5 @@
 args = {...}
-opts = getopt( args, "" )
+opts = getopt( args, "" );
 
 base_url = "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/";
 
@@ -16,11 +16,11 @@ files = {
 	"/unload"   = "unload.lua",
 	"/update"   = "update.lua",
 	"/w"        = "wall.lua",
-};
+}
 
 for f,u in ipairs( files ) do
 	if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
-		fs.delete( f )
+		fs.delete( f );
 		httpDownload( base_url .. u, f );
 	end
 end
