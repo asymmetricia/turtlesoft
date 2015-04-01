@@ -590,16 +590,3 @@ function printModel( model, zskip, dryrun, verbose, match, material, final )
                 north();
         end
 end
- 
-if( not fs.exists( "/m" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=xsCj9dzQ", "/m" ); end
-if( not fs.exists( "/d" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=tA786Gnm", "/d" ); end
-if( not fs.exists( "/f" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=wvdRkiet", "/f" ); end
-if( not fs.exists( "/w" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=WDUq1Udj", "/w" ); end
-if( not fs.exists( "/r" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=6smqCptJ", "/r" ); end
-if( not fs.exists( "/t" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=iLSKuJj3", "/t" ); end
-if( not fs.exists( "/rr" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=4BJA4dqc", "/rr" ); end     
-if( not fs.exists( "/sc" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=ZHfa2YH9", "/sc" ); end
-if( not fs.exists( "/dome" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=TzFZ3Sve", "/dome" ); end
-if( not fs.exists( "/unload" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=YDYApMpe", "/unload" ); end
-if( not fs.exists( "/recroom" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=QH3inEJm", "/recroom" ); end
-if( not fs.exists( "/hypstruc" ) ) then httpDownload( "http://www.pastebin.com/raw.php?i=FajfpMQ5", "/hypstruc" ); end
