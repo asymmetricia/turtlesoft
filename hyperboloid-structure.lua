@@ -70,8 +70,11 @@ theta_begin = (math.pi*2) * ( (which-1)/segs );
 theta_end   = (math.pi*2) * ( which/segs );
 for h_y_i = 0,steps do
 	h_y = hmax * h_y_i / steps;
-	if( h_y >= zskip and h_y <= n ) then
-		dz = math.floor( h_y + 0.5 );
+	dz = math.floor( dz + 0.5 );
+    if( dz >= zskip + layers ) then
+		break;
+    end
+	if( dz >= zskip ) then
 		layer_radius_max = math.sqrt( h_a_squared + h_a_squared * ( h_y - hmin ) * ( h_y - hmin ) / h_b_squared );
 		if( opts[ "fill" ] or opts[ "clear" ] ) then layer_radius_min = 0.5; else layer_radius_min = layer_radius_max end;
 		layer_radius = layer_radius_max
