@@ -42,6 +42,8 @@ if( opts["x"] ~= nil ) then x      = tonumber( opts["x"] ); end
 if( opts["y"] ~= nil ) then y      = tonumber( opts["y"] ); end
 if( opts["s"] ~= nil ) then segs   = tonumber( opts["s"] ); end
 if( opts["w"] ~= nil ) then which  = tonumber( opts["w"] ); end
+if( opts["clear"] ~= nil ) then print( "Extent clearing enabled." ); end
+if( opts["fill"] ~= nil )  then print( "Extent filling enabled." );  end
 
 homeX=x;
 homeY=y;
@@ -77,7 +79,7 @@ for h_y_i = 0,steps do
     end
 	if( dz >= zskip ) then
 		layer_radius_max = math.sqrt( h_a_squared + h_a_squared * ( h_y - hmin ) * ( h_y - hmin ) / h_b_squared );
-		if( opts[ "fill" ] or opts[ "clear" ] ) then layer_radius_min = 0.5; else layer_radius_min = layer_radius_max end;
+		if( opts[ "fill" ] ~= nil or opts[ "clear" ] ~= nil ) then layer_radius_min = 0.5; else layer_radius_min = layer_radius_max end;
 		layer_radius = layer_radius_max
 		while( layer_radius >= layer_radius_min ) do
 			x_end = math.floor( math.cos( theta_end ) * layer_radius + 0.5 );
@@ -89,7 +91,7 @@ for h_y_i = 0,steps do
 				dx = math.floor( math.cos( theta ) * layer_radius + 0.5);
 				dy = math.floor( math.sin( theta ) * layer_radius + 0.5);
 				if( model[dx][dy][dz] == nil or model[dx][dy][dz] == -1 ) then
-					if( opts[ "clear" ] and layer_radius ~= layer_radius_max ) then
+					if( opts[ "clear" ] ~= nil and layer_radius ~= layer_radius_max ) then
 						model[dx][dy][dz] = -1;
 					else
 						model[dx][dy][dz] = 1;
