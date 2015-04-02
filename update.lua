@@ -28,7 +28,7 @@ files["/unload"]   = "unload.lua";
 files["/update"]   = "update.lua";
 files["/w"]        = "wall.lua";
 
-for f,u in ipairs( files ) do
+for f,u in pairs( files ) do
 	if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
 		print( "Retrieving " .. base_url .. u );
 		fs.delete( f );
