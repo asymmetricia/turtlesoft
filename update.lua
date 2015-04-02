@@ -30,6 +30,7 @@ files["/w"]        = "wall.lua";
 
 for f,u in ipairs( files ) do
 	if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
+		print( "Retrieving " .. base_url .. u );
 		fs.delete( f );
 		httpDownload( base_url .. u, f );
 	end
