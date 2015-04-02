@@ -106,9 +106,9 @@ end
 print( "Done!" );
 
 if( opts[ "dump" ] ) then
-	for ty=radius,-radius,-1 do
+	for ty=rbase,-rbase,-1 do
 		s = "";
-		for tx=-radius,radius do
+		for tx=-rbase,rbase do
 			if( model[tx][ty][zskip] == 1 ) then
 				s = s .. 1;
 			elseif( model[tx][ty][zskip] == -1 ) then
