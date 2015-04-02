@@ -70,7 +70,7 @@ theta_begin = (math.pi*2) * ( (which-1)/segs );
 theta_end   = (math.pi*2) * ( which/segs );
 for h_y_i = 0,steps do
 	h_y = hmax * h_y_i / steps;
-	if( opts[ "debug" ] != nil ) then print( "Voxelizing h_y = " .. h_y ); end
+	if( opts[ "debug" ] ~= nil ) then print( "Voxelizing h_y = " .. h_y ); end
 	dz = math.floor( h_y + 0.5 );
     if( dz >= zskip + layers ) then
 		break;
