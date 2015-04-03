@@ -323,13 +323,13 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 	
 		tz = tz + modZ;
 		-- Remember, position is 0-index
-		if( tz == maxZ+1 or tz == minZ-1 ) then
+		if( (tz == maxZ+1 and modZ > 0) or (tz == minZ-1 and modZ < 0) ) then
 			tz = tz - modZ;
 			tx = tx + modX;
 			modZ = modZ * -1;
 		end
 
-		if( tx == maxX+1 or tx == minX-1 ) then
+		if( (tx == maxX+1 and modX > 0) or (tx == minX-1 and modX < 0) ) then
 			tx = tx - modX;
 			ty = ty + modY;
 			modX = modX * -1;
