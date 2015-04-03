@@ -239,57 +239,126 @@ function staircaseDown()
         goto( nil, nil, z-1 ); wallsDown(0,1);
         goto( 0, 0, nil ); north();
 end
- 
-function tunnelOne( xdim, zdim )
-        modX=1;
-        xdim = tonumber(xdim) or 1
-        zdim = tonumber(zdim) or 2
-        if( xdim < 0 ) then modX = -1; end
-        goto( 0, y+1, 0 );
-        tx=0; tz=0;
-        while true do
-                if( tx*modX % 2 == 0 ) then
-                        tz=tz+1;
-                        if( tz >= zdim ) then
-                                tz=zdim-1;
-                                tx=tx+modX;
-                        end
-                else
-                        tz=tz-1;
-                        if( tz < 0 ) then
-                                tz=0;
-                                tx=tx+modX;
-                        end
-                end
- 
-                north(); find(1); turtle.place();
-                if( x == 0 ) then
-                        if( modX == 1 ) then
-                                west(); find(1); turtle.place();
-                        else
-                                east(); find(1); turtle.place();
-                        end
-                end
-                if( x == xdim-modX ) then
-                        if( modX == 1 ) then
-                                east(); find(1); turtle.place();
-                        else
-                                west(); find(1); turtle.place();
-                        end
-                end
-                if( z == 0 ) then
-                        find(1); turtle.placeDown();
-                end
-                if( z == zdim-1 ) then
-                        find(1); turtle.placeUp();
-                end
- 
-                if( tx*modX >= xdim*modX ) then
-                        goto( 0, nil, 0 );
-                        return;
-                end
-                goto( tx, nil, tz );
-        end
+
+-- Advance == 1   if turtle should move forward into first open block of tunnel,
+--         == nil if turtle is starting "in the wall" of last segment
+function tunnel( xdim, ydim, zdim, advance, slope )
+	modX=1; modZ=1; modY=1;
+	xdim = tonumber(xdim) or 1
+	ydim = tonumber(ydim) or 1
+	zdim = tonumber(zdim) or 2
+	slope = tonumber(slope) or 0
+	
+	-- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
+	if( zdim < 0 ) then
+		minZ = z+zdim+1; maxZ = z;
+		modZ = -1;
+	else
+		minZ = z; maxZ = z+zdim-1;
+	end
+
+	if( xdim < 0 ) then
+		minX = x+xdim+1; maxX = x;
+		modX = -1;
+	else
+		minX = x; maxX = x+xdim-1;
+	end
+
+	if( advance ~= nil ) then
+		goto( nil, y+1, nil );
+	end
+
+	minY = y;
+	maxY = y + ydim - 1;
+
+	ty=y; tx=x; tz=z;
+
+	while true do
+		if( z == minZ ) then
+			find(1); turtle.placeDown();
+		end
+		if( z == maxZ ) then
+			find(1); turtle.placeUp();
+		end
+
+		-- Optimize to reduce turns
+		--       ^   N = 0
+		-- W=3 <   > E = 1
+		--       v   S = 2
+		if( p == 0 ) then
+			find(1); turtle.place();
+			-- if modX is positive we'll be heading east, so face east last
+			if( modX == 1 ) then
+				if( x == minX ) then
+					west(); find(1); turtle.place();
+				end
+				if( x == maxX ) then
+					east(); find(1); turtle.place();
+				end
+			else
+				if( x == maxX ) then
+					east(); find(1); turtle.place();
+				end
+				if( x == minX ) then
+					west(); find(1); turtle.place();
+				end
+			end
+		elseif( p == 1 ) then
+			if( x == maxX ) then
+				find(1); turtle.place();
+			end
+			north(); find(1); turtle.place();
+			if( x == minX ) then
+				west(); find(1); turtle.place();
+			end
+		elseif( p == 2 ) then
+			if( x == minX ) then
+				find(1); turtle.place();
+			end
+			north(); find(1); turtle.place();
+			if( x == maxX ) then
+				east(); find(1); turtle.place();
+			end
+		end
+	
+		tz = tz + modZ;
+		-- Remember, position is 0-index
+		if( tz == maxZ+1 or tz == minZ-1 ) then
+			tz = tz - modZ;
+			tx = tx + modX;
+			modZ = modZ * -1;
+		end
+
+		if( tx == maxX+1 or tx == minX-1 ) then
+			tx = tx - modX;
+			ty = ty + modY;
+			modX = modX * -1;
+			if( (ty <= maxY) and (slope ~= 0) and ((ty - minY) % math.abs( slope ) == 0) ) then
+				if( slope > 0 ) then
+					minZ = minZ + 1
+					maxZ = maxZ + 1
+					if( z < minZ ) then
+						tz = minZ;
+					end
+				else
+					minZ = minZ - 1
+					maxZ = maxZ - 1
+					if( z > maxZ ) then
+						tz = maxZ;
+					end
+				end
+				goto( nil, nil, tz );
+				goto( nil, ty, nil );
+			end
+		end
+
+		if( ty > maxY ) then
+			goto( minX, nil, minZ );
+			north();
+			return;
+		end
+		goto( tx, ty, tz );
+	end
 end
  
 function find(target)
