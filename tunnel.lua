@@ -14,9 +14,9 @@ end
 args = {...}
 opts = getopt( args, "xyzs" );
 
-if     tonumber(opts["x"]) ~= nil then print( "-x (width) is required" );  usage();
-elseif tonumber(opts["y"]) ~= nil then print( "-y (length) is required" ); usage();
-elseif tonumber(opts["z"]) ~= nil then print( "-z (height) is required" ); usage();
+if     tonumber(opts["x"]) == nil then print( "-x (width) is required" );  usage();
+elseif tonumber(opts["y"]) == nil then print( "-y (length) is required" ); usage();
+elseif tonumber(opts["z"]) == nil then print( "-z (height) is required" ); usage();
 end
 
 tunnel_x = tonumber(opts["x"]);
