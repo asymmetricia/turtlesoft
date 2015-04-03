@@ -33,4 +33,4 @@ if opts["s"] ~= nil then
 	end	
 end
 
-tunnel( x, y, z, 1, slope );
+tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope );
