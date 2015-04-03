@@ -8,6 +8,7 @@ end
 args = {...}
 if( table.getn( args ) ~= 2 ) then
 	print( "usage: staircase {up|down} <n>" );
+	exit();
 end
 print( args[1].." "..args[2] );
 
