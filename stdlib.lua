@@ -273,6 +273,10 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 
 	ty=y; tx=x; tz=z;
 
+	print( "X: [" .. minX .. "," .. maxX .. "]" );
+	print( "Y: [" .. minY .. "," .. maxY .. "]" );
+	print( "Z: [" .. minZ .. "," .. maxZ .. "]" );
+
 	while true do
 		if( z == minZ ) then
 			find(1); turtle.placeDown();
@@ -321,15 +325,26 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 			end
 		end
 	
+		-- Motion control
 		tz = tz + modZ;
-		-- Remember, position is 0-index
-		if( (tz == maxZ+1 and modZ > 0) or (tz == minZ-1 and modZ < 0) ) then
+
+		if( (tz > maxZ and modZ > 0) or (tz < minZ and modZ < 0) ) then
+			if( modZ > 0 ) then
+				print( "Reached top" );
+			else
+				print( "Reached bottom" );
+			end
 			tz = tz - modZ;
 			tx = tx + modX;
 			modZ = modZ * -1;
 		end
 
-		if( (tx == maxX+1 and modX > 0) or (tx == minX-1 and modX < 0) ) then
+		if( (tx > maxX and modX > 0) or (tx < minX and modX < 0) ) then
+			if( modX > 0 ) then
+				print( "Reached right" );
+			else
+				print( "Reached left" );
+			end
 			tx = tx - modX;
 			ty = ty + modY;
 			modX = modX * -1;
@@ -353,6 +368,7 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 		end
 
 		if( ty > maxY ) then
+			print( "Reached end" );
 			goto( minX, nil, minZ );
 			north();
 			return;
