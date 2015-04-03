@@ -334,31 +334,50 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 		tz = tz + modZ;
 
 		if( (tz > maxZ and modZ > 0) or (tz < minZ and modZ < 0) ) then
+			-- z hit bounds, move in x instead
 			tz = tz - modZ;
 			tx = tx + modX;
 			modZ = modZ * -1;
 		end
 
 		if( (tx > maxX and modX > 0) or (tx < minX and modX < 0) ) then
+			-- x hit bounds, move in y instead
 			tx = tx - modX;
 			ty = ty + modY;
 			modX = modX * -1;
 			if( (ty <= maxY) and (slope ~= 0) and ((ty - minY) % math.abs( slope ) == 0) ) then
+				-- Time to shift in Z
+				-- Note that if we hit this, modZ is already flipped
+
+				-- To slope, we need to move to the corresponding corner in the 
+				-- new plane. We should adjust bounds and control the order of 
+				-- moves
+
 				if( slope > 0 ) then
 					minZ = minZ + 1
 					maxZ = maxZ + 1
-					if( z < minZ ) then
+					if( tz < minZ ) then
 						tz = minZ;
+						goto( nil, nil, tz );
+						goto( nil, ty, nil );
+					else
+						tz = maxZ;
+						goto( nil, ty, nil );
+						goto( nil, nil, tz );
 					end
 				else
 					minZ = minZ - 1
 					maxZ = maxZ - 1
-					if( z > maxZ ) then
+					if( tz > maxZ ) then
 						tz = maxZ;
+						goto( nil, nil, tz );
+						goto( nil, ty, nil );
+					else
+						tz = minZ;
+						goto( nil, ty, nil );
+						goto( nil, nil, tz );
 					end
 				end
-				goto( nil, nil, tz );
-				goto( nil, ty, nil );
 			end
 		end
 
