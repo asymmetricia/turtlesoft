@@ -248,20 +248,22 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 	ydim = tonumber(ydim) or 1
 	zdim = tonumber(zdim) or 2
 	slope = tonumber(slope) or 0
-	
+
 	-- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
 	if( zdim < 0 ) then
 		minZ = z+zdim+1; maxZ = z;
 		modZ = -1;
 	else
-		minZ = z; maxZ = z+zdim-1;
+		minZ = z;
+		maxZ = z+zdim-1;
 	end
 
 	if( xdim < 0 ) then
 		minX = x+xdim+1; maxX = x;
 		modX = -1;
 	else
-		minX = x; maxX = x+xdim-1;
+		minX = x;
+		maxX = x+xdim-1;
 	end
 
 	if( advance ~= nil ) then
@@ -272,10 +274,6 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 	maxY = y + ydim - 1;
 
 	ty=y; tx=x; tz=z;
-
-	print( "X: [" .. minX .. "," .. maxX .. "]" );
-	print( "Y: [" .. minY .. "," .. maxY .. "]" );
-	print( "Z: [" .. minZ .. "," .. maxZ .. "]" );
 
 	while true do
 		if( z == minZ ) then
@@ -289,6 +287,13 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 		--       ^   N = 0
 		-- W=3 <   > E = 1
 		--       v   S = 2
+		if( p == 2 ) then
+			if( modX == 1 ) then
+				west();
+			else
+				east();
+			end
+		end
 		if( p == 0 ) then
 			find(1); turtle.place();
 			-- if modX is positive we'll be heading east, so face east last
@@ -315,7 +320,7 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 			if( x == minX ) then
 				west(); find(1); turtle.place();
 			end
-		elseif( p == 2 ) then
+		elseif( p == 3 ) then
 			if( x == minX ) then
 				find(1); turtle.place();
 			end
@@ -329,22 +334,12 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 		tz = tz + modZ;
 
 		if( (tz > maxZ and modZ > 0) or (tz < minZ and modZ < 0) ) then
-			if( modZ > 0 ) then
-				print( "Reached top" );
-			else
-				print( "Reached bottom" );
-			end
 			tz = tz - modZ;
 			tx = tx + modX;
 			modZ = modZ * -1;
 		end
 
 		if( (tx > maxX and modX > 0) or (tx < minX and modX < 0) ) then
-			if( modX > 0 ) then
-				print( "Reached right" );
-			else
-				print( "Reached left" );
-			end
 			tx = tx - modX;
 			ty = ty + modY;
 			modX = modX * -1;
@@ -368,7 +363,6 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 		end
 
 		if( ty > maxY ) then
-			print( "Reached end" );
 			goto( minX, nil, minZ );
 			north();
 			return;
