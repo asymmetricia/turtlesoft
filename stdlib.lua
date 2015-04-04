@@ -662,7 +662,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		end
 		point = plist[sel_pt];
 		action = point[4];
-		plist.remove( sel_pt );
+		table.remove( plist, sel_pt );
 	else
 		point = nextPoint( model, { 0,0,zskip } );
 		refpoint = point;
@@ -759,7 +759,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			if( sel_pt == nil ) then break; end
 			point = plist[sel_pt];
 			action = point[4];
-			plist.remove( sel_pt );
+			table.remove( plist, sel_pt );
 		else
 			point = nextPoint( model, refpoint )
 			if( point == nil ) then break; end
