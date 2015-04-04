@@ -626,65 +626,118 @@ function nextPoint( list, point )
         end
         return nil;
 end
- 
+
 function dist3d( p1, p2 )
 --      return math.sqrt( (p1[1]-p2[1])^2 + (p1[2]-p2[2])^2 + (p1[3]-p2[3])^2 );
 -- Taxi geometry. THIS IS MINECRAFT.
         return math.abs( p1[1]-p2[1] ) + math.abs( p1[2]-p2[2] ) + math.abs( p1[3]-p2[3] );
 end
  
-function printModel( model, zskip, dryrun, verbose, match, material, final )
-        if( zskip == nil )    then zskip = 0;       end
-        if( dryrun == nil )   then dryrun = 0;      end
-        if( verbose == nil )  then verbose = false; end
-        if( match == nil )    then match = false;   end
-        if( material == nil ) then material = 1;    end
-        if( final == nil )    then final = true;    end
- 
-        point = nextPoint( model, { 0,0,zskip } );
-        refpoint = point;
-        action = model[point[1]][point[2]][point[3]];
-        model[point[1]][point[2]][point[3]]=2;
---      if( not dryrun ) then goto( point[1], point[2], point[3] ); end
- 
-        last_yield_time = os.time()
- 
-        while( point ~= nil ) do
-                if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
-                if( verbose ) then print( table.concat( point, "," ) .. "=" .. action ); end
-                if( not dryrun ) then
-                        goto( nil, nil, point[3]+1 );
-                        goto( point[1], point[2], nil );
-                        if( model[point[1]][point[2]][point[3]+1] == -1 ) then
-                                model[point[1]][point[2]][point[3]+1] = 2;
-                        end
-                        if( action == 1 ) then
-                                find(material);
-                                if( match == 1 ) then
-                                        while turtle.detectDown() and not turtle.compareDown() do
-                                                turtle.digDown();
-                                        end
-                                end
-                                turtle.placeDown();
-                        else
-                                turtle.digDown();
-                        end
-                end
-                -- Find the next closest point from our reference.
-                -- If it's distance>2, instead find the next closest point from here.
-                point = nextPoint( model, refpoint )
-                if( point == nil ) then break; end
-                if( dist3d( point, refpoint ) > 2 ) then
-                        point = nextPoint( model, point );
-                        refpoint = point;
-                end
-                action = model[point[1]][point[2]][point[3]];
-                model[point[1]][point[2]][point[3]]=2;
-        end
- 
-        if( not dryrun and final ) then
-                goto( homeX,homeY, nil );
-                goto( nil, nil, z+1 );
-                north();
-        end
+function printModel( model, zskip, dryrun, verbose, match, material, final, dense )
+	if( zskip == nil )    then zskip = 0;       end
+	if( dryrun == nil )   then dryrun = 0;      end
+	if( verbose == nil )  then verbose = false; end
+	if( match == nil )    then match = false;   end
+	if( material == nil ) then material = 1;    end
+	if( final == nil )    then final = true;    end
+	if( dense == nil )    then dense = 0;       end
+	
+	point = nextPoint( model, { 0,0,zskip } );
+	refpoint = point;
+	action = model[point[1]][point[2]][point[3]];
+	model[point[1]][point[2]][point[3]]=2;
+	-- if( not dryrun ) then goto( point[1], point[2], point[3] ); end
+	
+	last_yield_time = os.time()
+
+	modX = 1; modY = 1; mode = 0;
+	
+	while( point ~= nil ) do
+		if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
+		if( verbose ) then print( table.concat( point, "," ) .. "=" .. action ); end
+		if( not dryrun ) then
+			goto( nil, nil, point[3]+1 );
+			goto( point[1], point[2], nil );
+			if( model[point[1]][point[2]][point[3]+1] == -1 ) then
+				model[point[1]][point[2]][point[3]+1] = 2;
+			end
+			if( action == 1 ) then
+				find(material);
+				if( match == 1 ) then
+					while turtle.detectDown() and not turtle.compareDown() do
+						turtle.digDown();
+					end
+				end
+				turtle.placeDown();
+			else
+				turtle.digDown();
+			end
+		end
+	-- Find the next closest point from our reference.
+	-- If it's distance>2, instead find the next closest point from here.
+		if( dense ~= nil ) then
+			-- Is there a point in modY direction from us on this layer?
+			point = nil;
+			cz = z - 1;
+			if( model[x] ~= nil ) then
+				for cy,zlist in pairs( model[x] ) do
+					if( (zlist[cz] ~= nil) and (cx == x) and ((modY == 1 and cy > y) or (modY == -1 and cy < y)) ) then
+						point = {cx,cy,cz};
+					end
+				end
+			end
+			-- If not, find the (modY==1?highest:lowest) Y for the next X over
+			if( point == nil ) then
+				if( model[x+modX] ~= nil ) then
+					sel = nil;
+					for cy,zlist in pairs(model[x+modX]) do
+						if( zlist[cz] ~= nil and (sel ~= nil or (modY == 1 and cy > sel) or (modY == -1 and cy < sel)) ) then
+							sel = cy;
+						end
+					end
+					if( sel ~= nil ) then
+						point = { x+modX, sel, cz };
+						modY = modY * -1;
+					end
+				end
+			end
+			-- If not, find the farthest -> farthest Y in the next layer up
+			if( point == nil ) then
+				cz = cz + 1;
+				sel_x = nil
+				sel_y = nil
+				for cx,ylist in pairs(model) do
+					for cy,zlist in pairs(ylist) do
+						if( zlist[cz] != nil ) then
+							if( sel_x == nil or (modX == 1 and cx > sel_x) or (modX == -1 and cx < sel_x) ) then
+								sel_y = nil
+								sel_x = cx
+							end
+							if( sel_y == nil or (sel_x == cx and ((modY == 1 and cy > sel_y) or (modY == -1 and cy < sel_y))) ) then
+								sel_y = cy
+							end
+						end
+					end
+				end
+				if( sel_x ~= nil and sel_y ~= nil ) then
+					point = { sel_x, sel_y, cz };
+				end
+			end
+		else
+			point = nextPoint( model, refpoint )
+			if( point == nil ) then break; end
+			if( dist3d( point, refpoint ) > 2 ) then
+				point = nextPoint( model, point );
+				refpoint = point;
+			end
+		end
+		action = model[point[1]][point[2]][point[3]];
+		model[point[1]][point[2]][point[3]]=2;
+	end
+	
+	if( not dryrun and final ) then
+		goto( homeX,homeY, nil );
+		goto( nil, nil, z+1 );
+		north();
+	end
 end

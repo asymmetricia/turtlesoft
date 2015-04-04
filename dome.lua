@@ -6,13 +6,13 @@ else
 end
 
 args = {...}
-opts = getopt( args, "rznxyswf" );
+opts = getopt( args, "rznxyswfc" );
 if( opts[ "r" ] == nil or opts[ "h" ] ) then
 	print( "usage: dome -r <radius> [-z <Zskip>] [-n <Nlayers>] [-m] [-d] [-x <startX>] [-y <startY>] [-s <segments>] [-w <which segment>]" );
-	print( "	-m match" );
+	print( "	-m, --match match materials" );
 	print( "	-d dryrun" );
-	print( "	-f, --fill fill the hemisphere" );
-	print( "	--clear clear the inside of the hemisphere" );
+	print( "	-f, --fill  fill the hemisphere" );
+	print( "	-c, --clear clear the inside of the hemisphere" );
 	print( "	-s, -w -- only draw a slice. E.g., -s 2 means north half, south half, -w 1 says draw north" );
 	exit();
 end	
@@ -34,6 +34,7 @@ if( opts["f"] ~= nil or opts[ "fill" ] ~= nil ) then print( "Block-fill enabled.
 if( opts["z"] ~= nil ) then zskip = tonumber( opts["z"] ); end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
 if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = 1; end
+if( opts["c"] ~= nil or opts["clear"] ~= nil ) then print( "Block clearing enabled." ); clear = 1; end
 if( opts["d"] ~= nil ) then dryrun = true; end
 if( opts["x"] ~= nil ) then x = tonumber( opts["x"] ); end
 if( opts["y"] ~= nil ) then y = tonumber( opts["y"] ); end
@@ -72,7 +73,7 @@ for i_z = 0,steps do
                 lr = math.cos( theta_z ) * radius;
                 lr_max = lr;
                 lr_min = lr_max;
-                if( fill or opts[ "clear" ] ) then lr_min = 0.5; end;
+                if( fill or clear ) then lr_min = 0.5; end;
                 while( lr >= lr_min ) do
                         x_end = math.floor( math.cos( theta_end ) * lr + 0.5 );
                         y_end = math.floor( math.sin( theta_end ) * lr + 0.5 );
@@ -83,7 +84,7 @@ for i_z = 0,steps do
                                 dx = math.floor( math.cos( theta ) * lr + 0.5);
                                 dy = math.floor( math.sin( theta ) * lr + 0.5);
                                 if( model[dx][dy][dz] == nil or model[dx][dy][dz] == -1 ) then
-                                        if( opts[ "clear" ] and lr ~= lr_max ) then
+                                        if( clear and lr ~= lr_max ) then
                                                 model[dx][dy][dz] = -1;
                                         else
                                                 model[dx][dy][dz] = 1;
@@ -133,4 +134,4 @@ print( "Dome will require " .. count .. " blocks total." );
 if( clear_count > 0 ) then
 	print( "Will clear " .. count .. " blocks." );
 end
-printModel( model, zskip, dryrun, opts[ "verbose" ] );
+printModel( model, zskip, dryrun, opts[ "verbose" ], match, 0, true, fill or clear );
