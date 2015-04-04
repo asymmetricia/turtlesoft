@@ -641,30 +641,46 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	if( material == nil ) then material = 1;    end
 	if( final == nil )    then final = true;    end
 	if( dense == nil )    then dense = 0;       end
+
+	plist = {}
 	
-	point = nextPoint( model, { 0,0,zskip } );
-	refpoint = point;
-	action = model[point[1]][point[2]][point[3]];
-	model[point[1]][point[2]][point[3]]=2;
-	-- if( not dryrun ) then goto( point[1], point[2], point[3] ); end
+	if( dense ) then
+		for cx,ylist in pairs(model) do
+			for cy,zlist in pairs(ylist) do
+				for cz,action in pairs(zlist) do
+					if cz >= zskip then
+						table.insert( plist, {cx,cy,cz,action} )
+					end
+				end
+			end
+		end
+		sel_pt = nil;
+		for k,pt in pairs(plist) do
+			if( sel_pt == nil or pt[3] < plist[sel_pt][3] or pt[1] < plist[sel_pt][1] or pt[2] < plist[sel_pt][2] ) then
+				sel_pt = k;
+			end
+		end
+		point = plist[sel_pt];
+		action = point[4];
+		plist.remove( sel_pt );
+	else
+		point = nextPoint( model, { 0,0,zskip } );
+		refpoint = point;
+		action = model[point[1]][point[2]][point[3]];
+		model[point[1]][point[2]][point[3]]=2;
+		-- if( not dryrun ) then goto( point[1], point[2], point[3] ); end
+	end
 	
 	last_yield_time = os.time()
 
-	modX = 1; modY = 1; mode = 0;
+	modX = 1; modY = 1;
 	
 	while( point ~= nil ) do
 		if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
 		if( verbose ) then print( table.concat( point, "," ) .. "=" .. action ); end
-		if( dryrun ) then
-			x = point[1];
-			y = point[2];
-			z = point[3]+1;
-		else
+		if( not dryrun ) then
 			goto( nil, nil, point[3]+1 );
 			goto( point[1], point[2], nil );
-		end
-		if( model[point[1]][point[2]][point[3]+1] == -1 ) then
-			model[point[1]][point[2]][point[3]+1] = 2;
 		end
 		if( not dryrun ) then
 			if( action == 1 ) then
@@ -682,53 +698,68 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	-- Find the next closest point from our reference.
 	-- If it's distance>2, instead find the next closest point from here.
 		if( dense ~= nil ) then
-			-- Is there a point in modY direction from us on this layer?
-			point = nil;
-			cz = z - 1;
-			if( model[x] ~= nil ) then
-				for cy,zlist in pairs( model[x] ) do
-					if( (zlist[cz] ~= nil) and (cx == x) and ((modY == 1 and cy > y) or (modY == -1 and cy < y)) ) then
-						point = {cx,cy,cz};
+			sel_pt = nil;
+			for k,pt in pairs(plist) do
+				-- First pass, only look at blocks on the current working row.
+				if( pt[1] == x and pt[3] == z-1 ) then
+					if( sel_pt == nil or
+					    ( modY == 1  and pt[2] <= plist[sel_pt][2] ) or
+					    ( modY == -1 and pt[2] >= plist[sel_pt][2] ) )
+					then
+						sel_pt = k;
 					end
 				end
 			end
-			-- If not, find the (modY==1?highest:lowest) Y for the next X over
-			if( point == nil ) then
-				if( model[x+modX] ~= nil ) then
-					sel = nil;
-					for cy,zlist in pairs(model[x+modX]) do
-						if( zlist[cz] ~= nil and (sel == nil or (modY == 1 and cy > sel) or (modY == -1 and cy < sel)) ) then
-							sel = cy;
-						end
-					end
-					if( sel ~= nil ) then
-						point = { x+modX, sel, cz };
-						modY = modY * -1;
-					end
-				end
-			end
-			-- If not, find the farthest -> farthest Y in the next layer up
-			if( point == nil ) then
-				cz = cz + 1;
-				sel_x = nil
-				sel_y = nil
-				for cx,ylist in pairs(model) do
-					for cy,zlist in pairs(ylist) do
-						if( zlist[cz] ~= nil ) then
-							if( sel_x == nil or (modX == 1 and cx > sel_x) or (modX == -1 and cx < sel_x) ) then
-								sel_y = nil
-								sel_x = cx
-							end
-							if( sel_y == nil or (sel_x == cx and ((modY == 1 and cy > sel_y) or (modY == -1 and cy < sel_y))) ) then
-								sel_y = cy
+			-- Second pass, look anywhere on this layer.
+			if( sel_pt == nil ) then
+				for k,pt in pairs(plist) do
+					if( pt[3] == z-1 ) then
+						if( sel_pt == nil or
+						    ( modX == 1  and pt[1] <= plist[sel_pt][1] ) or
+						    ( modX == -1 and pt[1] >= plist[sel_pt][1] ) )
+						then
+							-- Note, we inverted the relationship here, because if we
+							-- change rows, we change direction.
+							if( sel_pt == nil or
+							    ( modY == 1  and pt[2] >= plist[sel_pt][2] ) or
+							    ( modY == -1 and pt[2] <= plist[sel_pt][2] ) )
+							then
+								sel_pt = k;
 							end
 						end
 					end
 				end
-				if( sel_x ~= nil and sel_y ~= nil ) then
-					point = { sel_x, sel_y, cz };
+				if( sel_pt ~= nil ) then
+					modY = modY * -1;
 				end
 			end
+			-- Third pass, look on other layers.
+			if( sel_pt == nil ) then
+				for k,pt in pairs(plist) do
+					if( sel_pt == nil or pt[3] <= plist[sel_pt][3] ) then
+						-- Note that ase above, _both_ relationship tests are inverted
+						if( sel_pt == nil or
+						    ( modX == 1  and pt[1] >= plist[sel_pt][1] ) or
+						    ( modX == -1 and pt[1] <= plist[sel_pt][1] ) )
+						then
+							if( sel_pt == nil or
+							    ( modY == 1  and pt[1] >= plist[sel_pt][2] ) or
+							    ( modY == -1 and pt[1] <= plist[sel_pt][2] ) )
+							then
+								sel_pt = k;
+							end
+						end
+					end
+				end
+				if( sel_pt ~= nil ) then
+					modY = modY * -1;
+					modX = modX * -1;
+				end
+			end
+			if( sel_pt == nil ) then break; end
+			point = plist[sel_pt];
+			action = point[4];
+			plist.remove( sel_pt );
 		else
 			point = nextPoint( model, refpoint )
 			if( point == nil ) then break; end
