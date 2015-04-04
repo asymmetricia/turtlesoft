@@ -656,7 +656,11 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		end
 		sel_pt = nil;
 		for k,pt in pairs(plist) do
-			if( sel_pt == nil or pt[3] < plist[sel_pt][3] or pt[1] < plist[sel_pt][1] or pt[2] < plist[sel_pt][2] ) then
+			if( sel_pt == nil or 
+			    pt[3] < plist[sel_pt][3] or 
+			    pt[3] == plist[sel_pt][3] and pt[1] < plist[sel_pt][1] or 
+			    pt[3] == plist[sel_pt][3] and pt[1] == plist[sel_pt][1] and pt[2] < plist[sel_pt][2] )
+			then
 				sel_pt = k;
 			end
 		end
@@ -700,7 +704,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		if( dense ~= nil ) then
 			sel_pt = nil;
 			for k,pt in pairs(plist) do
-				-- First pass, only look at blocks on the current working row.
+				-- First pass, only look at blocks on the current working column.
 				if( pt[1] == x and pt[3] == z-1 ) then
 					if( sel_pt == nil or
 					    ( modY == 1  and pt[2] <= plist[sel_pt][2] ) or
@@ -715,13 +719,14 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 				for k,pt in pairs(plist) do
 					if( pt[3] == z-1 ) then
 						if( sel_pt == nil or
-						    ( modX == 1  and pt[1] <= plist[sel_pt][1] ) or
-						    ( modX == -1 and pt[1] >= plist[sel_pt][1] ) )
+						    ( modX == 1  and pt[1] < plist[sel_pt][1] ) or
+						    ( modX == -1 and pt[1] > plist[sel_pt][1] ) )
 						then
+							sel_pt = k;
+						elseif( pt[1] == plist[sel_pt][1] ) then
 							-- Note, we inverted the relationship here, because if we
-							-- change rows, we change direction.
-							if( sel_pt == nil or
-							    ( modY == 1  and pt[2] >= plist[sel_pt][2] ) or
+							-- change columns, we change direction.
+							if( ( modY == 1  and pt[2] >= plist[sel_pt][2] ) or
 							    ( modY == -1 and pt[2] <= plist[sel_pt][2] ) )
 							then
 								sel_pt = k;
@@ -736,14 +741,16 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			-- Third pass, look on other layers.
 			if( sel_pt == nil ) then
 				for k,pt in pairs(plist) do
-					if( sel_pt == nil or pt[3] <= plist[sel_pt][3] ) then
+					if( sel_pt == nil or pt[3] < plist[sel_pt][3] ) then
+						sel_pt = k;
+					elseif( pt[3] == plist[sel_pt][3] ) then
 						-- Note that ase above, _both_ relationship tests are inverted
-						if( sel_pt == nil or
-						    ( modX == 1  and pt[1] >= plist[sel_pt][1] ) or
-						    ( modX == -1 and pt[1] <= plist[sel_pt][1] ) )
+						if( ( modX == 1  and pt[1] > plist[sel_pt][1] ) or
+						    ( modX == -1 and pt[1] < plist[sel_pt][1] ) )
 						then
-							if( sel_pt == nil or
-							    ( modY == 1  and pt[1] >= plist[sel_pt][2] ) or
+							sel_pt = k;
+						elseif( pt[1] == plist[sel_pt][1] ) then
+							if( ( modY == 1  and pt[1] >= plist[sel_pt][2] ) or
 							    ( modY == -1 and pt[1] <= plist[sel_pt][2] ) )
 							then
 								sel_pt = k;
