@@ -134,4 +134,4 @@ print( "Dome will require " .. count .. " blocks total." );
 if( clear_count > 0 ) then
 	print( "Will clear " .. count .. " blocks." );
 end
-printModel( model, zskip, dryrun, opts[ "verbose" ], match, 0, true, fill or clear );
+printModel( model, zskip, dryrun, opts[ "verbose" ], match, nil, nil, fill or clear );
