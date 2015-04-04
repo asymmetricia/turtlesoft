@@ -6,12 +6,12 @@ else
 end
 
 args = {...}
-opts = getopt( args, "rznxysw" );
+opts = getopt( args, "rznxyswf" );
 if( opts[ "r" ] == nil or opts[ "h" ] ) then
 	print( "usage: dome -r <radius> [-z <Zskip>] [-n <Nlayers>] [-m] [-d] [-x <startX>] [-y <startY>] [-s <segments>] [-w <which segment>]" );
 	print( "	-m match" );
 	print( "	-d dryrun" );
-	print( "	--fill fill the hemisphere" );
+	print( "	-f, --fill fill the hemisphere" );
 	print( "	--clear clear the inside of the hemisphere" );
 	print( "	-s, -w -- only draw a slice. E.g., -s 2 means north half, south half, -w 1 says draw north" );
 	exit();
@@ -27,12 +27,13 @@ end
 
 radius=tonumber(opts["r"])
 zskip=0; match=0; dryrun=false; x=0; y=0;
-segs=1; which=1;
+segs=1; which=1;  fill = 0;
 layers=radius*2;
 
+if( opts["f"] ~= nil or opts[ "fill" ] ~= nil ) then print( "Block-fill enabled." ); fill = 1; end
 if( opts["z"] ~= nil ) then zskip = tonumber( opts["z"] ); end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
-if( opts["m"] ~= nil ) then print( "Block-matching enabled." ); match = 1; end
+if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = 1; end
 if( opts["d"] ~= nil ) then dryrun = true; end
 if( opts["x"] ~= nil ) then x = tonumber( opts["x"] ); end
 if( opts["y"] ~= nil ) then y = tonumber( opts["y"] ); end
@@ -71,7 +72,7 @@ for i_z = 0,steps do
                 lr = math.cos( theta_z ) * radius;
                 lr_max = lr;
                 lr_min = lr_max;
-                if( opts[ "fill" ] or opts[ "clear" ] ) then lr_min = 0.5; end;
+                if( fill or opts[ "clear" ] ) then lr_min = 0.5; end;
                 while( lr >= lr_min ) do
                         x_end = math.floor( math.cos( theta_end ) * lr + 0.5 );
                         y_end = math.floor( math.sin( theta_end ) * lr + 0.5 );

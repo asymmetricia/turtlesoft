@@ -32,6 +32,8 @@ if( opts["rmin"] == nil )  then print( "--rmin is required (hypstruc -h for usag
 if( opts["hmin"] == nil )  then print( "--hmin is required (hypstruc -h for usage)" );  exit(); else hmin  = tonumber( opts["hmin"] );  end
 if( opts["hmax"] == nil )  then print( "--hmax is required (hypstruc -h for usage)" );  exit(); else hmax  = tonumber( opts["hmax"] );  end
 
+layers=hmax;
+
 if( rmin >= rbase ) then print( "rbase must be larger than rmin" ); exit(); end
 
 if( opts["z"] ~= nil ) then zskip  = tonumber( opts["z"] ); end
