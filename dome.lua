@@ -27,14 +27,14 @@ end
 
 radius=tonumber(opts["r"])
 zskip=0; match=nil; dryrun=false; x=0; y=0;
-segs=1; which=1;  fill = false;
+segs=1; which=1;  fill = false; clear = false;
 layers=radius*2;
 
 if( opts["f"] ~= nil or opts[ "fill" ] ~= nil ) then print( "Block-fill enabled." ); fill = true; end
 if( opts["z"] ~= nil ) then zskip = tonumber( opts["z"] ); end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
 if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = 1; end
-if( opts["c"] ~= nil or opts["clear"] ~= nil ) then print( "Block clearing enabled." ); clear = 1; end
+if( opts["c"] ~= nil or opts["clear"] ~= nil ) then print( "Block clearing enabled." ); clear = true; end
 if( opts["d"] ~= nil ) then dryrun = true; end
 if( opts["x"] ~= nil ) then x = tonumber( opts["x"] ); end
 if( opts["y"] ~= nil ) then y = tonumber( opts["y"] ); end
