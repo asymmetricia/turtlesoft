@@ -1,10 +1,9 @@
-if( not fs.exists( "/stdlib" ) ) then
-	local response = http.get( "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/stdlib.lua" );
-	if response then
-		local sResponse = response.readAll(); response.close(); local file = fs.open( "/stdlib", "w" ); file.write( sResponse ); file.close();
-	else
-		print( "Error retrieving stdlib" );
-	end
+local response = http.get( "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/stdlib.lua" );
+if response then
+	local sResponse = response.readAll(); response.close(); local file = fs.open( "/stdlib", "w" ); file.write( sResponse ); file.close();
+else
+	print( "Error retrieving stdlib" );
+	exit();
 end
 
 dofile( "/stdlib" );
