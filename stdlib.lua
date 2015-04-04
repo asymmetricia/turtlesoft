@@ -708,7 +708,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 				sel_y = nil
 				for cx,ylist in pairs(model) do
 					for cy,zlist in pairs(ylist) do
-						if( zlist[cz] != nil ) then
+						if( zlist[cz] ~= nil ) then
 							if( sel_x == nil or (modX == 1 and cx > sel_x) or (modX == -1 and cx < sel_x) ) then
 								sel_y = nil
 								sel_x = cx
