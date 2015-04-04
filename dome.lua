@@ -26,11 +26,11 @@ function cosine( theta )
 end
 
 radius=tonumber(opts["r"])
-zskip=0; match=0; dryrun=false; x=0; y=0;
-segs=1; which=1;  fill = 0;
+zskip=0; match=nil; dryrun=false; x=0; y=0;
+segs=1; which=1;  fill = false;
 layers=radius*2;
 
-if( opts["f"] ~= nil or opts[ "fill" ] ~= nil ) then print( "Block-fill enabled." ); fill = 1; end
+if( opts["f"] ~= nil or opts[ "fill" ] ~= nil ) then print( "Block-fill enabled." ); fill = true; end
 if( opts["z"] ~= nil ) then zskip = tonumber( opts["z"] ); end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
 if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = 1; end
@@ -77,7 +77,7 @@ for i_z = 0,steps do
                 while( lr >= lr_min ) do
                         x_end = math.floor( math.cos( theta_end ) * lr + 0.5 );
                         y_end = math.floor( math.sin( theta_end ) * lr + 0.5 );
-			if( segs ~= 1 ) then model[x_end][y_end][dz]=2; end;
+						if( segs ~= 1 ) then model[x_end][y_end][dz]=2; end;
                         theta = theta_begin;
                         while( theta < theta_end ) do
                                 if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
