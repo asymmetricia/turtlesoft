@@ -636,11 +636,11 @@ end
 function printModel( model, zskip, dryrun, verbose, match, material, final, dense )
 	if( zskip == nil )    then zskip = 0;       end
 	if( dryrun == nil )   then dryrun = 0;      end
-	if( verbose == nil )  then verbose = false; else verbose = true; end
-	if( match == nil )    then match = false;   else match = true;   end
+	if( verbose == nil )  then verbose = false; end
+	if( match == nil )    then match = false;   end
 	if( material == nil ) then material = 1;    end
-	if( final == nil )    then final = true;    else final = false;  end
-	if( dense == nil )    then dense = false;   else dense = true;   end
+	if( final == nil )    then final = true;    end
+	if( dense == nil )    then dense = false;   end
 
 
 	if( verbose and dense ) then print( "Using dense fill algorithm" ); end
