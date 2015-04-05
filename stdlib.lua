@@ -647,6 +647,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	plist = {}
 	
 	if( dense ) then
+		if( verbose ) then print( "dense first point selection" ); end;
 		for cx,ylist in pairs(model) do
 			for cy,zlist in pairs(ylist) do
 				for cz,action in pairs(zlist) do
@@ -704,6 +705,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	-- Find the next closest point from our reference.
 	-- If it's distance>2, instead find the next closest point from here.
 		if( dense ) then
+			if( verbose ) then print( "dense subsequent point selection" ); end;
 			sel_pt = nil;
 			for k,pt in pairs(plist) do
 				-- First pass, only look at blocks on the current working column.
