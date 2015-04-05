@@ -642,6 +642,8 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	if( final == nil )    then final = true;    else final = false;  end
 	if( dense == nil )    then dense = false;   else dense = true;   end
 
+
+	if( verbose and dense ) then print( "Using dense fill algorithm" ); end
 	plist = {}
 	
 	if( dense ) then
