@@ -701,7 +701,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		end
 	-- Find the next closest point from our reference.
 	-- If it's distance>2, instead find the next closest point from here.
-		if( dense ~= nil ) then
+		if( dense ) then
 			sel_pt = nil;
 			for k,pt in pairs(plist) do
 				-- First pass, only look at blocks on the current working column.
