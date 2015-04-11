@@ -23,7 +23,7 @@ if( tonumber(args[2]) < 0 ) then modY = -1; end
 
 while true do
 	find(1);
-	while match and not turtle.compareUp() do
+	while match and turtle.detectUp() and not turtle.compareUp() do
 		turtle.digUp();
 	end
 	if not turtle.detectUp() then
