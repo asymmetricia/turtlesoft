@@ -6,18 +6,32 @@ else
 end
 
 args = {...}
-if( table.getn( args ) ~= 3 ) then
-	print( "usage: wall {left,right} <y> <z>" );
+if( table.getn( args ) < 3 or table.getn( args ) > 4 ) then
+	print( "usage: wall {left,right} <y> <z> [<match>]" );
 	exit();
+end
+
+if( table.getn( args ) < 4 ) then
+	match = 0;
+else
+	match = 1;
 end
 
 tx=0; ty=0; tz=0;
 
 while true do
 	if( args[1] == "left" ) then
-		west(); find(1); turtle.place();
+		west(); 
+		if( match and not turtle.compare() ) then
+			turtle.dig();
+		end
+		find(1); turtle.place();
 	else
-		east(); find(1); turtle.place();
+		east();
+		if( match and not turtle.compare() ) then
+			turtle.dig();
+		end
+		find(1); turtle.place();
 	end
 	if( y % 2 == 0 ) then
 		-- even Y
