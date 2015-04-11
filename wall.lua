@@ -21,18 +21,25 @@ tx=0; ty=0; tz=0;
 
 while true do
 	if( args[1] == "left" ) then
-		west(); 
-		while( match and turtle.detect() and not turtle.compare() ) do
-			turtle.dig();
-		end
-		find(1); turtle.place();
+		west();
 	else
 		east();
-		while( match and turtle.detect() and not turtle.compare() ) do
-			turtle.dig();
-		end
-		find(1); turtle.place();
 	end
+
+	while( match and turtle.detect() and not turtle.compare() ) do
+		turtle.dig();
+	end
+
+	find(1);
+
+	while not turtle.place() do
+		if( turtle.detect() ) then
+			turtle.dig();
+		else
+			turtle.attack();
+		end
+	end
+
 	if( y % 2 == 0 ) then
 		-- even Y
 		tz=tz+1;
