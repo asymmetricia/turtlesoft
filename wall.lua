@@ -32,11 +32,13 @@ while true do
 
 	find(1);
 
-	while not turtle.place() do
-		if( turtle.detect() ) then
-			turtle.dig();
-		else
-			turtle.attack();
+	if not turtle.compare() do 
+		while not turtle.place() do
+			if( turtle.detect() ) then
+				turtle.dig();
+			else
+				turtle.attack();
+			end
 		end
 	end
 
