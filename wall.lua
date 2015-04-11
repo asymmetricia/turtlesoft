@@ -22,13 +22,13 @@ tx=0; ty=0; tz=0;
 while true do
 	if( args[1] == "left" ) then
 		west(); 
-		if( match and not turtle.compare() ) then
+		while( match and turtle.detect() and not turtle.compare() ) do
 			turtle.dig();
 		end
 		find(1); turtle.place();
 	else
 		east();
-		if( match and not turtle.compare() ) then
+		while( match and turtle.detect() and not turtle.compare() ) do
 			turtle.dig();
 		end
 		find(1); turtle.place();
