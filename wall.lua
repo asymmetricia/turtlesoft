@@ -30,17 +30,7 @@ while true do
 		turtle.dig();
 	end
 
-	find(1);
-
-	if not turtle.compare() then
-		while not turtle.place() do
-			if( turtle.detect() ) then
-				turtle.dig();
-			else
-				turtle.attack();
-			end
-		end
-	end
+	placeBlock( 1, match );
 
 	if( y % 2 == 0 ) then
 		-- even Y

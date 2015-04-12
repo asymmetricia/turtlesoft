@@ -169,19 +169,19 @@ end
  
 function wallsUp( tdx, tdy )
         for n=0,3 do
-                find(1); turtle.placeUp();
+                placeBlockUp( 1, false );
                 if( x == tdx and y == tdy ) then
-                        find(1); turtle.placeDown();
+                        placeBlockDown(1,false);
                 end
                 if( x == 0 ) then
-                        west(); find(1); turtle.place();
+                        west(); placeBlock( 1, false );
                 else
-                        east(); find(1); turtle.place();
+                        east(); placeBlock( 1, false );
                 end
                 if( y == 0 ) then
-                        south(); find(1); turtle.place();
+                        south(); placeBlock( 1, false );
                 else
-                        north(); find(1); turtle.place();
+                        north(); placeBlock( 1, false );
                 end
                 if( x == 0 and y == 0 ) then
                         goto( 1, 0, nil );
@@ -198,17 +198,17 @@ end
 function wallsDown( tdx, tdy )
         for n=0,3 do
                 if( x == tdx and y == tdy ) then
-                        find(1); turtle.placeUp();
+                        placeBlockUp( 1, false );
                 end
                 if( x == 0 ) then
-                        west(); find(1); turtle.place();
+                        west(); placeBlock( 1, false );
                 else
-                        east(); find(1); turtle.place();
+                        east(); placeBlock( 1, false );
                 end
                 if( y == 0 ) then
-                        south(); find(1); turtle.place();
+                        south(); placeBlock( 1, false );
                 else
-                        north(); find(1); turtle.place();
+                        north(); placeBlock( 1, false );
                 end
                 if( x == 0 and y == 0 ) then
                         goto( 1, 0, nil );
@@ -240,14 +240,36 @@ function staircaseDown()
         goto( 0, 0, nil ); north();
 end
 
+function placeBlock( slot, match )
+	if turtle.detect() and not match then return; end
+	find( slot );
+	if turtle.compare() then return; end
+	while not turtle.place() do if turtle.detect() then turtle.dig(); else turtle.attack(); end; end
+end
+
+function placeBlockUp( slot, match )
+	if turtle.detectUp() and not match then return; end
+	find( slot );
+	if turtle.compareUp() then return; end
+	while not turtle.placeUp() do if turtle.detectUp() then turtle.digUp(); else turtle.attackUp(); end; end
+end
+
+function placeBlockDown( slot, match )
+	if turtle.detectDown() and not match then return; end
+	find( slot );
+	if turtle.compareDown() then return; end
+	while not turtle.placeDown() do if turtle.detectDown() then turtle.digDown(); else turtle.attackDown(); end; end
+end
+
 -- Advance == 1   if turtle should move forward into first open block of tunnel,
 --         == nil if turtle is starting "in the wall" of last segment
-function tunnel( xdim, ydim, zdim, advance, slope )
+function tunnel( xdim, ydim, zdim, advance, slope, match )
 	modX=1; modZ=1; modY=1;
 	xdim = tonumber(xdim) or 1
 	ydim = tonumber(ydim) or 1
 	zdim = tonumber(zdim) or 2
 	slope = tonumber(slope) or 0
+	match = tonumber(match) or 0
 
 	-- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
 	if( zdim < 0 ) then
@@ -277,10 +299,10 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 
 	while true do
 		if( z == minZ ) then
-			find(1); turtle.placeDown();
+			placeBlockDown( 1, match );
 		end
 		if( z == maxZ ) then
-			find(1); turtle.placeUp();
+			placeBlockUp( 1, match );
 		end
 
 		-- Optimize to reduce turns
@@ -295,38 +317,38 @@ function tunnel( xdim, ydim, zdim, advance, slope )
 			end
 		end
 		if( p == 0 ) then
-			find(1); turtle.place();
+			placeBlock( 1, match );
 			-- if modX is positive we'll be heading east, so face east last
 			if( modX == 1 ) then
 				if( x == minX ) then
-					west(); find(1); turtle.place();
+					west(); placeBlock( 1, match );
 				end
 				if( x == maxX ) then
-					east(); find(1); turtle.place();
+					east(); placeBlock( 1, match );
 				end
 			else
 				if( x == maxX ) then
-					east(); find(1); turtle.place();
+					east(); placeBlock( 1, match );
 				end
 				if( x == minX ) then
-					west(); find(1); turtle.place();
+					west(); placeBlock( 1, match );
 				end
 			end
 		elseif( p == 1 ) then
 			if( x == maxX ) then
-				find(1); turtle.place();
+				placeBlock( 1, match );
 			end
-			north(); find(1); turtle.place();
+			north(); placeBlock( 1, match );
 			if( x == minX ) then
-				west(); find(1); turtle.place();
+				west(); placeBlock( 1, match );
 			end
 		elseif( p == 3 ) then
 			if( x == minX ) then
-				find(1); turtle.place();
+				placeBlock( 1, match );
 			end
-			north(); find(1); turtle.place();
+			north(); placeBlock( 1, match );
 			if( x == maxX ) then
-				east(); find(1); turtle.place();
+				east(); placeBlock( 1, match );
 			end
 		end
 	
@@ -691,13 +713,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		end
 		if( not dryrun ) then
 			if( action == 1 ) then
-				find(material);
-				if( match == 1 ) then
-					while turtle.detectDown() and not turtle.compareDown() do
-						turtle.digDown();
-					end
-				end
-				turtle.placeDown();
+				placeBlockDown( material, match );
 			else
 				turtle.digDown();
 			end

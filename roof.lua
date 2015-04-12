@@ -22,13 +22,7 @@ if( tonumber(args[1]) < 0 ) then modX = -1; end
 if( tonumber(args[2]) < 0 ) then modY = -1; end
 
 while true do
-	find(1);
-	while not turtle.detectUp() or (not turtle.compareUp() and match) do
-		turtle.digUp();
-		if not turtle.placeUp() and not turtle.detectUp() then
-			turtle.attackUp();
-		end
-	end
+	placeBlockUp( 1, match );
 
 	if( (x/n) % 2 == 0 ) then
 		-- even X

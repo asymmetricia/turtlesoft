@@ -29,6 +29,12 @@ else
 	n = 1
 end
 
+if( table.getn( args ) > 4 ) then
+	match = 1
+else
+	match = 0
+end
+
 tx=0; ty=0;
 modY = 1; modX = 1;
 if( tonumber( args[1] ) < 0 ) then modX = -1; end
@@ -36,23 +42,11 @@ if( tonumber( args[2] ) < 0 ) then modY = -1; end
 dir=1;
 
 goto( nil, nil, -(depth-1) );
-while not turtle.detectDown() do
-	find(1); turtle.placeDown();
-end
-
-if( x % n == 0 and y % n == 0 ) then
-	if( tonumber(args[5]) == 1 ) then
-		find(1);
-		while turtle.detectDown() and not turtle.compareDown() do
-			turtle.digDown();
-		end
-	end
-	while not turtle.detectDown() do
-		find(1); turtle.placeDown();
-	end
-end
 
 while true do
+	placeBlockDown( 1, match );
+
+	-- Calculate next position
 	if( dir == 1 ) then
 		if( (x/n) % 2 == 0 ) then
 			-- even X
@@ -84,24 +78,20 @@ while true do
 			end
 		end
 	end
+
+	-- We end if the column is out-of-bounds..
 	if( ( tx*modX >= tonumber(args[1])*modX and dir == 1 ) or ( tx*modX < 0 and dir == -1 ) ) then
+		-- And we were are the top layer
 		if( z == 0 ) then
 			goto( 0, 0, 0 );
 			north();
 			break;
 		end
+		-- Otherwise, just move up a layer.
 		goto( nil, nil, z+1 );
 		tx = tx - dir*modX*n;
 		dir = dir * -1;
 	end
+
 	goto( tx, ty, nil );
-	if( tonumber(args[5]) == 1 ) then
-		find(1);
-		while turtle.detectDown() and not turtle.compareDown() do
-			turtle.digDown();
-		end
-	end
-	while not turtle.detectDown() do
-		find(1); turtle.placeDown();
-	end
 end
