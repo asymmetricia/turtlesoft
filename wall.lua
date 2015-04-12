@@ -32,7 +32,7 @@ while true do
 
 	find(1);
 
-	if not turtle.compare() do 
+	if not turtle.compare() then
 		while not turtle.place() do
 			if( turtle.detect() ) then
 				turtle.dig();
