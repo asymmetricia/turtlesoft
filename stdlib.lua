@@ -103,10 +103,10 @@ function newMineArea( dimX, dimY, dimZ, zskip )
                 end
                 if( modZ < 0 ) then
                         if( z*modZ+1 <= maxZ ) then turtle.digDown(); end
-                        if( z*modZ-1 >= minZ ) then turtle.digUp(); end
+                        if( z*modZ-1 >= minZ ) then while turtle.detectUp() do turtle.digUp(); end; end
                 else
                         if( z-1 >= minZ ) then turtle.digDown(); end
-                        if( z*modZ+1 <= maxZ ) then turtle.digUp(); end
+                        if( z*modZ+1 <= maxZ ) then while turtle.detectUp() do turtle.digUp(); end; end
                 end
                 if( dir%2 == 0 ) then
                         if( x % 2 == 0 ) then
