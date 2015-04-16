@@ -104,6 +104,7 @@ findReactor();
 stop=0
 
 while stop == 0 do
+	os.startTimer(0.1);
 	term.clear();
 	term.setCursorPos( 1, 1 );
 	term.write( "ReactorOS v0.1" );
@@ -128,11 +129,17 @@ while stop == 0 do
 		term.write( "  Exit" );
 	end
 
-	local event, scancode = os.pullEvent( "key" )
-	if( bindings[ state_list[cursor_position] ] ~= nil and bindings[ state_list[cursor_position] ][ scancode ] ~= nil ) then
-		bindings[ state_list[cursor_position] ][ scancode ]()
-	elseif( bindings[ "global" ] ~= nil and bindings[ "global" ][ scancode ] ~= nil ) then
-		bindings[ "global" ][ scancode ]()
+	while local event,arg = os.pullEvent() do
+		if event == "key" then
+			local scancode = arg
+			if( bindings[ state_list[cursor_position] ] ~= nil and bindings[ state_list[cursor_position] ][ scancode ] ~= nil ) then
+				bindings[ state_list[cursor_position] ][ scancode ]()
+			elseif( bindings[ "global" ] ~= nil and bindings[ "global" ][ scancode ] ~= nil ) then
+				bindings[ "global" ][ scancode ]()
+			end
+		elseif event == "timer" then
+			break;
+		end
 	end
 
 	sleep(0);
