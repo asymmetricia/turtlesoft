@@ -56,7 +56,7 @@ function printTemperature()
 	else
 		term.write( math.floor( reactor.getFuelTemperature() + 0.5 ) );
 	end
-	term.write( " / " .. target_temperature .. " ] +" );
+	term.write( " / " .. temp_pid.target .. " ] +" );
 end
 
 function printPower()
@@ -72,9 +72,9 @@ function printTemperaturePID()
 	cursor( "tpid" )
 	term.write( "T.PID: " );
 
-	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else term.write( " kp  " .. temp_kp ); end
-	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_ki ); else term.write( " kI  " .. temp_ki ); end
-	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_kd ); else term.write( " kD  " .. temp_kd ); end
+	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_pid.kp ); else term.write( " kp  " .. temp_pid.kp ); end
+	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_pid.ki ); else term.write( " kI  " .. temp_pid.ki ); end
+	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_pid.kd ); else term.write( " kD  " .. temp_pid.kd ); end
 	term.write( " o=" .. math.floor( temp_output*10+0.5 ) / 10 );
 
 	term.setCursorPos( 1, 6 );
@@ -88,9 +88,9 @@ function printPowerPID()
 	cursor( "ppid" )
 	term.write( "PwPID: " );
 
-	if( pow_sel == 0 ) then term.write( "[kP] " .. pow_kp ); else term.write( " kp  " .. pow_kp ); end
-	if( pow_sel == 1 ) then term.write( "[kI] " .. pow_ki ); else term.write( " kI  " .. pow_ki ); end
-	if( pow_sel == 2 ) then term.write( "[kD] " .. pow_kd ); else term.write( " kD  " .. pow_kd ); end
+	if( pow_sel == 0 ) then term.write( "[kP] " .. pow_pid.kp ); else term.write( " kp  " .. pow_pid.kp ); end
+	if( pow_sel == 1 ) then term.write( "[kI] " .. pow_pid.ki ); else term.write( " kI  " .. pow_pid.ki ); end
+	if( pow_sel == 2 ) then term.write( "[kD] " .. pow_pid.kd ); else term.write( " kD  " .. pow_pid.kd ); end
 	term.write( " o=" .. math.floor( pow_output*10+0.5 ) / 10 );
 
 	term.setCursorPos( 1, 8 );
@@ -124,68 +124,92 @@ end
 
 bindings["temp"] = {}
 bindings["temp"][203] = function ()
-	target_temperature = target_temperature - 50;
-	if( target_temperature < 0 ) then target_temperature = 0; end;
+	temp_pid.target = temp_pid.target - 50;
+	if( temp_pid.target < 0 ) then temp_pid.target = 0; end;
 end
 
 bindings["temp"][205] = function ()
-	target_temperature = target_temperature + 50;
+	temp_pid.target = temp_pid.target + 50;
 end
 
 bindings["tpid"] = {}
 bindings["tpid"][15] = function () tpid_sel = ( tpid_sel + 1 ) % 3; end
-bindings["tpid"][203] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp - 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki - 0.1; else temp_kd = temp_kd - 0.1; end; end
-bindings["tpid"][205] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp + 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki + 0.1; else temp_kd = temp_kd + 0.1; end; end
+bindings["tpid"][203] = function () if( tpid_sel == 0 ) then temp_pid.kp = temp_pid.kp - 0.1; elseif( tpid_sel == 1 ) then temp_pid.ki = temp_pid.ki - 0.1; else temp_pid.kd = temp_pid.kd - 0.1; end; end
+bindings["tpid"][205] = function () if( tpid_sel == 0 ) then temp_pid.kp = temp_pid.kp + 0.1; elseif( tpid_sel == 1 ) then temp_pid.ki = temp_pid.ki + 0.1; else temp_pid.kd = temp_pid.kd + 0.1; end; end
 
 bindings["ppid"] = {}
 bindings["ppid"][15] = function () pow_sel = ( pow_sel + 1 ) % 3; end
-bindings["ppid"][203] = function () if( pow_sel == 0 ) then pow_kp = pow_kp - 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki - 0.1; else pow_kd = pow_kd - 0.1; end; end
-bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_kp = pow_kp + 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki + 0.1; else pow_kd = pow_kd + 0.1; end; end
+bindings["ppid"][203] = function () if( pow_sel == 0 ) then pow_pid.kp = pow_pid.kp - 0.1; elseif( pow_sel == 1 ) then pow_pid.ki = pow_pid.ki - 0.1; else pow_pid.kd = pow_pid.kd - 0.1; end; end
+bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_pid.kp = pow_pid.kp + 0.1; elseif( pow_sel == 1 ) then pow_pid.ki = pow_pid.ki + 0.1; else pow_pid.kd = pow_pid.kd + 0.1; end; end
 
 bindings["exit"] = {}
 bindings["exit"][28] = function () stop = 1; end
 
-target_temperature = 200;
 cursor_position = 1;
 reactor = nil
 findReactor();
 stop=0
 
-tpid_sel = 0;
-temp_kp = 0;
-temp_ki = 0;
-temp_kd = 0;
-temp_pe = 0;
-temp_pd = 0;
-temp_i = 0;
-temp_output = 0;
-temp_last = os.clock()
+temp_pid = {
+	["target"] = 200,
+	["kp"] = 0,
+	["ki"] = 0,
+	["kd"] = 0,
+	["prevError"] = 0,
+	["derivative"] = 0,
+	["integral" ]  = 0,
+	["maxIntegral"] = 1000,
+	["output"]     = 0,
+	["last"]       = os.clock()
+}
 
-pow_sel = 0;
-pow_kp = 0;
-pow_ki = 0;
-pow_kd = 0;
-pow_pe = 0;
-pow_pd = 0;
-pow_i = 0;
-pow_output = 0;
-pow_last = os.clock()
 
--- Call as pe, pd, i, o, last = pid( input, target, kp, ki, kd, pe, i, last )
-function pid( input, target, kp, ki, kd, pe, i, last, min, max )
+pow_pid = {
+	["target"] = 1000,
+	["kp"] = 0,
+	["ki"] = 0,
+	["kd"] = 0,
+	["prevError"] = 0,
+	["derivative"] = 0,
+	["integral" ]  = 0,
+	["minIntegral"] = -1000,
+	["maxIntegral"] = 1000,
+	["output"]     = 0,
+	["minOutput"]  = 0,
+	["maxOutput"]  = 100,
+	["last"]       = os.clock()
+}
+
+function updatePid( pid, input )
 	local now = os.clock()
 	local dt = now - last
+
+
 	local error = target - input
-	local integ = i + error*dt
-	local deriv = ( pe - error ) / dt
-	output = kp * error + ki * integ + kd * deriv
-	if( output < min ) then output = min; elseif( output > max ) then output = max; end;
-	return error, deriv, integ, output, now
+
+	pid.integral = pid.integral + error * dt
+	if( pid.integral < pid.minIntegral ) then
+		pid.integral = pid.minIntegral
+	elseif( pid.integral > pid.maxIntegral ) then
+		pid.integral = pid.maxIntegral
+	end
+
+	pid.derivative = ( pid.prevError - error ) / dt;
+	pid.prevError = error;
+
+	pid.output = pid.kp * error + pid.ki * pid.integral + pid.kd * pid.derivative
+	if( pid.output < pid.minOutput ) then
+		pid.output = pid.minOutput;
+	elseif( pid.output > pid.maxOutput ) then
+		pid.output = pid.maxOutput;
+	end
+
+	return pid.output
 end
 
 while stop == 0 do
-	temp_pe, temp_pd, temp_i, temp_output, temp_last = pid( reactor.getFuelTemperature(), target_temperature, temp_kp, temp_ki, temp_kd, temp_pe, temp_i, temp_last, 0, 100 );
-	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored() / 10000, 1000,          pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last, 0, 100 );
+	temp_output = updatePid( temp_pid, reactor.getFuelTemperature()      )
+	pow_output  = updatePid( pow_pid,  reactor.getEnergyStored() / 10000 )
 
 	if( temp_output < pow_output ) then
 		reactor.setAllControlRodLevels( 100 - temp_output )
