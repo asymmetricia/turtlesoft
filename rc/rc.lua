@@ -102,12 +102,13 @@ while stop == 0 do
 	term.setCursorPos( 1, 1 );
 	term.write( "ReactorOS v0.1" );
 	if( reactor ~= nil ) then
-		printReactorState();
-
-		for y = 3,19 do
+		for y = 2,19 do
 			term.setCursorPos( 1, y );
 			term.clearLine();
 		end
+
+		printReactorState();
+		printTemperature();
 	else
 		term.setCursorPos( 1, 2 );
 		term.write( "No Reactor Found" );
