@@ -48,20 +48,20 @@ end
 state_list = { "state", "exit" }
 
 bindings["global"] = {}
-bindings["state"][200] = function
+bindings["state"][200] = function ()
 	if( sel == 1 ) then sel = state_list.maxn() else sel = sel - 1; end
 end
 
-bindings["state"][208] = function
+bindings["state"][208] = function ()
 	if( sel == state_list.maxn() ) then sel = 1 else sel = sel + 1; end
 end
 
 bindings["state"]  = {}
-bindings["state"][203] = function
+bindings["state"][203] = function ()
 	if( reactor.getActive() ) then reactor.setActive( false ); end
 end
 
-bindings["state"][205] = function
+bindings["state"][205] = function ()
 	if( not reactor.getActive() ) then reactor.setActive( true ); end
 end
 
