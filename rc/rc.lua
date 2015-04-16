@@ -129,16 +129,16 @@ while stop == 0 do
 		term.write( "  Exit" );
 	end
 
-	while local event,arg = os.pullEvent() do
+	while true do
+		local event,arg = os.pullEvent()
 		if event == "key" then
-			local scancode = arg
-			if( bindings[ state_list[cursor_position] ] ~= nil and bindings[ state_list[cursor_position] ][ scancode ] ~= nil ) then
-				bindings[ state_list[cursor_position] ][ scancode ]()
-			elseif( bindings[ "global" ] ~= nil and bindings[ "global" ][ scancode ] ~= nil ) then
-				bindings[ "global" ][ scancode ]()
+			if( bindings[ state_list[cursor_position] ] ~= nil and bindings[ state_list[cursor_position] ][ arg ] ~= nil ) then
+				bindings[ state_list[cursor_position] ][ arg ]()
+			elseif( bindings[ "global" ] ~= nil and bindings[ "global" ][ arg ] ~= nil ) then
+				bindings[ "global" ][ arg ]()
 			end
 		elseif event == "timer" then
-			break;
+			break
 		end
 	end
 
