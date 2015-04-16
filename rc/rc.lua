@@ -161,9 +161,9 @@ while stop == 0 do
 	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored(),    10000000,           pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last );
 
 	if( temp_output < pow_output ) then
-		setAllControlRodLevels( temp_output )
+		reactor.setAllControlRodLevels( temp_output )
 	else
-		setAllControlRodLevels( pow_output )
+		reactor.setAllControlRodLevels( pow_output )
 	end
 
 	os.startTimer(0.1);
