@@ -72,7 +72,7 @@ function printTemperaturePID()
 	cursor( "tpid" )
 	term.write( "T.PID: " );
 
-	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else term.write( " kp  " .. temp.kp ); end
+	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else term.write( " kp  " .. temp_kp ); end
 	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_ki ); else term.write( " kI  " .. temp_ki ); end
 	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_kd ); else term.write( " kD  " .. temp_kd ); end
 	term.write( " e=" .. math.floor( temp_pe * 10 + 0.5 ) / 10 );
@@ -86,7 +86,7 @@ function printPowerPID()
 	cursor( "ppid" )
 	term.write( "PwPID: " );
 
-	if( pow_sel == 0 ) then term.write( "[kP] " .. pow_kp ); else term.write( " kp  " .. pow.kp ); end
+	if( pow_sel == 0 ) then term.write( "[kP] " .. pow_kp ); else term.write( " kp  " .. pow_kp ); end
 	if( pow_sel == 1 ) then term.write( "[kI] " .. pow_ki ); else term.write( " kI  " .. pow_ki ); end
 	if( pow_sel == 2 ) then term.write( "[kD] " .. pow_kd ); else term.write( " kD  " .. pow_kd ); end
 	term.write( " e=" .. math.floor( pow_pe * 10 + 0.5 ) / 10 );
@@ -168,19 +168,20 @@ pow_output = 0;
 pow_last = os.clock()
 
 -- Call as pe, pd, i, o, last = pid( input, target, kp, ki, kd, pe, i, last )
-function pid( input, target, kp, ki, kd, pe, i, last )
+function pid( input, target, kp, ki, kd, pe, i, last, min, max )
 	local now = os.clock()
 	local dt = now - last
 	local error = target - input
 	local integ = i + error*dt
 	local deriv = ( pe - error ) / dt
 	output = kp * error + ki * integ + kd * deriv
+	if( output < min ) then output = min; elseif( output > max ) then output = max; end;
 	return error, deriv, integ, output, now
 end
 
 while stop == 0 do
-	temp_pe, temp_pd, temp_i, temp_output, temp_last = pid( reactor.getFuelTemperature(), target_temperature, temp_kp, temp_ki, temp_kd, temp_pe, temp_i, temp_last );
-	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored(),    10000000,           pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last );
+	temp_pe, temp_pd, temp_i, temp_output, temp_last = pid( reactor.getFuelTemperature(), target_temperature, temp_kp, temp_ki, temp_kd, temp_pe, temp_i, temp_last, 0, 100 );
+	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored(),    10000000,           pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last, 0, 100 );
 
 	if( temp_output < pow_output ) then
 		reactor.setAllControlRodLevels( 100 - temp_output )
