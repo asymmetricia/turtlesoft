@@ -130,13 +130,13 @@ end
 
 bindings["tpid"] = {}
 bindings["tpid"][15] = function () tpid_sel = ( tpid_sel + 1 ) % 3; end
-bindings["tpid"][203] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp - 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki - 0.1; else temp_kd = temp_kd - 0.1; end
-bindings["tpid"][205] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp + 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki + 0.1; else temp_kd = temp_kd + 0.1; end
+bindings["tpid"][203] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp - 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki - 0.1; else temp_kd = temp_kd - 0.1; end; end
+bindings["tpid"][205] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp + 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki + 0.1; else temp_kd = temp_kd + 0.1; end; end
 
 bindings["ppid"] = {}
 bindings["ppid"][15] = function () pow_sel = ( pow_sel + 1 ) % 3; end
-bindings["ppid"][203] = function () if( pow_sel == 0 ) then pow_kp = pow_kp - 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki - 0.1; else pow_kd = pow_kd - 0.1; end
-bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_kp = pow_kp + 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki + 0.1; else pow_kd = pow_kd + 0.1; end
+bindings["ppid"][203] = function () if( pow_sel == 0 ) then pow_kp = pow_kp - 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki - 0.1; else pow_kd = pow_kd - 0.1; end; end
+bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_kp = pow_kp + 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki + 0.1; else pow_kd = pow_kd + 0.1; end; end
 
 bindings["exit"] = {}
 bindings["exit"][28] = function () stop = 1; end
