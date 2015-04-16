@@ -75,24 +75,28 @@ function printTemperaturePID()
 	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else term.write( " kp  " .. temp_kp ); end
 	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_ki ); else term.write( " kI  " .. temp_ki ); end
 	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_kd ); else term.write( " kD  " .. temp_kd ); end
+	term.write( " o=" .. math.floor( temp_output*10+0.5 ) / 10 );
+
+	term.setCursorPos( 1, 6 );
 	term.write( " e=" .. math.floor( temp_pe * 10 + 0.5 ) / 10 );
 	term.write( " i=" .. math.floor( temp_i  * 10 + 0.5 ) / 10 );
 	term.write( " d=" .. math.floor( temp_pd * 10 + 0.5 ) / 10 );
-	term.write( " o=" .. math.floor( temp_output*10+0.5 ) / 10 );
 end
 
 function printPowerPID()
-	term.setCursorPos( 1, 6 );
+	term.setCursorPos( 1, 7 );
 	cursor( "ppid" )
 	term.write( "PwPID: " );
 
 	if( pow_sel == 0 ) then term.write( "[kP] " .. pow_kp ); else term.write( " kp  " .. pow_kp ); end
 	if( pow_sel == 1 ) then term.write( "[kI] " .. pow_ki ); else term.write( " kI  " .. pow_ki ); end
 	if( pow_sel == 2 ) then term.write( "[kD] " .. pow_kd ); else term.write( " kD  " .. pow_kd ); end
+	term.write( " o=" .. math.floor( pow_output*10+0.5 ) / 10 );
+
+	term.setCursorPos( 1, 8 );
 	term.write( " e=" .. math.floor( pow_pe * 10 + 0.5 ) / 10 );
 	term.write( " i=" .. math.floor( pow_i  * 10 + 0.5 ) / 10 );
 	term.write( " d=" .. math.floor( pow_pd * 10 + 0.5 ) / 10 );
-	term.write( " o=" .. math.floor( pow_output*10+0.5 ) / 10 );
 end
 
 function cleanup()
@@ -189,7 +193,7 @@ while stop == 0 do
 		reactor.setAllControlRodLevels( 100 - pow_output )
 	end
 
-	os.startTimer(0.1);
+	os.startTimer(0.5);
 	term.clear();
 	term.setCursorPos( 1, 1 );
 	term.write( "ReactorOS v0.1" );
