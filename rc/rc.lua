@@ -65,6 +65,7 @@ bindings["state"][205] = function ()
 	if( not reactor.getActive() ) then reactor.setActive( true ); end
 end
 
+bindings["exit"] = {}
 bindings["exit"][28] = function () cleanup(); shell.exit(); end
 
 sel = 1;
