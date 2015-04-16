@@ -78,9 +78,9 @@ function printTemperaturePID()
 	term.write( " o=" .. math.floor( temp_output*10+0.5 ) / 10 );
 
 	term.setCursorPos( 1, 6 );
-	term.write( " e=" .. math.floor( temp_pe * 10 + 0.5 ) / 10 );
-	term.write( " i=" .. math.floor( temp_i  * 10 + 0.5 ) / 10 );
-	term.write( " d=" .. math.floor( temp_pd * 10 + 0.5 ) / 10 );
+	term.write( " e=" .. math.floor( temp_pid.prevError  * 10 + 0.5 ) / 10 );
+	term.write( " i=" .. math.floor( temp_pid.integral   * 10 + 0.5 ) / 10 );
+	term.write( " d=" .. math.floor( temp_pid.derivative * 10 + 0.5 ) / 10 );
 end
 
 function printPowerPID()
@@ -94,9 +94,9 @@ function printPowerPID()
 	term.write( " o=" .. math.floor( pow_output*10+0.5 ) / 10 );
 
 	term.setCursorPos( 1, 8 );
-	term.write( " e=" .. math.floor( pow_pe * 10 + 0.5 ) / 10 );
-	term.write( " i=" .. math.floor( pow_i  * 10 + 0.5 ) / 10 );
-	term.write( " d=" .. math.floor( pow_pd * 10 + 0.5 ) / 10 );
+	term.write( " e=" .. math.floor( pow_pid.prevError  * 10 + 0.5 ) / 10 );
+	term.write( " i=" .. math.floor( pow_pid.integral   * 10 + 0.5 ) / 10 );
+	term.write( " d=" .. math.floor( pow_pid.derivative * 10 + 0.5 ) / 10 );
 end
 
 function cleanup()
