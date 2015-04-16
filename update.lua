@@ -26,6 +26,7 @@ files["/t"]        = "tunnel.lua";
 files["/unload"]   = "unload.lua";
 files["/update"]   = "update.lua";
 files["/w"]        = "wall.lua";
+files["/reac"]     = "rc/rc.lua";
 
 for f,u in pairs( files ) do
 	if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
