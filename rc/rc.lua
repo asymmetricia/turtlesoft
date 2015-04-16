@@ -24,10 +24,10 @@ for i,side in pairs(peripheral.getNames()) do
 end
 
 while 1 do
-	term.setCursorPos( 0, 0 );
+	term.setCursorPos( 1, 1 );
 	print( "ReactorOS v0.1" );
-	for y = 1,19 do
-		term.setCursorPos( 0, y );
+	for y = 2,19 do
+		term.setCursorPos( 1, y );
 		term.clearLine();
 	end
 	sleep(1);
