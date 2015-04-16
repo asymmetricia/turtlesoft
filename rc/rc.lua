@@ -158,8 +158,11 @@ temp_pid = {
 	["prevError"] = 0,
 	["derivative"] = 0,
 	["integral" ]  = 0,
+	["minIntegral"] = -1000,
 	["maxIntegral"] = 1000,
 	["output"]     = 0,
+	["minOutput"]  = 0,
+	["maxOutput"]  = 100,
 	["last"]       = os.clock()
 }
 
