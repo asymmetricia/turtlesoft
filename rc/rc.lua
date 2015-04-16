@@ -56,9 +56,9 @@ function printTemperature()
 	if( reactor == nil ) then
 		term.write( "unknown" );
 	else
-		term.write( reactor.getFuelTemperature() );
+		term.write( math.floor( reactor.getFuelTemperature() + 0.5 ) );
 	end
-	term.write( " / " .. target_tempearture .. " ] +" );
+	term.write( " / " .. target_temperature .. " ] +" );
 end
 
 function cleanup()
