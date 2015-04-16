@@ -23,37 +23,50 @@ end
 
 bindings={}
 
+function cursor( state )
+	local x,y = term.getCursorPos()
+	if( state_list[cursor_position] == state ) then
+		term.write( "->" );
+	else
+		term.write( "  " );
+	end
+	term.setCursorPos( 3, y )
+end
+
 function printReactorState()
 	term.setCursorPos( 1, 2 );
-	if( state_list[sel] == "state" ) then
-		print( "->" );
-	else
-		print( "  " );
-	end
-
-	term.setCursorPos( 3, 2 );
-	print( "State: " );
+	cursor( "state" )
+	term.write( "State: " );
 
 	term.setCursorPos( 10, 2 );
 	if( reactor.getActive() ) then
-		print( " Inactive  [Active]" );
+		term.write( " Inactive  [Active]" );
 	else
-		print( "[Inactive]  Active" );
+		term.write( "[Inactive]  Active" );
 	end
+end
+
+function printTemperature()
+	term.setCursorPos( 1, 3 );
+	cursor( "temp" )
+	term.write( " Temp: " );
+
+	term.setCursorPos( 10, 3 );
+	term.write( "- [ " .. reactor.getFuelTemperature() .. " / " .. target_tempearture .. " ] +" );
 end
 
 function cleanup()
 end
 
-state_list = { "state", "exit" }
+state_list = { "state", "temp", "exit" }
 
 bindings["global"] = {}
 bindings["global"][200] = function ()
-	if( sel == 1 ) then sel = table.maxn( state_list ) else sel = sel - 1; end
+	if( cursor_position == 1 ) then cursor_position = table.maxn( state_list ) else cursor_position = cursor_position - 1; end
 end
 
 bindings["global"][208] = function ()
-	if( sel == table.maxn( state_list ) ) then sel = 1 else sel = sel + 1; end
+	if( cursor_position == table.maxn( state_list ) ) then cursor_position = 1 else cursor_position = cursor_position + 1; end
 end
 
 bindings["state"]  = {}
@@ -65,18 +78,28 @@ bindings["state"][205] = function ()
 	if( not reactor.getActive() ) then reactor.setActive( true ); end
 end
 
+bindings["temperature"] = {}
+bindings["temperature"][203] = function ()
+	target_temperature = target_temperature - 50;
+	if( target_temperature < 0 ) then target_temperature = 0; end;
+end
+
+bindings["temperature"][205] = function ()
+	target_temperature = target_temperature + 50;
+end
+
 bindings["exit"] = {}
 bindings["exit"][28] = function () cleanup(); shell.exit(); end
 
-sel = 1;
-
+target_temperature = 200;
+cursor_position = 1;
 reactor = nil
 findReactor();
 
 while 1 do
 	term.clear();
 	term.setCursorPos( 1, 1 );
-	print( "ReactorOS v0.1" );
+	term.write( "ReactorOS v0.1" );
 	if( reactor ~= nil ) then
 		printReactorState();
 
@@ -86,20 +109,20 @@ while 1 do
 		end
 	else
 		term.setCursorPos( 1, 2 );
-		print( "No Reactor Found" );
+		term.write( "No Reactor Found" );
 		findReactor();
 	end
 
 	term.setCursorPos( 1, 19 );
-	if( state_list[sel] == "exit" ) then
-		print( "->Exit" );
+	if( state_list[cursor_position] == "exit" ) then
+		term.write( "->Exit" );
 	else
-		print( "  Exit" );
+		term.write( "  Exit" );
 	end
 
 	local event, scancode = os.pullEvent( "key" )
-	if( bindings[ state_list[sel] ] ~= nil and bindings[ state_list[sel] ][ scancode ] ~= nil ) then
-		bindings[ state_list[sel] ][ scancode ]()
+	if( bindings[ state_list[cursor_position] ] ~= nil and bindings[ state_list[cursor_position] ][ scancode ] ~= nil ) then
+		bindings[ state_list[cursor_position] ][ scancode ]()
 	elseif( bindings[ "global" ] ~= nil and bindings[ "global" ][ scancode ] ~= nil ) then
 		bindings[ "global" ][ scancode ]()
 	end
