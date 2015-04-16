@@ -25,16 +25,16 @@ bindings={}
 
 function printReactorState()
 	term.setCursorPos( 1, 2 );
-	if( sel == "state" ) then
-		print( "→" );
+	if( state_list[sel] == "state" ) then
+		print( "->" );
 	else
-		print( " " );
+		print( "  " );
 	end
 
-	term.setCursorPos( 2, 2 );
+	term.setCursorPos( 3, 2 );
 	print( "State: " );
 
-	term.setCursorPos( 9, 2 );
+	term.setCursorPos( 10, 2 );
 	if( reactor.getActive() ) then
 		print( " Inactive  [Active]" );
 	else
@@ -42,18 +42,32 @@ function printReactorState()
 	end
 end
 
-bindings["state"] = {}
-bindings["state"][203] = function {
-	if( reactor.getActive() ) then reactor.setActive( true ); end
-}
-bindings["state"][203] = function {
-	if( not reactor.getActive() ) then reactor.setActive( true ); end
-}
-bindings["state"][205] = function {
-	if( reactor.getActive() ) then reactor.setActive( false ); end
-}
+function cleanup()
+end
 
-sel = "state";
+state_list = { "state", "exit" }
+
+bindings["global"] = {}
+bindings["state"][200] = function
+	if( sel == 1 ) then sel = state_list.maxn() else sel = sel - 1; end
+end
+
+bindings["state"][208] = function
+	if( sel == state_list.maxn() ) then sel = 1 else sel = sel + 1; end
+end
+
+bindings["state"]  = {}
+bindings["state"][203] = function
+	if( reactor.getActive() ) then reactor.setActive( false ); end
+end
+
+bindings["state"][205] = function
+	if( not reactor.getActive() ) then reactor.setActive( true ); end
+end
+
+bindings["exit"][28] = function () cleanup(); shell.exit(); end
+
+sel = 1;
 
 reactor = nil
 findReactor();
@@ -75,9 +89,18 @@ while 1 do
 		findReactor();
 	end
 
+	term.setCursorPos( 1, 19 );
+	if( state_list[sel] == "exit" ) then
+		print( "->Exit" );
+	else
+		print( "  Exit" );
+	end
+
 	local event, scancode = os.pullEvent( "key" )
-	if( bindings[ sel ] ~= nil and bindings[ sel ][ scancode ] ~= nil ) then
-		call( bindings[ sel ][ scancode ] )
+	if( bindings[ state_list[sel] ] ~= nil and bindings[ state_list[sel] ][ scancode ] ~= nil ) then
+		bindings[ state_list[sel] ][ scancode ]()
+	elseif( bindings[ "global" ] ~= nil and bindings[ "global" ][ scancode ] ~= nil ) then
+		bindings[ "global" ][ scancode ]()
 	end
 
 	sleep(0);
