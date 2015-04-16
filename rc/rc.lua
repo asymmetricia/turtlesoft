@@ -52,7 +52,13 @@ function printTemperature()
 	term.write( " Temp: " );
 
 	term.setCursorPos( 10, 3 );
-	term.write( "- [ " .. reactor.getFuelTemperature() .. " / " .. target_tempearture .. " ] +" );
+	term.write( "- [ " );
+	if( reactor == nil ) then
+		term.write( "unknown" );
+	else
+		term.write( reactor.getFuelTemperature() );
+	end
+	term.write( " / " .. target_tempearture .. " ] +" );
 end
 
 function cleanup()
