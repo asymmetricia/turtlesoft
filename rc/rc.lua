@@ -49,11 +49,11 @@ state_list = { "state", "exit" }
 
 bindings["global"] = {}
 bindings["global"][200] = function ()
-	if( sel == 1 ) then sel = state_list.maxn() else sel = sel - 1; end
+	if( sel == 1 ) then sel = table.maxn( state_list ) else sel = sel - 1; end
 end
 
 bindings["global"][208] = function ()
-	if( sel == state_list.maxn() ) then sel = 1 else sel = sel + 1; end
+	if( sel == table.maxn( state_list ) ) then sel = 1 else sel = sel + 1; end
 end
 
 bindings["state"]  = {}
