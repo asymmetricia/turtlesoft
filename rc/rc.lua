@@ -12,4 +12,23 @@ function httpDownload( url, path )
                 return 0;
         end
 end
- 
+
+reactors = {}
+
+print( "Searching for reactors.." );
+for i,side in pairs(peripheral.getNames()) do
+	if( peripheral.getType( side ) == "BigReactors-Reactor" ) then
+		print( "Found reactor on " .. side .. " side" );
+		reactors[ side ] = peripheral.wrap( side );
+	end
+end
+
+while 1 do
+	term.setCursorPos( 0, 0 );
+	print( "ReactorOS v0.1" );
+	for y = 1,19 do
+		term.setCursorPos( 0, y );
+		term.clearLine();
+	end
+	sleep(1);
+end
