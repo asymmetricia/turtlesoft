@@ -98,7 +98,7 @@ end
 function cleanup()
 end
 
-state_list = { "state", "temp", "ppid", "exit" }
+state_list = { "state", "temp", "tpid", "ppid", "exit" }
 
 bindings["global"] = {}
 bindings["global"][200] = function ()
@@ -200,7 +200,9 @@ while stop == 0 do
 
 		printReactorState();
 		printTemperature();
+		printPower();
 		printTemperaturePID();
+		printPowerPID();
 	else
 		term.setCursorPos( 1, 2 );
 		term.write( "No Reactor Found" );
