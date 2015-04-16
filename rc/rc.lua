@@ -185,7 +185,7 @@ end
 
 while stop == 0 do
 	temp_pe, temp_pd, temp_i, temp_output, temp_last = pid( reactor.getFuelTemperature(), target_temperature, temp_kp, temp_ki, temp_kd, temp_pe, temp_i, temp_last, 0, 100 );
-	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored(),    10000000,           pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last, 0, 100 );
+	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored() / 10000, 1000,          pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last, 0, 100 );
 
 	if( temp_output < pow_output ) then
 		reactor.setAllControlRodLevels( 100 - temp_output )
