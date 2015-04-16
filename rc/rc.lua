@@ -182,8 +182,8 @@ pow_pid = {
 
 function updatePid( pid, input )
 	local now = os.clock()
-	local dt = now - last
-
+	local dt = now - pid.last
+	pid.last = now
 
 	local error = target - input
 
