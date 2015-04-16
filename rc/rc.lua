@@ -72,19 +72,33 @@ function printTemperaturePID()
 	cursor( "tpid" )
 	term.write( "T.PID: " );
 
-	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else temp.write( " kp  " .. temp_kp ); end
-	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_ki ); else temp.write( " kI  " .. temp_ki ); end
-	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_kd ); else temp.write( " kD  " .. temp_kd ); end
+	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else term.write( " kp  " .. temp.kp ); end
+	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_ki ); else term.write( " kI  " .. temp_ki ); end
+	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_kd ); else term.write( " kD  " .. temp_kd ); end
 	term.write( " e=" .. math.floor( temp_pe * 10 + 0.5 ) / 10 );
 	term.write( " i=" .. math.floor( temp_i  * 10 + 0.5 ) / 10 );
 	term.write( " d=" .. math.floor( temp_pd * 10 + 0.5 ) / 10 );
 	term.write( " o=" .. math.floor( temp_output*10+0.5 ) / 10 );
 end
 
+function printPowerPID()
+	term.setCursorPos( 1, 6 );
+	cursor( "ppid" )
+	term.write( "PwPID: " );
+
+	if( pow_sel == 0 ) then term.write( "[kP] " .. pow_kp ); else term.write( " kp  " .. pow.kp ); end
+	if( pow_sel == 1 ) then term.write( "[kI] " .. pow_ki ); else term.write( " kI  " .. pow_ki ); end
+	if( pow_sel == 2 ) then term.write( "[kD] " .. pow_kd ); else term.write( " kD  " .. pow_kd ); end
+	term.write( " e=" .. math.floor( pow_pe * 10 + 0.5 ) / 10 );
+	term.write( " i=" .. math.floor( pow_i  * 10 + 0.5 ) / 10 );
+	term.write( " d=" .. math.floor( pow_pd * 10 + 0.5 ) / 10 );
+	term.write( " o=" .. math.floor( pow_output*10+0.5 ) / 10 );
+end
+
 function cleanup()
 end
 
-state_list = { "state", "temp", "exit" }
+state_list = { "state", "temp", "ppid", "exit" }
 
 bindings["global"] = {}
 bindings["global"][200] = function ()
@@ -116,17 +130,24 @@ end
 
 bindings["tpid"] = {}
 bindings["tpid"][15] = function () tpid_sel = ( tpid_sel + 1 ) % 3; end
+bindings["tpid"][203] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp - 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki - 0.1; else temp_kd = temp_kd - 0.1; end
+bindings["tpid"][205] = function () if( tpid_sel == 0 ) then temp_kp = temp_kp + 0.1; elseif( tpid_sel == 1 ) then temp_ki = temp_ki + 0.1; else temp_kd = temp_kd + 0.1; end
+
+bindings["ppid"] = {}
+bindings["ppid"][15] = function () pow_sel = ( pow_sel + 1 ) % 3; end
+bindings["ppid"][203] = function () if( pow_sel == 0 ) then pow_kp = pow_kp - 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki - 0.1; else pow_kd = pow_kd - 0.1; end
+bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_kp = pow_kp + 0.1; elseif( pow_sel == 1 ) then pow_ki = pow_ki + 0.1; else pow_kd = pow_kd + 0.1; end
 
 bindings["exit"] = {}
 bindings["exit"][28] = function () stop = 1; end
 
-tpid_sel = 0;
 target_temperature = 200;
 cursor_position = 1;
 reactor = nil
 findReactor();
 stop=0
 
+tpid_sel = 0;
 temp_kp = 0;
 temp_ki = 0;
 temp_kd = 0;
@@ -136,6 +157,7 @@ temp_i = 0;
 temp_output = 0;
 temp_last = os.clock()
 
+pow_sel = 0;
 pow_kp = 0;
 pow_ki = 0;
 pow_kd = 0;
@@ -161,9 +183,9 @@ while stop == 0 do
 	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored(),    10000000,           pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last );
 
 	if( temp_output < pow_output ) then
-		reactor.setAllControlRodLevels( temp_output )
+		reactor.setAllControlRodLevels( 100 - temp_output )
 	else
-		reactor.setAllControlRodLevels( pow_output )
+		reactor.setAllControlRodLevels( 100 - pow_output )
 	end
 
 	os.startTimer(0.1);
