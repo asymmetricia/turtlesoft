@@ -89,14 +89,15 @@ bindings["temperature"][205] = function ()
 end
 
 bindings["exit"] = {}
-bindings["exit"][28] = function () cleanup(); shell.exit(); end
+bindings["exit"][28] = function () stop = 1; end
 
 target_temperature = 200;
 cursor_position = 1;
 reactor = nil
 findReactor();
+stop=0
 
-while 1 do
+while stop == 0 do
 	term.clear();
 	term.setCursorPos( 1, 1 );
 	term.write( "ReactorOS v0.1" );
@@ -129,3 +130,5 @@ while 1 do
 
 	sleep(0);
 end
+
+cleanup();
