@@ -13,8 +13,6 @@ function httpDownload( url, path )
         end
 end
 
-reactor = nil
-
 function findReactor()
 	for i,side in pairs(peripheral.getNames()) do
 		if( peripheral.getType( side ) == "BigReactors-Reactor" ) then
@@ -22,6 +20,8 @@ function findReactor()
 		end
 	end
 end
+
+bindings={}
 
 function printReactorState()
 	term.setCursorPos( 1, 2 );
@@ -42,7 +42,21 @@ function printReactorState()
 	end
 end
 
-sel = 0;
+bindings["state"] = {}
+bindings["state"][203] = function {
+	if( reactor.getActive() ) then reactor.setActive( true ); end
+}
+bindings["state"][203] = function {
+	if( not reactor.getActive() ) then reactor.setActive( true ); end
+}
+bindings["state"][205] = function {
+	if( reactor.getActive() ) then reactor.setActive( false ); end
+}
+
+sel = "state";
+
+reactor = nil
+findReactor();
 
 while 1 do
 	term.clear();
@@ -60,5 +74,11 @@ while 1 do
 		print( "No Reactor Found" );
 		findReactor();
 	end
-	sleep(1);
+
+	local event, scancode = os.pullEvent( "key" )
+	if( bindings[ sel ] ~= nil and bindings[ sel ][ scancode ] ~= nil ) then
+		call( bindings[ sel ][ scancode ] )
+	end
+
+	sleep(0);
 end
