@@ -38,7 +38,6 @@ function printReactorState()
 	cursor( "state" )
 	term.write( "State: " );
 
-	term.setCursorPos( 10, 2 );
 	if( reactor.getActive() ) then
 		term.write( " Inactive  [Active]" );
 	else
@@ -51,7 +50,6 @@ function printTemperature()
 	cursor( "temp" )
 	term.write( " Temp: " );
 
-	term.setCursorPos( 10, 3 );
 	term.write( "- [ " );
 	if( reactor == nil ) then
 		term.write( "unknown" );
@@ -59,6 +57,28 @@ function printTemperature()
 		term.write( math.floor( reactor.getFuelTemperature() + 0.5 ) );
 	end
 	term.write( " / " .. target_temperature .. " ] +" );
+end
+
+function printPower()
+	term.setCursorPos( 1, 4 );
+	cursor( "power" )
+	term.write( "Power: " );
+
+	term.write( math.floor( 100 * reactor.getEnergyStored() / 10000000 + 0.5 ) .. "%" )
+end
+
+function printTemperaturePID()
+	term.setCursorPos( 1, 5 );
+	cursor( "tpid" )
+	term.write( "T.PID: " );
+
+	if( tpid_sel == 0 ) then term.write( "[kP] " .. temp_kp ); else temp.write( " kp  " .. temp_kp ); end
+	if( tpid_sel == 1 ) then term.write( "[kI] " .. temp_ki ); else temp.write( " kI  " .. temp_ki ); end
+	if( tpid_sel == 2 ) then term.write( "[kD] " .. temp_kd ); else temp.write( " kD  " .. temp_kd ); end
+	term.write( " e=" .. math.floor( temp_pe * 10 + 0.5 ) / 10 );
+	term.write( " i=" .. math.floor( temp_i  * 10 + 0.5 ) / 10 );
+	term.write( " d=" .. math.floor( temp_pd * 10 + 0.5 ) / 10 );
+	term.write( " o=" .. math.floor( temp_output*10+0.5 ) / 10 );
 end
 
 function cleanup()
@@ -94,16 +114,58 @@ bindings["temp"][205] = function ()
 	target_temperature = target_temperature + 50;
 end
 
+bindings["tpid"] = {}
+bindings["tpid"][15] = function () tpid_sel = ( tpid_sel + 1 ) % 3; end
+
 bindings["exit"] = {}
 bindings["exit"][28] = function () stop = 1; end
 
+tpid_sel = 0;
 target_temperature = 200;
 cursor_position = 1;
 reactor = nil
 findReactor();
 stop=0
 
+temp_kp = 0;
+temp_ki = 0;
+temp_kd = 0;
+temp_pe = 0;
+temp_pd = 0;
+temp_i = 0;
+temp_output = 0;
+temp_last = os.clock()
+
+pow_kp = 0;
+pow_ki = 0;
+pow_kd = 0;
+pow_pe = 0;
+pow_pd = 0;
+pow_i = 0;
+pow_output = 0;
+pow_last = os.clock()
+
+-- Call as pe, pd, i, o, last = pid( input, target, kp, ki, kd, pe, i, last )
+function pid( input, target, kp, ki, kd, pe, i, last )
+	local now = os.clock()
+	local dt = now - last
+	local error = target - input
+	local integ = i + error*dt
+	local deriv = ( pe - error ) / dt
+	output = kp * error + ki * integ + kd * deriv
+	return error, deriv, integ, output, now
+end
+
 while stop == 0 do
+	temp_pe, temp_pd, temp_i, temp_output, temp_last = pid( reactor.getFuelTemperature(), target_temperature, temp_kp, temp_ki, temp_kd, temp_pe, temp_i, temp_last );
+	pow_pe,  pow_pd,  pow_i,  pow_output,  pow_last  = pid( reactor.getEnergyStored(),    10000000,           pow_kp,  pow_ki,  pow_kd,  pow_pe,  pow_i,  pow_last );
+
+	if( temp_output < pow_output ) then
+		setAllControlRodLevels( temp_output )
+	else
+		setAllControlRodLevels( pow_output )
+	end
+
 	os.startTimer(0.1);
 	term.clear();
 	term.setCursorPos( 1, 1 );
@@ -116,6 +178,7 @@ while stop == 0 do
 
 		printReactorState();
 		printTemperature();
+		printTemperaturePID();
 	else
 		term.setCursorPos( 1, 2 );
 		term.write( "No Reactor Found" );
