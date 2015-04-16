@@ -84,13 +84,13 @@ bindings["state"][205] = function ()
 	if( not reactor.getActive() ) then reactor.setActive( true ); end
 end
 
-bindings["temperature"] = {}
-bindings["temperature"][203] = function ()
+bindings["temp"] = {}
+bindings["temp"][203] = function ()
 	target_temperature = target_temperature - 50;
 	if( target_temperature < 0 ) then target_temperature = 0; end;
 end
 
-bindings["temperature"][205] = function ()
+bindings["temp"][205] = function ()
 	target_temperature = target_temperature + 50;
 end
 
