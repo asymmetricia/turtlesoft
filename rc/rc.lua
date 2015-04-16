@@ -185,7 +185,7 @@ function updatePid( pid, input )
 	local dt = now - pid.last
 	pid.last = now
 
-	local error = target - input
+	local error = pid.target - input
 
 	pid.integral = pid.integral + error * dt
 	if( pid.integral < pid.minIntegral ) then
