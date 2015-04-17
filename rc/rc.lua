@@ -145,6 +145,8 @@ bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_pid.kp = pow_pid
 bindings["exit"] = {}
 bindings["exit"][28] = function () stop = 1; end
 
+tpid_sel = 0;
+pow_sel = 0;
 cursor_position = 1;
 reactor = nil
 findReactor();
