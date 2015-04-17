@@ -168,7 +168,7 @@ temp_pid = {
 
 
 pow_pid = {
-	["target"] = 1000,
+	["target"] = 750,
 	["kp"] = 0,
 	["ki"] = 0,
 	["kd"] = 0,
