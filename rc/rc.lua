@@ -133,12 +133,12 @@ bindings["temp"][205] = function ()
 end
 
 bindings["tpid"] = {}
-bindings["tpid"][15] = function () tpid_sel = ( tpid_sel + 1 ) % 3; end
+bindings["tpid"][15] = function () if( tpid_sel == nil ) then tpid_sel = 0; end; tpid_sel = ( tpid_sel + 1 ) % 3; end
 bindings["tpid"][203] = function () if( tpid_sel == 0 ) then temp_pid.kp = temp_pid.kp - 0.1; elseif( tpid_sel == 1 ) then temp_pid.ki = temp_pid.ki - 0.1; else temp_pid.kd = temp_pid.kd - 0.1; end; end
 bindings["tpid"][205] = function () if( tpid_sel == 0 ) then temp_pid.kp = temp_pid.kp + 0.1; elseif( tpid_sel == 1 ) then temp_pid.ki = temp_pid.ki + 0.1; else temp_pid.kd = temp_pid.kd + 0.1; end; end
 
 bindings["ppid"] = {}
-bindings["ppid"][15] = function () pow_sel = ( pow_sel + 1 ) % 3; end
+bindings["ppid"][15] = function () if( pow_sel == nil ) then pow_sel = 0; end; pow_sel = ( pow_sel + 1 ) % 3; end
 bindings["ppid"][203] = function () if( pow_sel == 0 ) then pow_pid.kp = pow_pid.kp - 0.1; elseif( pow_sel == 1 ) then pow_pid.ki = pow_pid.ki - 0.1; else pow_pid.kd = pow_pid.kd - 0.1; end; end
 bindings["ppid"][205] = function () if( pow_sel == 0 ) then pow_pid.kp = pow_pid.kp + 0.1; elseif( pow_sel == 1 ) then pow_pid.ki = pow_pid.ki + 0.1; else pow_pid.kd = pow_pid.kd + 0.1; end; end
 
