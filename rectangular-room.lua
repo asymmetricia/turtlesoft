@@ -23,13 +23,13 @@ dimX=tonumber(opts["x"])-1
 if( opts["y"] == nil ) then dimY = dimX; else dimY=tonumber(opts["y"])-1; end
 if( opts["z"] == nil ) then dimZ = dimX; else dimZ=tonumber(opts["z"])-1; end
 
-zskip=0; match=0; dryrun=false; x=0; y=0;
+zskip=0; match=false; dryrun=false; x=0; y=0;
 layers=dimZ;
 
 if( opts["clear"] ~= nil ) then clear = 1; end
 if( opts["zskip"] ~= nil ) then zskip = tonumber( opts["z"] ); end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
-if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = 1; end
+if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = true; end
 if( opts["d"] ~= nil ) then dryrun = true; end
 if( opts["startx"] ~= nil ) then x = tonumber( opts["startx"] ); end
 if( opts["starty"] ~= nil ) then y = tonumber( opts["starty"] ); end
