@@ -9,14 +9,12 @@ args = {...}
 opts = getopt( args, "rznxysw" );
 if( opts[ "x" ] == nil or opts[ "h" ] ) then
 	print( "usage: recroom -x <x> [-y <y>] [-z <z>] [-w <wall thickness>] [--zskip=<Zskip>] [-n <Nlayers>] [-m] [-d] [-startx=<startX>] [-starty=<startY>]" );
-	print( "	-m match" );
-	print( "	-d dryrun" );
+	print( "	-m match     -d dryrun" );
 	print( "	--floor=<N> -- use N as item type for floor, default 1" );
 	print( "	--walls=<N> -- As above, default same as floor" );
 	print( "	--ceiling=<N> -- As above, default same as walls" );
-	print( "	--roof=<N> -- If set, the ceiling will be one unit thicker and the top will be Roof material instead of Ceiling material. The overall height will be preserved." );
-	print( "	--fill fill the hemisphere" );
-	print( "	--clear clear the inside of the hemisphere" );
+	print( "	--roof=<N> -- If 1, the ceiling will be one unit thicker and the top will be Roof material instead of Ceiling material. The overall height will be preserved." );
+	print( "	--clear clear the inside of the room" );
 	print( "	Note: Keystone block of the floor is the layer the turtle begins on." );
 	exit();
 end	
