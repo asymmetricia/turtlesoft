@@ -72,7 +72,7 @@ function newMineArea( dimX, dimY, dimZ, zskip )
         minY=0; maxY=dimY*modY-1; ty=0; 
 		minZ = zskip; maxZ=dimZ*modZ-1;
 		-- If we're mining more than 3Z, move to the middle of the first layer
-		if((maxZ - minZ) >= 3) then tz=minZ*modZ+1*modZ; else tz=minZ*modZ; end
+		if((maxZ - minZ)+1 >= 3) then tz=minZ*modZ+1*modZ; else tz=minZ*modZ; end
 		goto(0, 0, tz);
         zmax = tz; -- Number of completed layers
         dir=0;
