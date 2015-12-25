@@ -70,7 +70,7 @@ function newMineArea( dimX, dimY, dimZ, zskip )
         minX=0; maxX=dimX*modX-1;
         minY=0; maxY=dimY*modY-1;
         minZ=0; maxZ=dimZ*modZ-1;
-        tx=0; ty=0; tz=zskip*modZ;
+        tx=0; ty=0; tz=(zskip+1)*modZ;
         if( tz == 0 and dimZ*modZ > 1 ) then tz = 1*modZ; goto( tx, ty, tz ); end
         zmax = tz-modZ;
         dir=0;
