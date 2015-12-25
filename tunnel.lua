@@ -34,6 +34,6 @@ if opts["s"] ~= nil then
 end
 
 match = 0
-if opts["m"] ~= nil then match = 1; end
+if opts["m"] ~= nil then print( "matching enabled." ); match = 1; end
 
 tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
