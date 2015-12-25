@@ -1,7 +1,7 @@
 if( fs.exists( "/stdlib" ) ) then
 	dofile( "/stdlib" );
 else
-	print( "dome: error: /stdlib missing" );
+	print( "tunnel: error: /stdlib missing" );
 	os.exit();
 end
 
