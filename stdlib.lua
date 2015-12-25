@@ -659,7 +659,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	if( zskip == nil )    then zskip = 0;       end
 	if( dryrun == nil )   then dryrun = 0;      end
 	if( verbose == nil )  then verbose = false; end
-	if( match == nil )    then match = false;   end
+	if( match == nil or match == 0 ) then match = false; end
 	if( material == nil ) then material = 1;    end
 	if( final == nil )    then final = true;    end
 	if( dense == nil )    then dense = false;   end
