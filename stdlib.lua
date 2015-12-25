@@ -67,12 +67,14 @@ function newMineArea( dimX, dimY, dimZ, zskip )
         if( dimX < 0 ) then modX = -1; end
         if( dimY < 0 ) then modY = -1; end
         if( dimZ < 0 ) then modZ = -1; end
-        minX=0; maxX=dimX*modX-1;
-        minY=0; maxY=dimY*modY-1;
-        minZ=0; maxZ=dimZ*modZ-1;
-        tx=0; ty=0; tz=(zskip+1)*modZ;
-        if( tz == 0 and dimZ*modZ > 1 ) then tz = 1*modZ; goto( tx, ty, tz ); end
-        zmax = tz-modZ;
+		-- Positive values, regardless of direction.
+        minX=0; maxX=dimX*modX-1; tx=0;
+        minY=0; maxY=dimY*modY-1; ty=0; 
+		minZ = zskip; maxZ=dimZ*modZ-1;
+		-- If we're mining more than 3Z, move to the middle of the first layer
+		if((maxZ - minZ) >= 3) then tz=minZ*modZ+1*modZ; else tz=minZ*modZ; end
+		goto(0, 0, tz);
+        zmax = tz; -- Number of completed layers
         dir=0;
         if( dimZ*modZ >= dimX*modX and dimZ*modZ >= dimY*modY ) then
                 axis=0;
@@ -106,7 +108,7 @@ function newMineArea( dimX, dimY, dimZ, zskip )
                         if( z*modZ-1 >= minZ ) then while turtle.detectUp() do turtle.digUp(); end; end
                 else
                         if( z-1 >= minZ ) then turtle.digDown(); end
-                        if( z*modZ+1 <= maxZ ) then while turtle.detectUp() do turtle.digUp(); end; end
+                        if( z+1 <= maxZ ) then while turtle.detectUp() do turtle.digUp(); end; end
                 end
                 if( dir%2 == 0 ) then
                         if( x % 2 == 0 ) then
