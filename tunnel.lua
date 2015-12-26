@@ -100,7 +100,7 @@ if opts["u"] ~= nil then
 		goto(x,y,math.floor((y-1)*slope+tunnel_z-1));
 		goto(x,y+1,z);
 	end
-	goto(x,y,math.floor((y-1)*slope));
+	goto(x,y,math.floor((y)*slope));
 	north();
 else
 	tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
