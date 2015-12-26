@@ -55,20 +55,20 @@ if opts["u"] ~= nil then
 		dir = -1 * dir
 		tx = tx + 1
 	end
-	os.exit();
 	-- Right Wall
-	tx=tunnel_x; tz=1;
+	tx=tunnel_x; level=1;
 	if dir == 1 then ty=1; else ty = tunnel_y; end
 	while (tz <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			goto(tx,ty,z); goto(x,y,tz);
+			goto(tx,ty,z); goto(x,y,(ty-1)*slope+level);
 			placeBlockDown(1,match);
 			ty = ty + dir;
 		end
 		ty = ty - dir;
 		dir = -1 * dir
-		tz = tz + 1
+		level = level + 1
 	end
+	goto(0,0,0); north(); os.exit();
 	-- Roof
 	tx=tunnel_x-1; tz=tunnel_z+1;
 	if dir == 1 then ty=1; else ty=tunnel_y; end
