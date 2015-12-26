@@ -50,10 +50,10 @@ if opts["u"] ~= nil then
 			placeBlockDown(1,match);
 			while(turtle.detectUp()) do turtle.digUp(); end
 			ty = ty + dir;
-			tz = ty * slope;
+			tz = (ty-1) * slope;
 		end
 		ty = ty - dir;
-		tz = ty * slope;
+		tz = (ty-1) * slope;
 		dir = -1 * dir
 		tx = tx + 1
 	end
