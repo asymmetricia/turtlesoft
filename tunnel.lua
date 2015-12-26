@@ -69,21 +69,21 @@ if opts["u"] ~= nil then
 		dir = -1 * dir
 		level = level + 1
 	end
-	goto(0,0,0); north(); os.exit();
 	-- Roof
-	tx=tunnel_x-1; tz=tunnel_z+1;
 	if dir == 1 then ty=1; else ty=tunnel_y; end
+	tx=tunnel_x-1; tz=math.floor((ty-1)*slope+tunnel_z-1);
 	goto(x,y,tz);
 	while(tx > -1) do
 		while((dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0)) do
-			goto(tx,ty,tz);
-			placeBlockDown(1,match);
+			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+tunnel_z-1));
+			placeBlockUp(1,match);
 			ty = ty + dir;
 		end
 		ty = ty - dir;
 		dir = -1 * dir;
 		tx = tx - 1;
 	end
+	goto(0,0,0); north(); os.exit();
 	-- Left Wall
 	tx = -1; tz = 1;
 	if dir == 1 then ty=1; else ty=tunnel_y; end
