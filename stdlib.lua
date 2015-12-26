@@ -271,7 +271,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
 	ydim = tonumber(ydim) or 1
 	zdim = tonumber(zdim) or 2
 	slope = tonumber(slope) or 0
-	match = (tonumber(match)>0) or false
+	if(type(match) == "boolean") then match=match else match=false;
 
 	-- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
 	if( zdim < 0 ) then
