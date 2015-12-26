@@ -42,7 +42,7 @@ if opts["u"] ~= nil then
 		print("But I don't know how to slope while doing so yet.");
 		os.exit();
 	end
-	tx=0; ty=0; tz=0; dir=1;
+	tx=0; ty=1; tz=0; dir=1;
 	-- Floor
 	while (tx < tunnel_x) do
 		-- Note that tunnel runs form y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
@@ -58,7 +58,7 @@ if opts["u"] ~= nil then
 	end
 	-- Right Wall
 	tx=tunnel_x; tz=1;
-	if dir == 1 then ty=0; else ty = tunnel_y-1; end
+	if dir == 1 then ty=1; else ty = tunnel_y; end
 	while (tz <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
 			goto(tx,ty,z); goto(x,y,tz);
@@ -71,7 +71,7 @@ if opts["u"] ~= nil then
 	end
 	-- Roof
 	tx=tunnel_x-1; tz=tunnel_z+1;
-	if dir == 1 then ty=0; else ty=tunnel_y-1; end
+	if dir == 1 then ty=1; else ty=tunnel_y; end
 	goto(x,y,tz);
 	while(tx > -1) do
 		while((dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0)) do
@@ -85,7 +85,7 @@ if opts["u"] ~= nil then
 	end
 	-- Left Wall
 	tx = -1; tz = 1;
-	if dir == 1 then ty=0; else ty=tunnel_y-1; end
+	if dir == 1 then ty=1; else ty=tunnel_y; end
 	while (tz <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
 			goto(tx,ty,z); goto(x,y,tz);
