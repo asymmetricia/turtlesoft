@@ -39,7 +39,7 @@ while true do
 			tx=tx+modX*n;
 		end
 	end
-	if( tx*modX > tonumber(args[1])*modX ) then
+	if( tx*modX >= tonumber(args[1])*modX ) then
 		goto( 0, 0, 0 ); north();
 		break;
 	end
