@@ -53,6 +53,7 @@ if opts["u"] ~= nil then
 			tz = ty * slope;
 		end
 		ty = ty - dir;
+		tz = ty * slope;
 		dir = -1 * dir
 		tx = tx + 1
 	end
