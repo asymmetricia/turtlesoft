@@ -53,8 +53,8 @@ if opts["u"] ~= nil then
 			ty = ty + dir;
 		end
 		ty = ty - dir;
-		dir = -1 * dir
-		tx = tx + 1
+		dir = -1 * dir;
+		tx = tx + 1;
 	end
 	-- Right Wall
 	tx=tunnel_x; level=1;
@@ -66,8 +66,8 @@ if opts["u"] ~= nil then
 			ty = ty + dir;
 		end
 		ty = ty - dir;
-		dir = -1 * dir
-		level = level + 1
+		dir = -1 * dir;
+		level = level + 1;
 	end
 	-- Roof
 	if dir == 1 then ty=1; else ty=tunnel_y; end
@@ -92,8 +92,8 @@ if opts["u"] ~= nil then
 			ty = ty + dir;
 		end
 		ty = ty - dir;
-		dir = -1 * dir
-		level = level + 1
+		dir = -1 * dir;
+		level = level + 1;
 	end
 	goto(x,y,z+1); goto(0,y,z); goto(x,y,math.floor((ty-1)*slope+tunnel_z-1)); placeBlockUp(1,match);
 	while (y<tunnel_y) do 
