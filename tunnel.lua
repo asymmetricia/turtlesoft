@@ -82,21 +82,23 @@ if opts["u"] ~= nil then
 		dir = -1 * dir;
 		tx = tx - 1;
 	end
-	goto(0,0,0); north(); os.exit();
 	-- Left Wall
-	tx = -1; tz = 1;
-	if dir == 1 then ty=1; else ty=tunnel_y; end
-	while (tz <= tunnel_z) do -- We'll go _above_ target Z
+	tx = -1; level = 1;
+	if dir == 1 then ty=1; else ty = tunnel_y; end
+	while (level <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			goto(tx,ty,z); goto(x,y,tz);
+			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+level));
 			placeBlockDown(1,match);
 			ty = ty + dir;
 		end
 		ty = ty - dir;
 		dir = -1 * dir
-		tz = tz + 1
+		level = level + 1
 	end
-	goto(x,y,z+1); goto(0,y,z); goto(0,tunnel_y,z); goto(x,y,tunnel_z-1); placeBlockUp(1,match); goto(x,y,0); north();
+	goto(x,y,z+1); goto(0,y,z); goto(x,y,math.floor((ty-1)*slope+tunnel_z-1)); placeBlockUp(1,match);
+	until y==tunnel_y do goto(x,y,math.floor((ty-1)*slope+tunnel_z-1)); goto(x,y+1,z); end
+	goto(x,y,math.floor((ty-1)*slope));
+	north();
 else
 	tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
 end
