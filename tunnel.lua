@@ -59,9 +59,9 @@ if opts["u"] ~= nil then
 	-- Right Wall
 	tx=tunnel_x; level=1;
 	if dir == 1 then ty=1; else ty = tunnel_y; end
-	while (tz <= tunnel_z) do -- We'll go _above_ target Z
+	while (level <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			goto(tx,ty,z); goto(x,y,(ty-1)*slope+level);
+			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+level));
 			placeBlockDown(1,match);
 			ty = ty + dir;
 		end
