@@ -38,24 +38,23 @@ if opts["m"] ~= nil then print( "matching enabled." ); match = true; end
 
 if opts["u"] ~= nil then
 	print("I, too, like to live dangerously.");
-	if(opts["s"] ~= nil) then
-		print("But I don't know how to slope while doing so yet.");
-		os.exit();
-	end
+
 	tx=0; ty=1; tz=0; dir=1;
 	-- Floor
 	while (tx < tunnel_x) do
 		-- Note that tunnel runs form y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			goto(tx,ty,tz);
+			goto(tx,ty,math.floor(tz));
 			placeBlockDown(1,match);
 			while(turtle.detectUp()) do turtle.digUp(); end
 			ty = ty + dir;
+			tz = tz + ty*slope;
 		end
 		ty = ty - dir;
 		dir = -1 * dir
 		tx = tx + 1
 	end
+	os.exit();
 	-- Right Wall
 	tx=tunnel_x; tz=1;
 	if dir == 1 then ty=1; else ty = tunnel_y; end
