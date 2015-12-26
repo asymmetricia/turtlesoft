@@ -96,7 +96,10 @@ if opts["u"] ~= nil then
 		level = level + 1
 	end
 	goto(x,y,z+1); goto(0,y,z); goto(x,y,math.floor((ty-1)*slope+tunnel_z-1)); placeBlockUp(1,match);
-	until y==tunnel_y do goto(x,y,math.floor((ty-1)*slope+tunnel_z-1)); goto(x,y+1,z); end
+	while (y<tunnel_y) do 
+		goto(x,y,math.floor((ty-1)*slope+tunnel_z-1));
+		goto(x,y+1,z);
+	end
 	goto(x,y,math.floor((ty-1)*slope));
 	north();
 else
