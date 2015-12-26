@@ -51,6 +51,7 @@ if opts["u"] ~= nil then
 			while(turtle.detectUp()) do turtle.digUp(); end
 			ty = ty + dir;
 		end
+		ty = ty - dir;
 		dir = -1 * dir
 		tx = tx + 1
 	end
@@ -63,6 +64,7 @@ if opts["u"] ~= nil then
 			placeBlockDown(1,match);
 			ty = ty + dir;
 		end
+		ty = ty - dir;
 		dir = -1 * dir
 		tz = tz + 1
 	end
