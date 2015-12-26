@@ -25,10 +25,10 @@ tunnel_z = tonumber(opts["z"]);
 
 slope = 0
 if opts["s"] ~= nil then
-	if tonumber(opts["s"]) ~= nil then
+	if tonumber(opts["s"]) ~= nil and tonumber(opts["s"]) ~= 0 then
 		slope = tonumber(opts["s"])
 	else
-		print( "-s (slope) must be numeric" );
+		print( "-s (slope) must be numeric and non-zero" );
 		usage();
 	end	
 end
@@ -37,6 +37,7 @@ match = false
 if opts["m"] ~= nil then print( "matching enabled." ); match = true; end
 
 if opts["u"] ~= nil then
+	if(slope ~= 0) then slope = 1 / slope; end
 	print("I, too, like to live dangerously.");
 
 	tx=0; ty=1; tz=0; dir=1;
