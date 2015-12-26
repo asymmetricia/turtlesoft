@@ -68,6 +68,20 @@ if opts["u"] ~= nil then
 		dir = -1 * dir
 		tz = tz + 1
 	end
+	-- Roof
+	tx=tunnel_x-1; tz=tunnel_z;
+	if dir == 1 then ty=0; else ty=tunnel_y-1; end
+	goto(x,y,tz);
+	while(tx > -1) do
+		while((dir == 1 and ty < tunnel_y) or (dir == -1 and ty > -1)) do
+			goto(tx,ty,tz);
+			placeBlockDown(1,match);
+			ty = ty + dir;
+		end
+		ty = ty - dir;
+		dir = -1 * dir;
+		tx = tx - 1;
+	end
 	goto(0,0,0); north();
 else
 	tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
