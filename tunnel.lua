@@ -43,8 +43,8 @@ if opts["u"] ~= nil then
 		os.exit();
 	end
 	tx=0; ty=0; tz=0; dir=1;
-	// Floor
-	while (tx <= tunnel_x) do
+	-- Floor
+	while (tx < tunnel_x) do
 		while( (dir == 1 and ty < tunnel_y) or (dir == -1 and ty > -1) ) do
 			goto(tx,ty,tz);
 			placeBlockDown(1,match);
@@ -54,6 +54,19 @@ if opts["u"] ~= nil then
 		dir = -1 * dir
 		tx = tx + 1
 	end
+	-- Right Wall
+	tx=tunnel_x; tz=1;
+	if dir == 1 then ty=0; else ty = tunnel_y-1; end
+	while (tz <= tunnel_z) do -- We'll go _above_ target Z
+		while( (dir == 1 and ty < tunnel_y) or (dir == -1 and ty > -1) ) do
+			goto(tx,ty,z); goto(x,y,tz);
+			placeBlockDown(1,match);
+			ty = ty + dir;
+		end
+		dir = -1 * dir
+		tz = tz + 1
+	end
+	goto(0,0,0); north();
 else
 	tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
 end
