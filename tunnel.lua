@@ -72,7 +72,6 @@ if opts["u"] ~= nil then
 	-- Roof
 	if dir == 1 then ty=1; else ty=tunnel_y; end
 	tx=tunnel_x-1; tz=math.floor((ty-1)*slope+tunnel_z-1);
-	goto(x,y,tz);
 	while(tx > -1) do
 		while((dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0)) do
 			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+tunnel_z-1));
