@@ -46,14 +46,12 @@ if opts["u"] ~= nil then
 		-- Note that tunnel runs form y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
 			if(dir==1) then goto(x,y,math.floor(tz)); else goto(tx,ty,z); end
-			goto(tx,ty,math.floor(tz));
+			goto(tx,ty,math.floor((ty-1)*slope));
 			placeBlockDown(1,match);
 			while(turtle.detectUp()) do turtle.digUp(); end
 			ty = ty + dir;
-			tz = (ty-1) * slope;
 		end
 		ty = ty - dir;
-		tz = (ty-1) * slope;
 		dir = -1 * dir
 		tx = tx + 1
 	end
