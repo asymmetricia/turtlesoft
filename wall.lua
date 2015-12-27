@@ -26,10 +26,6 @@ while true do
 		east();
 	end
 
-	while( match and turtle.detect() and not turtle.compare() ) do
-		turtle.dig();
-	end
-
 	placeBlock( 1, match );
 
 	if( y % 2 == 0 ) then
