@@ -108,12 +108,14 @@ if opts["u"] ~= nil then
 		dir = -1 * dir;
 		level = level + 1;
 	end
-	goto(x,y,z+1); goto(0,y,z); goto(x,y,sloped_z(y,slope)+tunnel_z-1); placeBlockUp(1,match);
+	goto(x,y,z+1); goto(0,y,z);
+	goto(x,y,sloped_z(y,slope)+tunnel_z-1); placeBlockUp(1,match);
+	goto(x,y,sloped_z(y,slope));
 	while (y<tunnel_y) do
 		if(slope<0) then
-			goto(x,y,sloped_z(y+1,slope)); goto(x,y+1,z);
-		else
 			goto(x,y+1,z); goto(x,y,sloped_z(y,slope));
+		else
+			goto(x,y,sloped_z(y+1,slope)); goto(x,y+1,z);
 		end
 	end
 	north();
