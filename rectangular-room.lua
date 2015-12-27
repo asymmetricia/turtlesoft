@@ -9,13 +9,14 @@ args = {...}
 opts = getopt( args, "rznxysw" );
 if( opts[ "x" ] == nil or opts[ "h" ] ) then
 	print( "usage: recroom -x <x> [-y <y>] [-z <z>] [-w <wall thickness>] [--zskip=<Zskip>] [-n <Nlayers>] [-m] [-d] [-startx=<startX>] [-starty=<startY>]" );
+	print( "	-xN -yN -ZN -- *external* dimensions" );
 	print( "	-m match     -d dryrun" );
 	print( "	--floor=<N> -- use N as item type for floor, default 1" );
 	print( "	--walls=<N> -- As above, default same as floor" );
 	print( "	--ceiling=<N> -- As above, default same as walls" );
 	print( "	--roof=<N> -- If 1, the ceiling will be one unit thicker and the top will be Roof material instead of Ceiling material. The overall height will be preserved." );
 	print( "	--clear clear the inside of the room" );
-	print( "	Note: Keystone block of the floor is the layer the turtle begins on." );
+	print( "	Note: Turtle begins in bottom-right corner of interior space." );
 	exit();
 end	
 
@@ -57,12 +58,12 @@ model_floor   = {}
 model_walls   = {}
 model_ceiling = {}
 model_roof    = {}
-for tx = 0,dimX do 
+for tx = -1,dimX-1 do 
 	model_floor[tx]   = {}
 	model_walls[tx]   = {}
 	model_ceiling[tx] = {}
 	model_roof[tx]    = {}
-	for ty = 0,dimY do
+	for ty = -1,dimY-1 do
 		model_floor[tx][ty]   = {}
 		model_walls[tx][ty]   = {}
 		model_ceiling[tx][ty] = {}
@@ -83,9 +84,9 @@ counts = {0,0,0,0};
 clear_count = 0;	
 
 print( "Voxelizing model..." );
-for i_z = 0,dimZ do
-	for i_y = 0,dimY do
-		for i_x = 0,dimX do 
+for i_z = -1,dimZ-1 do
+	for i_y = -1,dimY-1 do
+		for i_x = -1,dimX-1 do 
 			if( i_z < wallthickness ) then
 				model_floor[i_x][i_y][i_z]   = 1;
 				count = count + 1;		
