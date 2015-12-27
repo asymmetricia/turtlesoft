@@ -56,7 +56,7 @@ if opts["u"] ~= nil then
 			tz = sloped_z(ty,slope);
 			goto(tx,ty,z); goto(tx,ty,tz);
 			placeBlockDown(1,match);
-			while(turtle.detectUp()) do turtle.digUp(); end
+			while turtle.digUp(); do end
 			ty = ty + dir;
 		end
 		ty = ty - dir;
@@ -108,10 +108,12 @@ if opts["u"] ~= nil then
 	end
 	goto(x,y,z+1); goto(0,y,z); goto(x,y,sloped_z(y,slope)+tunnel_z-1); placeBlockUp(1,match);
 	while (y<tunnel_y) do
-		goto(x,y,sloped_z(y,slope));
-		goto(x,y+1,z);
+		if(slope<0) then
+			goto(x,y,sloped_z(y+1,slope)); goto(x,y+1,z);
+		else
+			goto(x,y+1,z); goto(x,y,sloped_z(y,slope));
+		end
 	end
-	goto(x,y,sloped_z(y,slope));
 	north();
 else
 	tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
