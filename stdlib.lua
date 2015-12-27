@@ -243,6 +243,7 @@ function staircaseDown()
 end
 
 function placeBlock( slot, match )
+	if(type(match)=="number") then match = (match==1); end
 	if turtle.detect() and not match then return; end
 	find( slot );
 	if turtle.compare() then return; end
@@ -250,6 +251,7 @@ function placeBlock( slot, match )
 end
 
 function placeBlockUp( slot, match )
+	if(type(match)=="number") then match = (match==1); end
 	if turtle.detectUp() and not match then return; end
 	find( slot );
 	if turtle.compareUp() then return; end
@@ -257,6 +259,7 @@ function placeBlockUp( slot, match )
 end
 
 function placeBlockDown( slot, match )
+	if(type(match)=="number") then match = (match==1); end
 	if turtle.detectDown() and not match then return; end
 	find( slot );
 	if turtle.compareDown() then return; end

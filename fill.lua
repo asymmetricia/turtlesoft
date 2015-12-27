@@ -30,9 +30,9 @@ else
 end
 
 if( table.getn( args ) > 4 ) then
-	match = 1
+	match = true
 else
-	match = 0
+	match = false
 end
 
 tx=0; ty=0;
