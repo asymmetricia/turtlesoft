@@ -11,6 +11,14 @@ function usage()
 	os.exit();
 end
 
+function sloped_z(y,slope)
+	if(slope>=0) then
+		return math.floor((y-1)*slope);
+	else
+		return math.ceil((y-1)*slope);
+	end
+end
+
 args = {...}
 opts = getopt( args, "xyzsm" );
 
@@ -45,9 +53,8 @@ if opts["u"] ~= nil then
 	while (tx < tunnel_x) do
 		-- Note that tunnel runs form y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			tz = math.floor((ty-1) * slope)
-			if(dir==1) then goto(x,y,tz); else goto(tx,ty,z); end
-			goto(tx,ty,tz);
+			tz = sloped_z(ty,slope);
+			goto(tx,ty,z); goto(tx,ty,tz);
 			placeBlockDown(1,match);
 			while(turtle.detectUp()) do turtle.digUp(); end
 			ty = ty + dir;
@@ -61,7 +68,8 @@ if opts["u"] ~= nil then
 	if dir == 1 then ty=1; else ty = tunnel_y; end
 	while (level <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+level));
+			tz = sloped_z(ty,slope) + level;
+			goto(tx,ty,z); goto(x,y,tz);
 			placeBlockDown(1,match);
 			ty = ty + dir;
 		end
@@ -71,10 +79,12 @@ if opts["u"] ~= nil then
 	end
 	-- Roof
 	if dir == 1 then ty=1; else ty=tunnel_y; end
-	tx=tunnel_x-1; tz=math.floor((ty-1)*slope+tunnel_z-1);
+	tx=tunnel_x-1;
+	if(slope>=0) then tz = math.floor((ty-1) * slope + tunnel_z - 1) else tz=math.ceil((ty-1)*slope + tunnel_z - 1); end
 	while(tx > -1) do
 		while((dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0)) do
-			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+tunnel_z-1));
+			tz = sloped_z(ty,slope)+tunnel_z-1;
+			goto(tx,ty,z); goto(x,y,tz);
 			placeBlockUp(1,match);
 			ty = ty + dir;
 		end
@@ -87,7 +97,8 @@ if opts["u"] ~= nil then
 	if dir == 1 then ty=1; else ty = tunnel_y; end
 	while (level <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-			goto(tx,ty,z); goto(x,y,math.floor((ty-1)*slope+level));
+			tz = sloped_z(ty,slope)+level;
+			goto(tx,ty,z); goto(x,y,tz);
 			placeBlockDown(1,match);
 			ty = ty + dir;
 		end
@@ -95,12 +106,12 @@ if opts["u"] ~= nil then
 		dir = -1 * dir;
 		level = level + 1;
 	end
-	goto(x,y,z+1); goto(0,y,z); goto(x,y,math.floor((y-1)*slope+tunnel_z-1)); placeBlockUp(1,match);
-	while (y<tunnel_y) do 
-		goto(x,y,math.floor((y-1)*slope+tunnel_z-1));
+	goto(x,y,z+1); goto(0,y,z); goto(x,y,sloped_z(y,slope)+tunnel_z-1)); placeBlockUp(1,match);
+	while (y<tunnel_y) do
+		goto(x,y,sloped_z(y,slope));
 		goto(x,y+1,z);
 	end
-	goto(x,y,math.floor((y)*slope));
+	goto(x,y,sloped_z(y,slope));
 	north();
 else
 	tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, match );
