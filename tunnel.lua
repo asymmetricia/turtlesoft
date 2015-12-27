@@ -12,10 +12,12 @@ function usage()
 end
 
 function sloped_z(y,slope)
-	if(slope>=0) then
-		return math.floor((y-1)*slope);
+	if(slope == 0) then
+		return 0;
+	elseif(slope>=0) then
+		return math.floor((y-1)*slope)+1;
 	else
-		return math.ceil((y-1)*slope);
+		return math.ceil((y-1)*slope)-1;
 	end
 end
 
@@ -56,7 +58,7 @@ if opts["u"] ~= nil then
 			tz = sloped_z(ty,slope);
 			goto(tx,ty,z); goto(tx,ty,tz);
 			placeBlockDown(1,match);
-			while turtle.digUp(); do end
+			while turtle.digUp() do end
 			ty = ty + dir;
 		end
 		ty = ty - dir;
