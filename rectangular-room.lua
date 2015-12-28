@@ -105,7 +105,7 @@ for i_z = -1,-1+wallthickness-1 do
 end
 
 -- Walls from (-1+wallthickness) to (dimZ-2-wallthickness) or one less if roofing
-if mat_roof == 0 then wall_top = dimZ-2-wallthickness else wall_top = dimz-3-wallthickness; end
+if mat_roof == 0 then wall_top = dimZ-2-wallthickness else wall_top = dimZ-3-wallthickness; end
 for i_z = -1+wallthickness, wall_top do
 	if(verbose) then print( i_z .. " -> wall" ); end
 	for i_x = -1,dimX-2 do
