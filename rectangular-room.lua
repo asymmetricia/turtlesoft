@@ -51,7 +51,7 @@ else
 	roof_msg = " without roof";
 end
 
-print( "Printing recroom " .. (dimX+1) .. " W x " .. (dimY+1) .. " L x " .. (dimZ+1) .. "H in materials " .. mat_floor .. ", " .. mat_walls .. ", " .. mat_ceiling  .. roof_msg );
+print( "Printing recroom " .. (dimX) .. " W x " .. (dimY) .. " L x " .. (dimZ) .. "H in materials " .. mat_floor .. ", " .. mat_walls .. ", " .. mat_ceiling  .. roof_msg );
 
 homeX=x;
 homeY=y;
@@ -74,6 +74,9 @@ for tx = -1,dimX-2 do
 	end
 	sleep(0);
 end
+log.writeLine("Allocated:");
+log.writeLine(textutils.serialise(model_floor));
+log.flush();
 print( "Done!" );
 
 if( clear ) then
