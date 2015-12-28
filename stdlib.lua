@@ -694,6 +694,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 				sel_pt = k;
 			end
 		end
+		if sel_pt == nil or plist[sel_pt] == nil then print( "no points found in model?!" ); os.exit(); end
 		point = plist[sel_pt];
 		if(verbose) then print( "dense selected " .. textutils.serialise(point) ); end
 		action = point[4];
