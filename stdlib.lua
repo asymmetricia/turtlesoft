@@ -686,6 +686,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		end
 		sel_pt = nil;
 		for k,pt in pairs(plist) do
+			if(verbose) then print( k .. "=" .. pt ); end
 			if( sel_pt == nil or 
 			    pt[3] < plist[sel_pt][3] or 
 			    pt[3] == plist[sel_pt][3] and pt[1] < plist[sel_pt][1] or 
