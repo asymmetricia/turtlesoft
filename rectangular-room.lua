@@ -26,11 +26,11 @@ dimX=tonumber(opts["x"])
 if( opts["y"] == nil ) then dimY = dimX; else dimY=tonumber(opts["y"]); end
 if( opts["z"] == nil ) then dimZ = dimX; else dimZ=tonumber(opts["z"]); end
 
-zskip=0; match=false; dryrun=false; x=0; y=0; verbose=false;
+zskip=-1; match=false; dryrun=false; x=0; y=0; verbose=false;
 layers=dimZ;
 
 if( opts["clear"] ~= nil ) then clear = 1; end
-if( opts["zskip"] ~= nil ) then zskip = tonumber( opts["z"] ); end
+if( opts["zskip"] ~= nil ) then zskip = tonumber( opts["z"] )-1; end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
 if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = true; end
 if( opts["d"] ~= nil ) then dryrun = true; end
@@ -92,17 +92,17 @@ clear_count = 0;
 
 print( "Voxelizing model..." );
 -- Solid from (-1) to (-1+wallthickness-1)
-for i_z = -1,wallthickness-2 do
+for i_z = -1,-1+wallthickness-1 do
 	if(verbose) then print( i_z .. " -> floor" ); end
 	log.writeLine(i_z .. " -> floor"); log.flush();
-	for i_y=-1,dimY-2 do for i_x=-1,dimX-2 do
-		model_floor[i_x][i_y][i_z] = 1;
-		count = count+1;
-		counts[1] = counts[1]+1;
-	end; end
+	for i_y=-1,dimY-2 do
+		for i_x=-1,dimX-2 do
+			model_floor[i_x][i_y][i_z] = 1;
+			count = count+1;
+			counts[1] = counts[1]+1;
+		end
+	end
 end
-
-log.writeLine(textutils.serialise(model_floor)); log.flush();
 
 -- Walls from (-1+wallthickness) to (dimZ-2-wallthickness) or one less if roofing
 if mat_roof == 0 then wall_top = dimZ-2-wallthickness else wall_top = dimz-3-wallthickness; end
