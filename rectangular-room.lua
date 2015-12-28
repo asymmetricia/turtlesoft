@@ -84,39 +84,51 @@ counts = {0,0,0,0};
 clear_count = 0;	
 
 print( "Voxelizing model..." );
-for i_z = -1,dimZ-1 do
-	for i_y = -1,dimY-1 do
-		for i_x = -1,dimX-1 do 
-			if( i_z < wallthickness ) then
-				model_floor[i_x][i_y][i_z]   = 1;
-				count = count + 1;		
-				counts[1] = counts[1] + 1;
-			elseif( i_z > ( dimZ - wallthickness ) ) then
-				if( mat_roof ~= 0 and i_z == dimZ ) then
-					if( i_z > 0 and model_ceiling[i_x][i_y][i_z-1] ~= 1 ) then
-						if( model_ceiling[i_x][i_y][i_z-1] == -1 ) then clear_count = clear_count - 1; end
-						model_ceiling[i_x][i_y][i_z-1] = 1;
-						counts[3] = counts[3] + 1;
-						count = count + 1;
-					end
-					model_roof[i_x][i_y][i_z] = 1;
-					counts[4] = counts[4] + 1;
-				else
-					model_ceiling[i_x][i_y][i_z] = 1;
-					counts[3] = counts[3] + 1;
-				end
-				count = count + 1;
-			elseif( i_y < wallthickness or i_y > ( dimY - wallthickness ) or
-			        i_x < wallthickness or i_x > ( dimX - wallthickness ) ) then
+-- Solid from (-1) to (-1+wallthickness)
+for i_z = -1,wallthickness-1 do
+	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+		model_floor[i_x][i_y][i_z] = 1;
+		count = count+1;
+		counts = counts[1]+1;
+	end; end
+end
+
+-- Walls from (-1+wallthickness+1) to (dimZ-2-wallthickness)
+for i_z = -1, dimZ-2-wallthickness do
+	for i_x = -1,dimX-2 do
+		for i_y = -1,dimY-2 do
+			if(i_x < -1+wallthickness or i_x > dimX - 2 - wallthickness or i_y < -1-wallthickness or i_y > dimY - 2 - wallthickness) then
 				model_walls[i_x][i_y][i_z] = 1;
 				count = count + 1;
-				counts[2] = counts[2] + 1;
-			elseif( clear ) then
-				model_walls[i_x][i_y][i_z] = -1;
-				clear_count = clear_count + 1;
+				count[2] = count[2] + 1;
 			end
 		end
-	end	
+	end
+end
+
+-- If no roof, ceiling from (dimz-2-wallthickness) to (dimz-2)
+-- If roof, ceiling from (dimz-3-wallthickness) to (dimz-3) and roof on dimz-2.
+if mat_roof == 0 then
+	for i_z = dimZ - 1 - wallthickness, dimZ - 2 do
+		for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+			model_ceiling[i_x][i_y][i_z] = 1;
+			count = count+1;
+			counts = counts[3]+1;
+		end; end
+	end
+else
+	for i_z = dimZ - 2 - wallthickness, dimZ - 3 do
+		for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+			model_ceiling[i_x][i_y][i_z] = 1;
+			count = count+1;
+			counts = counts[3]+1;
+		end; end
+	end
+	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+		model_roof[i_x][i_y][dimZ-2] = 1;
+		count = count+1;
+		counts = counts[4]+1;
+	end; end
 end
 print( "Done!" );
 
@@ -128,13 +140,13 @@ if( clear_count > 0 ) then
 end
 
 print( "Printing floor in material " .. mat_floor );
-printModel( model_floor,   zskip, dryrun, opts[ "verbose" ], match, mat_floor, false   );
+printModel( model_floor,   zskip, dryrun, opts[ "verbose" ], match, mat_floor, true   );
 
 print( "Printing walls in material " .. mat_walls );
 printModel( model_walls,   zskip, dryrun, opts[ "verbose" ], match, mat_walls, false   );
 
 print( "Printing ceiling in material " .. mat_ceiling );
-printModel( model_ceiling, zskip, dryrun, opts[ "verbose" ], match, mat_ceiling, mat_roof == 0 );
+printModel( model_ceiling, zskip, dryrun, opts[ "verbose" ], match, mat_ceiling, true );
 
 if( mat_roof ~= 0 ) then
 	print( "Printing roof in material " .. mat_roof );
