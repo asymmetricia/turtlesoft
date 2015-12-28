@@ -84,8 +84,8 @@ counts = {0,0,0,0};
 clear_count = 0;	
 
 print( "Voxelizing model..." );
--- Solid from (-1) to (-1+wallthickness)
-for i_z = -1,wallthickness-1 do
+-- Solid from (-1) to (-1+wallthickness-1)
+for i_z = -1,wallthickness-2 do
 	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
 		model_floor[i_x][i_y][i_z] = 1;
 		count = count+1;
@@ -100,7 +100,7 @@ for i_z = -1, dimZ-2-wallthickness do
 			if(i_x < -1+wallthickness or i_x > dimX - 2 - wallthickness or i_y < -1-wallthickness or i_y > dimY - 2 - wallthickness) then
 				model_walls[i_x][i_y][i_z] = 1;
 				count = count + 1;
-				counts[2] = count[2] + 1;
+				counts[2] = counts[2] + 1;
 			end
 		end
 	end
