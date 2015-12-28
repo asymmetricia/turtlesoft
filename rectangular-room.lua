@@ -155,6 +155,23 @@ if( clear_count > 0 ) then
 	print( "Will clear " .. count .. " blocks." );
 end
 
+if(verbose) then
+	local ty = -1+wallthickness
+	local tx, tz;
+	for tz=-1,dimZ-2 do
+		write(string.format("%" .. math.max(2,(math.floor(math.log10(dimZ-2))+1)) .. "d ", tz))
+		for tx=-1,dimX-2 do
+			if model_roof[tx][ty][tz] then write("R")
+			elseif model_ceiling[tx][ty][tz] then write("C")
+			elseif model_walls[tx][ty][tz] then write("W")
+			elseif model_floor[tx][ty][tz then write("F")
+			else write(" ")
+			end
+		end
+		print()
+	end
+end
+
 print( "Printing floor in material " .. mat_floor );
 printModel( model_floor,   zskip, dryrun, verbose, match, mat_floor, false, true);
 
