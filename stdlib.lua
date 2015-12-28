@@ -695,6 +695,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			end
 		end
 		point = plist[sel_pt];
+		if(verbose) then print( "dense selected " .. textutils.serialise(point) ); end
 		action = point[4];
 		table.remove( plist, sel_pt );
 	else
