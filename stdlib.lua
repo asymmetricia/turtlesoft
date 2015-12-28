@@ -684,6 +684,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 				end
 			end
 		end
+		if(verbose) then print( table.getn(plist) .. " points found" ); end
 		sel_pt = nil;
 		for k,pt in pairs(plist) do
 			if(verbose) then 
