@@ -675,9 +675,9 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	
 	if( dense ) then
 		if( verbose ) then print( "dense first point selection" ); end;
-		for cx,ylist in ipairs(model) do
-			for cy,zlist in ipairs(ylist) do
-				for cz,action in ipairs(zlist) do
+		for cx,ylist in pairs(model) do
+			for cy,zlist in pairs(ylist) do
+				for cz,action in pairs(zlist) do
 					if cz >= zskip then
 						table.insert( plist, {cx,cy,cz,action} )
 					end
@@ -685,7 +685,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			end
 		end
 		sel_pt = nil;
-		for k,pt in ipairs(plist) do
+		for k,pt in pairs(plist) do
 			if( sel_pt == nil or 
 			    pt[3] < plist[sel_pt][3] or 
 			    pt[3] == plist[sel_pt][3] and pt[1] < plist[sel_pt][1] or 
@@ -694,7 +694,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 				sel_pt = k;
 			end
 		end
-		if sel_pt == nil or plist[sel_pt] == nil then print( "no points found in model?!" ); os.exit(); end
+		if sel_pt == nil or plist[sel_pt] == nil then print( "no points found in model?!" ); os.exit(); end;
 		point = plist[sel_pt];
 		if(verbose) then print( "dense selected " .. textutils.serialise(point) ); end
 		action = point[4];
@@ -732,7 +732,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		if( dense ) then
 			if( verbose ) then print( "dense subsequent point selection" ); end;
 			sel_pt = nil;
-			for k,pt in ipairs(plist) do
+			for k,pt in pairs(plist) do
 				-- First pass, only look at blocks on the current working column.
 				if( pt[1] == x and pt[3] == z-1 ) then
 					if( sel_pt == nil or
@@ -745,7 +745,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			end
 			-- Second pass, look anywhere on this layer.
 			if( sel_pt == nil ) then
-				for k,pt in ipairs(plist) do
+				for k,pt in pairs(plist) do
 					if( pt[3] == z-1 ) then
 						if( sel_pt == nil or
 						    ( modX == 1  and pt[1] < plist[sel_pt][1] ) or
@@ -769,7 +769,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			end
 			-- Third pass, look on other layers.
 			if( sel_pt == nil ) then
-				for k,pt in ipairs(plist) do
+				for k,pt in pairs(plist) do
 					if( sel_pt == nil or pt[3] < plist[sel_pt][3] ) then
 						sel_pt = k;
 					elseif( pt[3] == plist[sel_pt][3] ) then
