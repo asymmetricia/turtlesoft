@@ -24,7 +24,7 @@ dimX=tonumber(opts["x"])-1
 if( opts["y"] == nil ) then dimY = dimX; else dimY=tonumber(opts["y"])-1; end
 if( opts["z"] == nil ) then dimZ = dimX; else dimZ=tonumber(opts["z"])-1; end
 
-zskip=0; match=false; dryrun=false; x=0; y=0;
+zskip=0; match=false; dryrun=false; x=0; y=0; verbose=false;
 layers=dimZ;
 
 if( opts["clear"] ~= nil ) then clear = 1; end
@@ -41,6 +41,7 @@ if( opts["floor"]   ~= nil ) then mat_floor   = tonumber( opts["floor"] ); mat_w
 if( opts["walls"]   ~= nil ) then mat_walls   = tonumber( opts["walls"] ); mat_ceiling = mat_walls; end
 if( opts["ceiling"] ~= nil ) then mat_ceiling = tonumber( opts["ceiling"] ); end
 if( opts["roof"]    ~= nil ) then mat_roof    = tonumber( opts["roof"] ); end
+if( opts["verbose"] ~= nil ) then verbose = true; end
 
 if( mat_roof ~= 0 ) then
 	roof_msg = " with roof in material " .. mat_roof;
@@ -140,15 +141,15 @@ if( clear_count > 0 ) then
 end
 
 print( "Printing floor in material " .. mat_floor );
-printModel( model_floor,   zskip, dryrun, opts[ "verbose" ], match, mat_floor, true   );
+printModel( model_floor,   zskip, dryrun, verbose, match, mat_floor, false, true);
 
 print( "Printing walls in material " .. mat_walls );
-printModel( model_walls,   zskip, dryrun, opts[ "verbose" ], match, mat_walls, false   );
+printModel( model_walls,   zskip, dryrun, verbose, match, mat_walls, false   );
 
 print( "Printing ceiling in material " .. mat_ceiling );
-printModel( model_ceiling, zskip, dryrun, opts[ "verbose" ], match, mat_ceiling, true );
+printModel( model_ceiling, zskip, dryrun, verbose, match, mat_ceiling, mat_roof == 0, true );
 
 if( mat_roof ~= 0 ) then
 	print( "Printing roof in material " .. mat_roof );
-	printModel( model_roof, zskip, dryrun, opts[ "verbose" ], match, mat_roof, true );
+	printModel( model_roof, zskip, dryrun, verbose, match, mat_roof, true, true );
 end

@@ -699,7 +699,9 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		table.remove( plist, sel_pt );
 	else
 		point = nextPoint( model, { 0,0,zskip } );
+		if(point == nil) then print("Error: No first point found"); end
 		refpoint = point;
+		if(verbose) then print( "Printing " .. point[1] .. "," .. point[2] .. "," .. point[3] ); end
 		action = model[point[1]][point[2]][point[3]];
 		model[point[1]][point[2]][point[3]]=2;
 		-- if( not dryrun ) then goto( point[1], point[2], point[3] ); end
