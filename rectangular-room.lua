@@ -158,7 +158,7 @@ end
 if(verbose) then
 	local ty = -1+wallthickness
 	local tx, tz;
-	for tz=-1,dimZ-2 do
+	for tz=dimZ-2,-1,-1 do
 		write(string.format("%" .. math.max(2,(math.floor(math.log10(dimZ-2))+1)) .. "d ", tz))
 		for tx=-1,dimX-2 do
 			if model_roof[tx][ty][tz] then write("R")
