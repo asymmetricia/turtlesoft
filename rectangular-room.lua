@@ -164,7 +164,7 @@ if(verbose) then
 			if model_roof[tx][ty][tz] then write("R")
 			elseif model_ceiling[tx][ty][tz] then write("C")
 			elseif model_walls[tx][ty][tz] then write("W")
-			elseif model_floor[tx][ty][tz then write("F")
+			elseif model_floor[tx][ty][tz] then write("F")
 			else write(" ")
 			end
 		end
