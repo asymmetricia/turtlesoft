@@ -89,7 +89,7 @@ for i_z = -1,wallthickness-1 do
 	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
 		model_floor[i_x][i_y][i_z] = 1;
 		count = count+1;
-		counts = counts[1]+1;
+		counts[1] = counts[1]+1;
 	end; end
 end
 
@@ -100,7 +100,7 @@ for i_z = -1, dimZ-2-wallthickness do
 			if(i_x < -1+wallthickness or i_x > dimX - 2 - wallthickness or i_y < -1-wallthickness or i_y > dimY - 2 - wallthickness) then
 				model_walls[i_x][i_y][i_z] = 1;
 				count = count + 1;
-				count[2] = count[2] + 1;
+				counts[2] = count[2] + 1;
 			end
 		end
 	end
@@ -113,7 +113,7 @@ if mat_roof == 0 then
 		for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
 			model_ceiling[i_x][i_y][i_z] = 1;
 			count = count+1;
-			counts = counts[3]+1;
+			counts[3] = counts[3]+1;
 		end; end
 	end
 else
@@ -121,13 +121,13 @@ else
 		for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
 			model_ceiling[i_x][i_y][i_z] = 1;
 			count = count+1;
-			counts = counts[3]+1;
+			counts[3] = counts[3]+1;
 		end; end
 	end
 	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
 		model_roof[i_x][i_y][dimZ-2] = 1;
 		count = count+1;
-		counts = counts[4]+1;
+		counts[4] = counts[4]+1;
 	end; end
 end
 print( "Done!" );
