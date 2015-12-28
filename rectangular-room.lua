@@ -5,7 +5,7 @@ else
 	exit();
 end
 
-local log = fs.open("/log","a")
+local log = fs.open("/log","w")
 
 args = {...}
 opts = getopt( args, "rznxysw" );
@@ -90,15 +90,15 @@ print( "Voxelizing model..." );
 -- Solid from (-1) to (-1+wallthickness-1)
 for i_z = -1,wallthickness-2 do
 	if(verbose) then print( i_z .. " -> floor" ); end
-	log.writeLine(i_z .. " -> floor);
-	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+	log.writeLine(i_z .. " -> floor"); log.flush();
+	for i_y=-1,dimY-2 do for i_x=-1,dimX-2 do
 		model_floor[i_x][i_y][i_z] = 1;
 		count = count+1;
 		counts[1] = counts[1]+1;
 	end; end
 end
 
-log.writeLine(textutils.serialise(model_floor));
+log.writeLine(textutils.serialise(model_floor)); log.flush();
 
 -- Walls from (-1+wallthickness) to (dimZ-2-wallthickness) or one less if roofing
 if mat_roof == 0 then wall_top = dimZ-2-wallthickness else wall_top = dimz-3-wallthickness; end
@@ -120,7 +120,7 @@ end
 if mat_roof == 0 then
 	for i_z = dimZ - 1 - wallthickness, dimZ - 2 do
 	if(verbose) then print( i_z .. " -> ceiling" ); end
-		for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+		for i_y=-1,dimY-2 do for i_x=-1,dimX-2 do
 			model_ceiling[i_x][i_y][i_z] = 1;
 			count = count+1;
 			counts[3] = counts[3]+1;
@@ -129,13 +129,13 @@ if mat_roof == 0 then
 else
 	for i_z = dimZ - 2 - wallthickness, dimZ - 3 do
 		if(verbose) then print( i_z .. " -> ceiling" ); end
-		for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+		for i_y=-1,dimY-2 do for i_x=-1,dimX-2 do
 			model_ceiling[i_x][i_y][i_z] = 1;
 			count = count+1;
 			counts[3] = counts[3]+1;
 		end; end
 	end
-	for i_y=-1,dimY-1 do for i_x=-1,dimX-1 do
+	for i_y=-1,dimY-2 do for i_x=-1,dimX-2 do
 		if(verbose) then print( i_z .. " -> roof" ); end
 		model_roof[i_x][i_y][dimZ-2] = 1;
 		count = count+1;
