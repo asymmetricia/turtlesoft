@@ -110,7 +110,7 @@ for i_z = -1+wallthickness, wall_top do
 	if(verbose) then print( i_z .. " -> wall" ); end
 	for i_x = -1,dimX-2 do
 		for i_y = -1,dimY-2 do
-			if(i_x < -1+wallthickness or i_x > dimX - 2 - wallthickness or i_y < -1-wallthickness or i_y > dimY - 2 - wallthickness) then
+			if(i_x < -1+wallthickness or i_x > dimX - 2 - wallthickness or i_y < -1+wallthickness or i_y > dimY - 2 - wallthickness) then
 				model_walls[i_x][i_y][i_z] = 1;
 				count = count + 1;
 				counts[2] = counts[2] + 1;
