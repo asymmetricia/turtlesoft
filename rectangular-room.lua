@@ -22,9 +22,9 @@ if( opts[ "x" ] == nil or opts[ "h" ] ) then
 	exit();
 end	
 
-dimX=tonumber(opts["x"])-1
-if( opts["y"] == nil ) then dimY = dimX; else dimY=tonumber(opts["y"])-1; end
-if( opts["z"] == nil ) then dimZ = dimX; else dimZ=tonumber(opts["z"])-1; end
+dimX=tonumber(opts["x"])
+if( opts["y"] == nil ) then dimY = dimX; else dimY=tonumber(opts["y"]); end
+if( opts["z"] == nil ) then dimZ = dimX; else dimZ=tonumber(opts["z"]); end
 
 zskip=0; match=false; dryrun=false; x=0; y=0; verbose=false;
 layers=dimZ;
@@ -61,12 +61,12 @@ model_floor   = {}
 model_walls   = {}
 model_ceiling = {}
 model_roof    = {}
-for tx = -1,dimX-1 do 
+for tx = -1,dimX-2 do 
 	model_floor[tx]   = {}
 	model_walls[tx]   = {}
 	model_ceiling[tx] = {}
 	model_roof[tx]    = {}
-	for ty = -1,dimY-1 do
+	for ty = -1,dimY-2 do
 		model_floor[tx][ty]   = {}
 		model_walls[tx][ty]   = {}
 		model_ceiling[tx][ty] = {}
