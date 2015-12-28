@@ -67,6 +67,7 @@ for tx = -1,dimX-2 do
 	model_ceiling[tx] = {}
 	model_roof[tx]    = {}
 	for ty = -1,dimY-2 do
+	log.writeLine("Allocating for " .. tx .. "," .. ty)
 		model_floor[tx][ty]   = {}
 		model_walls[tx][ty]   = {}
 		model_ceiling[tx][ty] = {}
