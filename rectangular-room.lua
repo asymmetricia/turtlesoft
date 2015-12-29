@@ -183,5 +183,12 @@ printModel( model_ceiling, zskip, dryrun, verbose, match, mat_ceiling, mat_roof 
 
 if( mat_roof ~= 0 ) then
 	print( "Printing roof in material " .. mat_roof );
-	printModel( model_roof, zskip, dryrun, verbose, match, mat_roof, true, true );
+	printModel( model_roof, zskip, dryrun, verbose, match, mat_roof, false, true );
 end
+
+goto(0,0,z); 
+if(mat_roof ~= 0) then goto(0,0,z-2); placeBlockUp(2,true); else goto(0,0,z-1) end
+for i=1,wallthickness do
+	goto(0,0,z-1); placeBlockUp(1,true);
+end
+goto(0,0,0);
