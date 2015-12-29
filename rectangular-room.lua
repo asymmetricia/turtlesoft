@@ -187,7 +187,7 @@ if( mat_roof ~= 0 ) then
 end
 
 goto(0,0,z); 
-if(mat_roof ~= 0) then goto(0,0,z-2); placeBlockUp(2,true); else goto(0,0,z-1) end
+if(mat_roof ~= 0) then goto(0,0,z-3); placeBlockUp(2,true); else goto(0,0,z-2) end
 for i=1,wallthickness do
 	goto(0,0,z-1); placeBlockUp(1,true);
 end
