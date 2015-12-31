@@ -654,8 +654,29 @@ function nextPoint( list, point )
         return nil;
 end
 
-function nextPointDense(list, point, verbose)
+function firstPointDense(model, point, verbose)
+	point = nil
+	for cx,ylist in pairs(model) do
+		for cy,zlist in pairs(ylist) do
+			for cz,action in pairs(zlist) do
+				if(action ~= 0) then
+					if(point == nil or
+					   cy < point[2] and cx <= point[1] and cz <= point[3] or
+					   cx < point[1] and cz <= point[3] or
+					   cz < point[3]
+					) then
+						point = {cx,cy,cz}
+					end
+				end
+			end
+		end
+	end
+end
+
+function nextPointDense(model, point, verbose)
 	if verbose == nil then verbose=false; end
+	plist = {}
+
 	for cx,ylist in pairs(model) do
 		for cy,zlist in pairs(ylist) do
 			for cz,action in pairs(zlist) do
@@ -740,7 +761,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	if( verbose and dense ) then print( "Using dense fill algorithm" ); end
 	
 	if( dense ) then
-		point = nextPointDense(model, {0,0,zskip}, verbose);
+		point = firstPointDense(model, {0,0,zskip}, verbose);
 	else
 		point = nextPoint(model, { 0,0,zskip });
 		refpoint = point;
@@ -783,7 +804,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	-- Find the next closest point from our reference.
 	-- If it's distance>2, instead find the next closest point from here.
 		if( dense ) then
-			point = nextPointDense(model, {x,y,z}, verbose)
+			point = nextPointDense(model, point, verbose)
 			if( point == nil ) then break; end
 		else
 			point = nextPoint( model, refpoint )
