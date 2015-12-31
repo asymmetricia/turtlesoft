@@ -654,10 +654,78 @@ function nextPoint( list, point )
         return nil;
 end
 
+function nextPointDense(list, point, verbose)
+	if verbose == nil then verbose=false; end
+	if( verbose ) then print( "dense first point selection" ); end;
+	for cx,ylist in pairs(model) do
+		for cy,zlist in pairs(ylist) do
+			for cz,action in pairs(zlist) do
+				if cz >= zskip and action ~= 0 then
+					table.insert( plist, {cx,cy,cz,action} )
+				end
+			end
+		end
+	end
+	-- Dense means we print in stripes, period.
+	-- Find nearest Point on this X and Z
+	-- else nearest Point this Z
+	-- else find min Y on min X on next Z
+
+	sel_pt = nil;
+	for k,pt in pairs(plist) do
+		if(pt[1] == point[1] and 
+		   pt[3] == point[3] and 
+		   (sel_pt == nil or dist3d(pt,point) < dist3d(sel_pt,point))
+		) then
+			sel_pt = pt;
+		end
+	end
+	if( sel_pt ~= nil ) then return sel_pt; end
+	
+	for k,pt in pairs(plist) do
+		if(pt[3] == point[3] and (
+			sel_pt == nil or
+			pt[1] < sel_pt[1] or
+			(pt[1] == sel_pt[1] and dist3d(pt,point) < dist3d(sel_pt,point))
+		)) then
+			sel_pt = pt;
+		end
+	end
+	if( sel_pt ~= nil ) then return sel_pt; end
+
+	for k,pt in pairs(plist) do
+		if(pt[3] == point[3]+1 and (
+			sel_pt == nil or
+			pt[1] < sel_pt[1] or
+			(pt[1] == sel_pt[1] and pt[2] < sel_pt[2])
+		)) then
+			sel_pt = pt;
+		end
+	end
+	return sel_pt;
+end
+
 function dist3d( p1, p2 )
 --      return math.sqrt( (p1[1]-p2[1])^2 + (p1[2]-p2[2])^2 + (p1[3]-p2[3])^2 );
 -- Taxi geometry. THIS IS MINECRAFT.
         return math.abs( p1[1]-p2[1] ) + math.abs( p1[2]-p2[2] ) + math.abs( p1[3]-p2[3] );
+end
+ 
+function printModelPoint(model, x, y, z, material, match, dryrun)
+	if(model[x][y][z-1] == -1) then
+		if not dryrun then turtle.digDown(); end
+		model[x][y][z-1] = 0;
+	else if(model[x][y][z-1] == 1) then
+		if not dryrun then placeBlockDown(material,match); end
+		model[x][y][z-1] = 0;
+	end
+	if(model[x][y][z+1]) == -1) then
+		if not dryrun then while turtle.digUp() do end; end
+		model[x][y][z+1] = 0;
+	end
+	if(model[x][y][z] == -1) then
+		model[x][y][z] = 0;
+	end
 end
  
 function printModel( model, zskip, dryrun, verbose, match, material, final, dense )
@@ -671,51 +739,19 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 
 
 	if( verbose and dense ) then print( "Using dense fill algorithm" ); end
-	plist = {}
 	
 	if( dense ) then
-		if( verbose ) then print( "dense first point selection" ); end;
-		for cx,ylist in pairs(model) do
-			for cy,zlist in pairs(ylist) do
-				for cz,action in pairs(zlist) do
-					if cz >= zskip then
-						table.insert( plist, {cx,cy,cz,action} )
-					end
-				end
-			end
-		end
-		if(verbose) then print( table.getn(plist) .. " points found" ); end
-		sel_pt = nil;
-		for k,pt in pairs(plist) do
-			if(verbose) then 
-				write(k .. "=");
-				write(type(pt) .. " {");
-				first=true;
-				for i,v in pairs(pt) do if(not first) then write("," .. v) else write(v); first=false; end; end
-				print();
-			end
-			if( sel_pt == nil or 
-			    pt[3] < plist[sel_pt][3] or 
-			    pt[3] == plist[sel_pt][3] and pt[1] < plist[sel_pt][1] or 
-			    pt[3] == plist[sel_pt][3] and pt[1] == plist[sel_pt][1] and pt[2] < plist[sel_pt][2] )
-			then
-				sel_pt = k;
-			end
-		end
-		if sel_pt == nil then print( "no points found in model?!" ); return; end;
-		point = plist[sel_pt];
-		if(verbose) then print( "dense selected " .. textutils.serialise(point) ); end
-		action = point[4];
-		table.remove( plist, sel_pt );
+		point = nextPointDense(model, {0,0,zskip}, verbose);
 	else
-		point = nextPoint( model, { 0,0,zskip } );
-		if(point == nil) then print("Error: No first point found"); end
+		point = nextPoint(model, { 0,0,zskip });
 		refpoint = point;
-		if(verbose) then print( "Printing " .. point[1] .. "," .. point[2] .. "," .. point[3] ); end
-		action = model[point[1]][point[2]][point[3]];
-		model[point[1]][point[2]][point[3]]=2;
-		-- if( not dryrun ) then goto( point[1], point[2], point[3] ); end
 	end
+
+	if(point == nil) then print("Error: No first point found"); return; end
+	action = model[point[1]][point[2]][point[3]];
+	model[point[1]][point[2]][point[3]]=2;
+	if(model[point[1]][point[2]][point[3]+1] == -1) then model[point[1]][point[2]][point[3]] = 0; end;
+	if(verbose) then print( "Printing " .. point[1] .. "," .. point[2] .. "," .. point[3] ); end
 	
 	last_yield_time = os.time()
 
@@ -724,86 +760,36 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	while( point ~= nil ) do
 		if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
 		if( verbose ) then print( table.concat( point, "," ) .. "=" .. action ); end
-		if( not dryrun ) then
-			goto( nil, nil, point[3]+1 );
-			goto( point[1], point[2], nil );
-		end
-		if( not dryrun ) then
-			if( action == 1 ) then
-				placeBlockDown( material, match );
-			else
-				turtle.digDown();
+		while(z != point[3]+1) do
+			if(z < point[3]+1) then 
+				if dryrun then z = z + 1; else goto(nil,nil,z+1); end
+			else 
+				if dryrun then z = z - 1; else goto(nil,nil,z-1); end
 			end
+			printModelPoint(model,x,y,z,material,match);
 		end
+		while(x != point[1]) do
+			if(x < point[1]) then 
+				if dryrun then x = x + 1; else goto(x+1,nil,nil); end
+			else
+				if dryrun then x = x - 1; else goto(x-1,nil,nil); end
+			end
+			printModelPoint(model,x,y,z,material,match);
+		end
+		while(y != point[2]) do
+			if(y < point[2]) then 
+				if dryrun then y = y + 1; else goto(y+1,nil,nil); end
+			else 
+				if dryrun then y = y - 1; else goto(y-1,nil,nil); end
+			end
+			printModelPoint(model,x,y,z,material,match);
+		end
+
 	-- Find the next closest point from our reference.
 	-- If it's distance>2, instead find the next closest point from here.
 		if( dense ) then
-			if( verbose ) then print( "dense subsequent point selection" ); end;
-			sel_pt = nil;
-			for k,pt in pairs(plist) do
-				-- First pass, only look at blocks on the current working column.
-				if( pt[1] == x and pt[3] == z-1 ) then
-					if( sel_pt == nil or
-					    ( modY == 1  and pt[2] <= plist[sel_pt][2] ) or
-					    ( modY == -1 and pt[2] >= plist[sel_pt][2] ) )
-					then
-						sel_pt = k;
-					end
-				end
-			end
-			-- Second pass, look anywhere on this layer.
-			if( sel_pt == nil ) then
-				for k,pt in pairs(plist) do
-					if( pt[3] == z-1 ) then
-						if( sel_pt == nil or
-						    ( modX == 1  and pt[1] < plist[sel_pt][1] ) or
-						    ( modX == -1 and pt[1] > plist[sel_pt][1] ) )
-						then
-							sel_pt = k;
-						elseif( pt[1] == plist[sel_pt][1] ) then
-							-- Note, we inverted the relationship here, because if we
-							-- change columns, we change direction.
-							if( ( modY == 1  and pt[2] >= plist[sel_pt][2] ) or
-							    ( modY == -1 and pt[2] <= plist[sel_pt][2] ) )
-							then
-								sel_pt = k;
-							end
-						end
-					end
-				end
-				if( sel_pt ~= nil ) then
-					modY = modY * -1;
-				end
-			end
-			-- Third pass, look on other layers.
-			if( sel_pt == nil ) then
-				for k,pt in pairs(plist) do
-					if( sel_pt == nil or pt[3] < plist[sel_pt][3] ) then
-						sel_pt = k;
-					elseif( pt[3] == plist[sel_pt][3] ) then
-						-- Note that ase above, _both_ relationship tests are inverted
-						if( ( modX == 1  and pt[1] > plist[sel_pt][1] ) or
-						    ( modX == -1 and pt[1] < plist[sel_pt][1] ) )
-						then
-							sel_pt = k;
-						elseif( pt[1] == plist[sel_pt][1] ) then
-							if( ( modY == 1  and pt[1] >= plist[sel_pt][2] ) or
-							    ( modY == -1 and pt[1] <= plist[sel_pt][2] ) )
-							then
-								sel_pt = k;
-							end
-						end
-					end
-				end
-				if( sel_pt ~= nil ) then
-					modY = modY * -1;
-					modX = modX * -1;
-				end
-			end
-			if( sel_pt == nil ) then break; end
-			point = plist[sel_pt];
-			action = point[4];
-			table.remove( plist, sel_pt );
+			point = nextPointDense(model, {x,y,z}, verbose)
+			if( point == nil ) then break; end
 		else
 			point = nextPoint( model, refpoint )
 			if( point == nil ) then break; end
@@ -812,8 +798,6 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 				refpoint = point;
 			end
 		end
-		action = model[point[1]][point[2]][point[3]];
-		model[point[1]][point[2]][point[3]]=2;
 	end
 	
 	if( not dryrun and final ) then
