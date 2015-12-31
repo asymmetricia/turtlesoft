@@ -715,11 +715,11 @@ function printModelPoint(model, x, y, z, material, match, dryrun)
 	if(model[x][y][z-1] == -1) then
 		if not dryrun then turtle.digDown(); end
 		model[x][y][z-1] = 0;
-	else if(model[x][y][z-1] == 1) then
+	elseif(model[x][y][z-1] == 1) then
 		if not dryrun then placeBlockDown(material,match); end
 		model[x][y][z-1] = 0;
 	end
-	if(model[x][y][z+1]) == -1) then
+	if(model[x][y][z+1] == -1) then
 		if not dryrun then while turtle.digUp() do end; end
 		model[x][y][z+1] = 0;
 	end
