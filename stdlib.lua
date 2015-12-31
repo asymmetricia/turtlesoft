@@ -747,10 +747,6 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	end
 
 	if(point == nil) then print("Error: No first point found"); return; end
-	action = model[point[1]][point[2]][point[3]];
-	model[point[1]][point[2]][point[3]]=2;
-	if(model[point[1]][point[2]][point[3]+1] == -1) then model[point[1]][point[2]][point[3]] = 0; end;
-	if(verbose) then print( "Printing " .. point[1] .. "," .. point[2] .. "," .. point[3] ); end
 	
 	last_yield_time = os.time()
 
@@ -758,7 +754,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	
 	while( point ~= nil ) do
 		if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
-		if( verbose ) then print( table.concat( point, "," ) .. "=" .. action ); end
+		if( verbose ) then print( table.concat( point, "," ) .. "=" .. model[point[1]][point[2]][point[3]] ); end
 		while(z ~= point[3]+1) do
 			if(z < point[3]+1) then 
 				if dryrun then z = z + 1; else goto(nil,nil,z+1); end
