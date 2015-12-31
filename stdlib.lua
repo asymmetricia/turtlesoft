@@ -656,7 +656,6 @@ end
 
 function nextPointDense(list, point, verbose)
 	if verbose == nil then verbose=false; end
-	if( verbose ) then print( "dense first point selection" ); end;
 	for cx,ylist in pairs(model) do
 		for cy,zlist in pairs(ylist) do
 			for cz,action in pairs(zlist) do
@@ -778,9 +777,9 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 		end
 		while(y ~= point[2]) do
 			if(y < point[2]) then 
-				if dryrun then y = y + 1; else goto(y+1,nil,nil); end
+				if dryrun then y = y + 1; else goto(nil,y+1,nil); end
 			else 
-				if dryrun then y = y - 1; else goto(y-1,nil,nil); end
+				if dryrun then y = y - 1; else goto(nil,y-1,nil); end
 			end
 			printModelPoint(model,x,y,z,material,match);
 		end
