@@ -671,6 +671,7 @@ function firstPointDense(model, point, verbose)
 			end
 		end
 	end
+	return point
 end
 
 function nextPointDense(model, point, verbose)
