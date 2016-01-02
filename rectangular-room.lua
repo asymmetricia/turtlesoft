@@ -33,7 +33,7 @@ if( opts["clear"] ~= nil ) then clear = 1; end
 if( opts["zskip"] ~= nil ) then zskip = tonumber( opts["z"] )-1; end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
 if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = true; end
-if( opts["d"] ~= nil ) then dryrun = true; end
+if( opts["d"] ~= nil or opts["dryrun"] ~= nil ) then dryrun = true; end
 if( opts["startx"] ~= nil ) then x = tonumber( opts["startx"] ); end
 if( opts["starty"] ~= nil ) then y = tonumber( opts["starty"] ); end
 if( opts["w"] ~= nil ) then wallthickness = tonumber( opts["w"] ); else wallthickness = 1; end
@@ -186,9 +186,11 @@ if( mat_roof ~= 0 ) then
 	printModel( model_roof, zskip, dryrun, verbose, match, mat_roof, false, true );
 end
 
-goto(0,0,z); 
-if(mat_roof ~= 0) then goto(0,0,z-3); placeBlockUp(2,true); else goto(0,0,z-2) end
-for i=1,wallthickness do
-	goto(0,0,z-1); placeBlockUp(1,true);
+if not dryrun then
+	goto(0,0,z); 
+	if(mat_roof ~= 0) then goto(0,0,z-3); placeBlockUp(2,true); else goto(0,0,z-2) end
+	for i=1,wallthickness do
+		goto(0,0,z-1); placeBlockUp(1,true);
+	end
+	goto(0,0,0);
 end
-goto(0,0,0);
