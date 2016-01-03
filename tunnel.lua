@@ -88,6 +88,7 @@ if opts["u"] ~= nil then
 			tz = sloped_z(ty,slope)+tunnel_z-1;
 			goto(tx,ty,z); goto(x,y,tz);
 			placeBlockUp(1,match);
+			if(tunnel_z>1) then while turtle.digDown() do end; end
 			ty = ty + dir;
 		end
 		ty = ty - dir;
