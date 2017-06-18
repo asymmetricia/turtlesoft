@@ -19,6 +19,8 @@ end
 
 tx=0; ty=0; tz=0;
 
+target_y = tonumber(args[2]);
+
 while true do
 	if( args[1] == "left" ) then
 		west();
@@ -33,17 +35,17 @@ while true do
 		tz=tz+1;
 		if( tz >= tonumber(args[3]) ) then
 			tz=tz-1;
-			ty=ty+1;
+			ty=ty+(target_y>0 ? 1 : -1);
 		end
 	else
 		-- odd Y
 		tz=tz-1;
 				if( tz < 0 ) then
-			tz=tz+1
-			ty=ty+1
+			tz=tz+1;
+			ty=ty+(target_y>0 ? 1 : -1);
 		end
 	end
-	if( ty >= tonumber(args[2]) ) then
+	if( target_y > 0 and ty >= target_y or target_y < 0 and ty <= target_y) then
 		goto(0,0,0);
 		north();
 		break;
