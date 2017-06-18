@@ -1,7 +1,7 @@
 if( fs.exists( "/stdlib" ) ) then
   dofile( "/stdlib" );
 else
-  print( "dome: error: /stdlib missing" );
+  print( "wall: error: /stdlib missing" );
   exit();
 end
 
@@ -34,7 +34,7 @@ while true do
   if( y % 2 == 0 ) then
     -- even Y
     tz=tz+delta_z;
-    if( tz >= target_z*delta_z ) then
+    if( tz*delta_z >= target_z*delta_z ) then
       tz=tz-delta_z;
       ty=ty+1;
     end
