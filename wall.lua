@@ -35,14 +35,14 @@ while true do
 		tz=tz+1;
 		if( tz >= tonumber(args[3]) ) then
 			tz=tz-1;
-			ty=ty+(target_y>0 ? 1 : -1);
+			ty=ty+((target_y>0 and 1) or -1);
 		end
 	else
 		-- odd Y
 		tz=tz-1;
 				if( tz < 0 ) then
 			tz=tz+1;
-			ty=ty+(target_y>0 ? 1 : -1);
+			ty=ty+((target_y>0 and 1) or -1);
 		end
 	end
 	if( target_y > 0 and ty >= target_y or target_y < 0 and ty <= target_y) then
