@@ -38,8 +38,9 @@ while true do
       tx = tx - dx;
       dx = -1 * dx;
       tz = tz + dz;
-      if tz >= mz then
+      if tz <= mz then
         goto(0,0,0);
+        break;
       end
     end
   end
