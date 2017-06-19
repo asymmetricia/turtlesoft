@@ -29,7 +29,9 @@ while true do
     if ty == 0      then south(); placeBlock(1,match); end
     if tx == 0      then west();  placeBlock(1,match); end
   end
-  placeBlockDown(1, false)
+  if tz > mz then
+    placeBlockDown(1, false)
+  end
 
   ty = ty + dy;
   if ty >= my or ty < 0 then
@@ -40,11 +42,12 @@ while true do
       tx = tx - dx;
       dx = -1 * dx;
       tz = tz + dz;
-      if tz <= mz then
-        goto(0,0,0);
-        north();
+      if tz < mz then
         break;
       end
     end
   end
 end
+
+goto(0,0,0);
+north();
