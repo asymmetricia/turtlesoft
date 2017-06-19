@@ -40,6 +40,7 @@ while true do
       tz = tz + dz;
       if tz <= mz then
         goto(0,0,0);
+        north();
         break;
       end
     end
