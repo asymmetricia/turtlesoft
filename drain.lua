@@ -23,10 +23,12 @@ dx=1; dy=1; dz=-1;
 
 while true do
   goto(tx,ty,tz);
-  if ty == (my-1) then north(); placeBlock(1,match); end
-  if tx == (mx-1) then east();  placeBlock(1,match); end
-  if ty == 0      then south(); placeBlock(1,match); end
-  if tx == 0      then west();  placeBlock(1,match); end
+  if tz < 0 then
+    if ty == (my-1) then north(); placeBlock(1,match); end
+    if tx == (mx-1) then east();  placeBlock(1,match); end
+    if ty == 0      then south(); placeBlock(1,match); end
+    if tx == 0      then west();  placeBlock(1,match); end
+  end
   placeBlockDown(1, false)
 
   ty = ty + dy;
