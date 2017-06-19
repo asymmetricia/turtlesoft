@@ -15,6 +15,7 @@ base_url = "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/";
 
 files = {}
 files["/d"]        = "dome.lua";
+files["/drain"]    = "drain.lua";
 files["/f"]        = "fill.lua";
 files["/hypstruc"] = "hyperboloid-structure.lua";
 files["/m"]        = "mine.lua";
