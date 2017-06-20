@@ -5,7 +5,7 @@ x=home_x
 y=home_y
 z=home_z
 p=0
- 
+
 function checkSpace()
         for i=1,16 do
                 if( turtle.getItemCount(i) == 0 ) then
@@ -14,7 +14,7 @@ function checkSpace()
         end
         return (compact(true,true))>0;
 end
- 
+
 function compact(order,early)
         countFree=0;
         if( order ) then
@@ -41,7 +41,7 @@ function compact(order,early)
                 for i=16,1,-1 do
                         if( turtle.getItemCount(i) > 0 and turtle.getItemSpace(i) > 0 ) then
                                 turtle.select(i);
-                                j=i-1; 
+                                j=i-1;
                                 while( turtle.getItemSpace(i) > 0 and j >= 1 ) do
                                         if( turtle.compareTo( j ) ) then
                                                 turtle.select(j);
@@ -61,7 +61,7 @@ function compact(order,early)
         turtle.select(1);
         return countFree;
 end
- 
+
 function newMineArea( dimX, dimY, dimZ, zskip )
         modX=1; modY=1; modZ=1;
         if( dimX < 0 ) then modX = -1; end
@@ -69,7 +69,7 @@ function newMineArea( dimX, dimY, dimZ, zskip )
         if( dimZ < 0 ) then modZ = -1; end
 		-- Positive values, regardless of direction.
         minX=0; maxX=dimX*modX-1; tx=0;
-        minY=0; maxY=dimY*modY-1; ty=0; 
+        minY=0; maxY=dimY*modY-1; ty=0;
 		minZ = zskip; maxZ=dimZ*modZ-1;
 		-- If we're mining more than 3Z, move to the middle of the first layer
 		if((maxZ - minZ)+1 >= 3) then tz=minZ*modZ+1*modZ; else tz=minZ*modZ; end
@@ -168,7 +168,7 @@ function newMineArea( dimX, dimY, dimZ, zskip )
                 goto( tx, ty, tz );
         end
 end
- 
+
 function wallsUp( tdx, tdy )
         for n=0,3 do
                 placeBlockUp( 1, false );
@@ -196,7 +196,7 @@ function wallsUp( tdx, tdy )
                 end
         end
 end
- 
+
 function wallsDown( tdx, tdy )
         for n=0,3 do
                 if( x == tdx and y == tdy ) then
@@ -223,7 +223,7 @@ function wallsDown( tdx, tdy )
                 end
         end
 end
- 
+
 function staircaseUp()
         wallsUp();
         goto( nil, nil, z+1 ); wallsUp(0,0);
@@ -232,7 +232,7 @@ function staircaseUp()
         goto( nil, nil, z+1 ); wallsUp(0,1);
         goto( 0, 0, nil ); north();
 end
- 
+
 function staircaseDown()
         wallsDown();
         goto( nil, nil, z-1 ); wallsDown(0,0);
@@ -356,7 +356,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
 				east(); placeBlock( 1, match );
 			end
 		end
-	
+
 		-- Motion control
 		tz = tz + modZ;
 
@@ -376,8 +376,8 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
 				-- Time to shift in Z
 				-- Note that if we hit this, modZ is already flipped
 
-				-- To slope, we need to move to the corresponding corner in the 
-				-- new plane. We should adjust bounds and control the order of 
+				-- To slope, we need to move to the corresponding corner in the
+				-- new plane. We should adjust bounds and control the order of
 				-- moves
 
 				if( slope > 0 ) then
@@ -416,7 +416,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
 		goto( tx, ty, tz );
 	end
 end
- 
+
 function find(target)
         if( turtle.getItemCount( target ) > 1 ) then
                 turtle.select(target);
@@ -438,16 +438,16 @@ function find(target)
         print( "NO MATERIAL FOUND" );
         exit();
 end
- 
+
 function checkFuel()
         if( turtle.getFuelLevel() > (math.abs(x)-home_x)+(math.abs(y)-home_y)+(math.abs(z)-home_z)+10 ) then
                 return 1;
         end
-        print( "INSUFFICIENT FUEL" );
+        print( "INSUFFICIENT FUEL (" .. x .. ", " .. y .. ", " .. z .. ")" );
         goto( home_x, home_y, home_z ); north();
         exit();
 end
- 
+
 function goto(tx,ty,tz)
         if( tx == nil ) then
                 tx = x;
@@ -524,7 +524,7 @@ function goto(tx,ty,tz)
                 end
         end
 end
- 
+
 function north()
         if( p == 2 ) then
                 turtle.turnLeft(); turtle.turnLeft();
@@ -537,7 +537,7 @@ function north()
         end
         p=0;
 end
- 
+
 function east()
         if( p == 0 ) then
                 turtle.turnRight();
@@ -550,7 +550,7 @@ function east()
         end
         p=1;
 end
- 
+
 function west()
         if( p == 0 ) then
                 turtle.turnLeft();
@@ -563,7 +563,7 @@ function west()
         end
         p=3;
 end
- 
+
 function south()
         if( p == 0 ) then
                 turtle.turnLeft(); turtle.turnLeft();
@@ -576,7 +576,7 @@ function south()
         end
         p=2;
 end
- 
+
 function httpDownload( url, path )
         local response = http.get( url );
         if response then
@@ -591,7 +591,7 @@ function httpDownload( url, path )
                 return 0;
         end
 end
- 
+
 function getopt( arg, options )
   local tab = {}
   for k, v in ipairs(arg) do
@@ -622,7 +622,7 @@ function getopt( arg, options )
   end
   return tab
 end
- 
+
 function nextPoint( list, point )
         max_z = 0;
         for tx,rank in pairs(list) do
@@ -694,15 +694,15 @@ function nextPointDense(model, point, verbose)
 
 	sel_pt = nil;
 	for k,pt in pairs(plist) do
-		if(pt[1] == point[1] and 
-		   pt[3] == point[3] and 
+		if(pt[1] == point[1] and
+		   pt[3] == point[3] and
 		   (sel_pt == nil or dist3d(pt,point) < dist3d(sel_pt,point))
 		) then
 			sel_pt = pt;
 		end
 	end
 	if( sel_pt ~= nil ) then return sel_pt; end
-	
+
 	for k,pt in pairs(plist) do
 		if(pt[3] == point[3] and (
 			sel_pt == nil or
@@ -731,7 +731,7 @@ function dist3d( p1, p2 )
 -- Taxi geometry. THIS IS MINECRAFT.
         return math.abs( p1[1]-p2[1] ) + math.abs( p1[2]-p2[2] ) + math.abs( p1[3]-p2[3] );
 end
- 
+
 function printModelPoint(model, x, y, z, material, match, dryrun)
 	if(model[x][y][z-1] == -1) then
 		if not dryrun then turtle.digDown(); end
@@ -748,7 +748,7 @@ function printModelPoint(model, x, y, z, material, match, dryrun)
 		model[x][y][z] = 0;
 	end
 end
- 
+
 function printModel( model, zskip, dryrun, verbose, match, material, final, dense )
 	if( zskip == nil )    then zskip = 0;       end
 	if( dryrun == nil )   then dryrun = 0;      end
@@ -760,7 +760,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 
 
 	if( verbose and dense ) then print( "Using dense fill algorithm" ); end
-	
+
 	if( dense ) then
 		point = firstPointDense(model, {0,0,zskip}, verbose);
 	else
@@ -769,24 +769,24 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 	end
 
 	if(point == nil) then print("Error: No first point found"); return; end
-	
+
 	last_yield_time = os.time()
 
 	modX = 1; modY = 1;
-	
+
 	while( point ~= nil ) do
 		if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
 		if( verbose ) then print( table.concat( point, "," ) .. "=" .. model[point[1]][point[2]][point[3]] ); end
 		while(z ~= point[3]+1) do
-			if(z < point[3]+1) then 
+			if(z < point[3]+1) then
 				if dryrun then z = z + 1; else goto(nil,nil,z+1); end
-			else 
+			else
 				if dryrun then z = z - 1; else goto(nil,nil,z-1); end
 			end
 			printModelPoint(model,x,y,z,material,match);
 		end
 		while(x ~= point[1]) do
-			if(x < point[1]) then 
+			if(x < point[1]) then
 				if dryrun then x = x + 1; else goto(x+1,nil,nil); end
 			else
 				if dryrun then x = x - 1; else goto(x-1,nil,nil); end
@@ -794,9 +794,9 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			printModelPoint(model,x,y,z,material,match);
 		end
 		while(y ~= point[2]) do
-			if(y < point[2]) then 
+			if(y < point[2]) then
 				if dryrun then y = y + 1; else goto(nil,y+1,nil); end
-			else 
+			else
 				if dryrun then y = y - 1; else goto(nil,y-1,nil); end
 			end
 			printModelPoint(model,x,y,z,material,match);
@@ -816,7 +816,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 			end
 		end
 	end
-	
+
 	if( not dryrun and final ) then
 		goto( homeX,homeY, nil );
 		goto( nil, nil, z+1 );
