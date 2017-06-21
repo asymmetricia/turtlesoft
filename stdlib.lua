@@ -819,7 +819,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
 
 	if( not dryrun and final ) then
 		goto( homeX,homeY, nil );
-		goto( nil, nil, z+1 );
+		goto( nil, nil, 0 );
 		north();
 	end
 end
