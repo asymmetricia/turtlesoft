@@ -297,11 +297,12 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
     if (slope < 0) then
       goto(nil,1,nil);
       goto(nil,nil,-1);
+      minZ = minZ - 1; maxZ = maxZ - 1;        
     elseif (slope > 0) then
       goto(nil,nil,1);
       goto(nil,1,nil);
+      minZ = minZ + 1; maxZ = maxZ + 1;
     end
-    z=0;
 	end
 
 	minY = y;
