@@ -247,7 +247,23 @@ function placeBlock( slot, match )
 	if turtle.detect() and not match then return; end
 	find( slot );
 	if turtle.compare() then return; end
-	while not turtle.place() do if turtle.detect() then turtle.dig(); else turtle.attack(); end; end
+	while true do
+	  if turtle.place() then
+	    if turtle.detect() then
+	      break;
+	    else
+	      turtle.forward();
+	      turtle.dig();
+	      turtle.back();
+	    end
+	  else
+	    if turtle.detect() then
+	      turtle.dig();
+	    else
+	      turtle.attack();
+	    end
+	  end
+	end
 end
 
 function placeBlockUp( slot, match )
@@ -255,7 +271,23 @@ function placeBlockUp( slot, match )
 	if turtle.detectUp() and not match then return; end
 	find( slot );
 	if turtle.compareUp() then return; end
-	while not turtle.placeUp() do if turtle.detectUp() then turtle.digUp(); else turtle.attackUp(); end; end
+  while true do
+    if turtle.placeUp() then
+      if turtle.detectUp() then
+        break;
+      else
+        turtle.up();
+        turtle.digUp();
+        turtle.down();
+      end
+    else
+      if turtle.detectUp() then
+        turtle.digUp();
+      else
+        turtle.attackUp();
+      end
+    end
+  end
 end
 
 function placeBlockDown( slot, match )
@@ -263,7 +295,23 @@ function placeBlockDown( slot, match )
 	if turtle.detectDown() and not match then return; end
 	find( slot );
 	if turtle.compareDown() then return; end
-	while not turtle.placeDown() do if turtle.detectDown() then turtle.digDown(); else turtle.attackDown(); end; end
+	while true do
+	  if turtle.placeDown() then
+	    if turtle.detectDown() then
+	      break;
+	    else
+	      turtle.down();
+	      turtle.digDown();
+	      turtle.up();
+	    end
+	  else
+	    if turtle.detectDown() then
+	      turtle.digDown();
+	    else
+	      turtle.attackDown();
+	    end
+	  end
+	end
 end
 
 -- Advance == 1   if turtle should move forward into first open block of tunnel,
