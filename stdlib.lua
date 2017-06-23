@@ -276,14 +276,6 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
 	slope = tonumber(slope) or 0
 	if(type(match) == "boolean") then match=match else match=false; end
 
-  if (slope < 0) then
-    goto(nil,1,nil);
-    goto(nil,nil,-1);
-  elseif (slope > 0) then
-    goto(nil,nil,1);
-    goto(nil,1,nil);
-  end
-
 	-- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
 	if( zdim < 0 ) then
 		minZ = z+zdim+1; maxZ = z;
@@ -302,7 +294,13 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
 	end
 
 	if( advance ~= nil ) then
-		goto( nil, y+1, nil );
+    if (slope < 0) then
+      goto(nil,1,nil);
+      goto(nil,nil,-1);
+    elseif (slope > 0) then
+      goto(nil,nil,1);
+      goto(nil,1,nil);
+    end
 	end
 
 	minY = y;
