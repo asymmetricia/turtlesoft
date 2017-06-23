@@ -301,6 +301,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
       goto(nil,nil,1);
       goto(nil,1,nil);
     end
+    z=0;
 	end
 
 	minY = y;
