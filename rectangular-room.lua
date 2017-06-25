@@ -16,7 +16,7 @@ if( opts[ "x" ] == nil or opts[ "h" ] ) then
 	print( "	--floor=<N> -- use N as item type for floor, default 1" );
 	print( "	--walls=<N> -- As above, default same as floor" );
 	print( "	--ceiling=<N> -- As above, default same as walls" );
-	print( "	--roof=<N> -- If 1, the ceiling will be one unit thicker and the top will be Roof material instead of Ceiling material. The overall height will be preserved." );
+	print( "	--roof=<N> -- If set, the ceiling will be one unit thicker and the top will be Roof material instead of Ceiling material. The overall height will be preserved." );
 	print( "	--clear clear the inside of the room" );
 	print( "	Note: Turtle begins in bottom-right corner of interior space." );
 	exit();
@@ -30,7 +30,7 @@ zskip=-1; match=false; dryrun=false; x=0; y=0; verbose=false;
 layers=dimZ;
 
 if( opts["clear"] ~= nil ) then clear = 1; end
-if( opts["zskip"] ~= nil ) then zskip = tonumber( opts["z"] )-1; end
+if( opts["zskip"] ~= nil ) then zskip = tonumber( opts["zskip"] )-1; end
 if( opts["n"] ~= nil ) then layers = tonumber( opts["n"] ); end
 if( opts["m"] ~= nil or opts["match"] ~= nil ) then print( "Block-matching enabled." ); match = true; end
 if( opts["d"] ~= nil or opts["dryrun"] ~= nil ) then dryrun = true; end
