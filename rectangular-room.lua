@@ -188,9 +188,11 @@ end
 
 if not dryrun then
 	goto(0,0,z); 
-	if(mat_roof ~= 0) then goto(0,0,z-3); placeBlockUp(2,true); else goto(0,0,z-2) end
+	goto(0,0,z-2);
+	if(mat_roof ~= 0) then placeBlockUp(mat_roof,true); end
 	for i=1,wallthickness do
-		goto(0,0,z-1); placeBlockUp(1,true);
+		goto(0,0,z-1); placeBlockUp(mat_ceiling,true);
 	end
 	goto(0,0,0);
+	north();
 end
