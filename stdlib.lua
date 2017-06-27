@@ -488,10 +488,10 @@ function find(target)
                         end
                 end
         end
+        print( "NO MATERIAL (" .. x .. ", " .. y .. ", " .. z .. ")" );
         goto( home_x, home_y, nil );
         goto( nil, nil, home_z );
         north();
-        print( "NO MATERIAL FOUND" );
         exit();
 end
 
