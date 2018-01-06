@@ -1,5 +1,5 @@
 if( fs.exists( "/stdlib" ) ) then
-	dofile( "/stdlib" );
+	if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
 	print( "drain: error: /stdlib missing" );
 	exit();

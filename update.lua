@@ -6,7 +6,7 @@ else
 	exit();
 end
 
-dofile( "/stdlib" );
+if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 
 args = {...}
 opts = getopt( args, "" );
