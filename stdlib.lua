@@ -67,13 +67,13 @@ function newMineArea( dimX, dimY, dimZ, zskip )
         if( dimX < 0 ) then modX = -1; end
         if( dimY < 0 ) then modY = -1; end
         if( dimZ < 0 ) then modZ = -1; end
-		-- Positive values, regardless of direction.
+    -- Positive values, regardless of direction.
         minX=0; maxX=dimX*modX-1; tx=0;
         minY=0; maxY=dimY*modY-1; ty=0;
-		minZ = zskip; maxZ=dimZ*modZ-1;
-		-- If we're mining more than 3Z, move to the middle of the first layer
-		if((maxZ - minZ)+1 >= 3) then tz=minZ*modZ+1*modZ; else tz=minZ*modZ; end
-		goto(0, 0, tz);
+    minZ = zskip; maxZ=dimZ*modZ-1;
+    -- If we're mining more than 3Z, move to the middle of the first layer
+    if((maxZ - minZ)+1 >= 3) then tz=minZ*modZ+1*modZ; else tz=minZ*modZ; end
+    goto(0, 0, tz);
         zmax = tz; -- Number of completed layers
         dir=0;
         if( dimZ*modZ >= dimX*modX and dimZ*modZ >= dimY*modY ) then
@@ -243,34 +243,34 @@ function staircaseDown()
 end
 
 function placeBlock( slot, match )
-	if(type(match)=="number") then match = (match==1); end
-	if turtle.detect() and not match then return; end
-	find( slot );
-	if turtle.compare() then return; end
-	while true do
-	  if turtle.place() then
-	    if turtle.detect() then
-	      break;
-	    else
-	      turtle.forward();
-	      turtle.dig();
-	      turtle.back();
-	    end
-	  else
-	    if turtle.detect() then
-	      turtle.dig();
-	    else
-	      turtle.attack();
-	    end
-	  end
-	end
+  if(type(match)=="number") then match = (match==1); end
+  if turtle.detect() and not match then return; end
+  find( slot );
+  if turtle.compare() then return; end
+  while true do
+    if turtle.place() then
+      if turtle.detect() then
+        break;
+      else
+        turtle.forward();
+        turtle.dig();
+        turtle.back();
+      end
+    else
+      if turtle.detect() then
+        turtle.dig();
+      else
+        turtle.attack();
+      end
+    end
+  end
 end
 
 function placeBlockUp( slot, match )
-	if(type(match)=="number") then match = (match==1); end
-	if turtle.detectUp() and not match then return; end
-	find( slot );
-	if turtle.compareUp() then return; end
+  if(type(match)=="number") then match = (match==1); end
+  if turtle.detectUp() and not match then return; end
+  find( slot );
+  if turtle.compareUp() then return; end
   while true do
     if turtle.placeUp() then
       if turtle.detectUp() then
@@ -291,58 +291,60 @@ function placeBlockUp( slot, match )
 end
 
 function placeBlockDown( slot, match )
-	if(type(match)=="number") then match = (match==1); end
-	if turtle.detectDown() and not match then return; end
-	find( slot );
-	if turtle.compareDown() then return; end
-	while true do
-	  if turtle.placeDown() then
-	    if turtle.detectDown() then
-	      break;
-	    else
-	      turtle.down();
-	      turtle.digDown();
-	      turtle.up();
-	    end
-	  else
-	    if turtle.detectDown() then
-	      turtle.digDown();
-	    else
-	      turtle.attackDown();
-	    end
-	  end
-	end
+  if(type(match)=="number") then match = (match==1); end
+  if turtle.detectDown() and not match then return; end
+  find( slot );
+  if turtle.compareDown() then return; end
+  while true do
+    if turtle.placeDown() then
+      if turtle.detectDown() then
+        break;
+      else
+        turtle.down();
+        turtle.digDown();
+        turtle.up();
+      end
+    else
+      if turtle.detectDown() then
+        turtle.digDown();
+      else
+        turtle.attackDown();
+      end
+    end
+  end
 end
 
 -- Advance == 1   if turtle should move forward into first open block of tunnel,
 --         == nil if turtle is starting "in the wall" of last segment
-function tunnel( xdim, ydim, zdim, advance, slope, match )
-	modX=1; modZ=1; modY=1;
-	xdim = tonumber(xdim) or 1
-	ydim = tonumber(ydim) or 1
-	zdim = tonumber(zdim) or 2
-	slope = tonumber(slope) or 0
-	if(type(match) == "boolean") then match=match else print("tunnel: expected boolean for match but received" .. type(match)); match=false; end
-	if(match) then print("tunnel: block matching enabled"); end
+function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
+  print( "Starting fuel: " .. turtle.getFuelLevel() )
+  modX=1; modZ=1; modY=1;
+  xdim = tonumber(xdim) or 1
+  ydim = tonumber(ydim) or 1
+  zdim = tonumber(zdim) or 2
+  slope = tonumber(slope) or 0
+  hslope = tonumber(hslope) or 0
+  if(type(match) == "boolean") then match=match else print("tunnel: expected boolean for match but received" .. type(match)); match=false; end
+  if(match) then print("tunnel: block matching enabled"); end
 
-	-- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
-	if( zdim < 0 ) then
-		minZ = z+zdim+1; maxZ = z;
-		modZ = -1;
-	else
-		minZ = z;
-		maxZ = z+zdim-1;
-	end
+  -- Z will actually take these values, i.e., minZ=maxZ=0 would be one block high
+  if( zdim < 0 ) then
+    minZ = z+zdim+1; maxZ = z;
+    modZ = -1;
+  else
+    minZ = z;
+    maxZ = z+zdim-1;
+  end
 
-	if( xdim < 0 ) then
-		minX = x+xdim+1; maxX = x;
-		modX = -1;
-	else
-		minX = x;
-		maxX = x+xdim-1;
-	end
+  if( xdim < 0 ) then
+    minX = x+xdim+1; maxX = x;
+    modX = -1;
+  else
+    minX = x;
+    maxX = x+xdim-1;
+  end
 
-	if( advance ~= nil ) then
+  if( advance ~= nil ) then
     if (slope < 0) then
       goto(nil,1,nil);
       goto(nil,nil,-1);
@@ -352,126 +354,145 @@ function tunnel( xdim, ydim, zdim, advance, slope, match )
       goto(nil,1,nil);
       minZ = minZ + 1; maxZ = maxZ + 1;
     end
-	end
+  end
 
-	minY = y;
-	maxY = y + ydim - 1;
+  minY = y;
+  maxY = y + ydim - 1;
 
-	ty=y; tx=x; tz=z;
+  ty=y; tx=x; tz=z;
 
-	while true do
-		if( z == minZ ) then
-			placeBlockDown( 1, match );
-		end
-		if( z == maxZ ) then
-			placeBlockUp( 1, match );
-		end
+  while true do
+    if( z == minZ ) then
+      placeBlockDown( 1, match );
+    end
+    if( z == maxZ ) then
+      placeBlockUp( 1, match );
+    end
 
-		-- Optimize to reduce turns
-		--       ^   N = 0
-		-- W=3 <   > E = 1
-		--       v   S = 2
-		if( p == 2 ) then
-			if( modX == 1 ) then
-				west();
-			else
-				east();
-			end
-		end
-		if( p == 0 ) then
-			placeBlock( 1, match );
-			-- if modX is positive we'll be heading east, so face east last
-			if( modX == 1 ) then
-				if( x == minX ) then
-					west(); placeBlock( 1, match );
-				end
-				if( x == maxX ) then
-					east(); placeBlock( 1, match );
-				end
-			else
-				if( x == maxX ) then
-					east(); placeBlock( 1, match );
-				end
-				if( x == minX ) then
-					west(); placeBlock( 1, match );
-				end
-			end
-		elseif( p == 1 ) then
-			if( x == maxX ) then
-				placeBlock( 1, match );
-			end
-			north(); placeBlock( 1, match );
-			if( x == minX ) then
-				west(); placeBlock( 1, match );
-			end
-		elseif( p == 3 ) then
-			if( x == minX ) then
-				placeBlock( 1, match );
-			end
-			north(); placeBlock( 1, match );
-			if( x == maxX ) then
-				east(); placeBlock( 1, match );
-			end
-		end
+    -- Optimize to reduce turns
+    --       ^   N = 0
+    -- W=3 <   > E = 1
+    --       v   S = 2
+    if( p == 2 ) then
+      if( modX == 1 ) then
+        west();
+      else
+        east();
+      end
+    end
+    if( p == 0 ) then
+      placeBlock( 1, match );
+      -- if modX is positive we'll be heading east, so face east last
+      if( modX == 1 ) then
+        if( x == minX ) then
+          west(); placeBlock( 1, match );
+        end
+        if( x == maxX ) then
+          east(); placeBlock( 1, match );
+        end
+      else
+        if( x == maxX ) then
+          east(); placeBlock( 1, match );
+        end
+        if( x == minX ) then
+          west(); placeBlock( 1, match );
+        end
+      end
+    elseif( p == 1 ) then
+      if( x == maxX ) then
+        placeBlock( 1, match );
+      end
+      north(); placeBlock( 1, match );
+      if( x == minX ) then
+        west(); placeBlock( 1, match );
+      end
+    elseif( p == 3 ) then
+      if( x == minX ) then
+        placeBlock( 1, match );
+      end
+      north(); placeBlock( 1, match );
+      if( x == maxX ) then
+        east(); placeBlock( 1, match );
+      end
+    end
 
-		-- Motion control
-		tz = tz + modZ;
+    -- Motion control
+    tz = tz + modZ;
 
-		if( (tz > maxZ and modZ > 0) or (tz < minZ and modZ < 0) ) then
-			-- z hit bounds, move in x instead
-			tz = tz - modZ;
-			tx = tx + modX;
-			modZ = modZ * -1;
-		end
+    if( (tz > maxZ and modZ > 0) or (tz < minZ and modZ < 0) ) then
+      -- z hit bounds, move in x instead
+      tz = tz - modZ;
+      tx = tx + modX;
+      modZ = modZ * -1;
+    end
 
-		if( (tx > maxX and modX > 0) or (tx < minX and modX < 0) ) then
-			-- x hit bounds, move in y instead
-			tx = tx - modX;
-			ty = ty + modY;
-			modX = modX * -1;
-			if( (ty <= maxY) and (slope ~= 0) and ((ty - minY) % math.abs( slope ) == 0) ) then
-				-- Time to shift in Z
-				-- Note that if we hit this, modZ is already flipped
+    if( (tx > maxX and modX > 0) or (tx < minX and modX < 0) ) then
+      -- x hit bounds, move in y instead
+      tx = tx - modX;
+      ty = ty + modY;
+      modX = modX * -1;
+      if( (ty <= maxY) and (hslope ~= 0) and ((ty - minY) % math.abs( hslope ) == 0) ) then
+        if( hslope > 0 ) then
+          minX = minX + 1
+          maxX = maxX + 1
+          if( tx < minX ) then
+            tx = minX
+            goto(tx, nil, nil);
+          end
+        else
+          minX = minX - 1
+          maxX = maxX - 1
+          if( tx > maxX ) then
+            tx = maxX
+            goto(tx, nil, nil);
+          end
+        end
+      end
 
-				-- To slope, we need to move to the corresponding corner in the
-				-- new plane. We should adjust bounds and control the order of
-				-- moves
+      if( (ty <= maxY) and (slope ~= 0) and ((ty - minY) % math.abs( slope ) == 0) ) then
+        -- Time to shift in Z
+        -- Note that if we hit this, modZ is already flipped
 
-				if( slope > 0 ) then
-					minZ = minZ + 1
-					maxZ = maxZ + 1
-					if( tz < minZ ) then
-						tz = minZ;
-						goto( nil, nil, tz );
-						goto( nil, ty, nil );
-					else
-						tz = maxZ;
-						goto( nil, ty, nil );
-						goto( nil, nil, tz );
-					end
-				else
-					minZ = minZ - 1
-					maxZ = maxZ - 1
-					if( tz > maxZ ) then
-						tz = maxZ;
-						goto( nil, nil, tz );
-						goto( nil, ty, nil );
-					else
-						tz = minZ;
-						goto( nil, ty, nil );
-						goto( nil, nil, tz );
-					end
-				end
-			end
-		end
+        -- To slope, we need to move to the corresponding corner in the
+        -- new plane. We should adjust bounds and control the order of
+        -- moves
 
-		if( ty > maxY ) then
-			goto( minX, nil, minZ );
-			north();
-			return;
-		end
-		goto( tx, ty, tz );
-	end
+        if( slope > 0 ) then
+          minZ = minZ + 1
+          maxZ = maxZ + 1
+          if( tz < minZ ) then
+            tz = minZ;
+            goto( nil, nil, tz );
+            goto( nil, ty, nil );
+          else
+            tz = maxZ;
+            goto( nil, ty, nil );
+            goto( nil, nil, tz );
+          end
+        else
+          minZ = minZ - 1
+          maxZ = maxZ - 1
+          if( tz > maxZ ) then
+            tz = maxZ;
+            goto( nil, nil, tz );
+            goto( nil, ty, nil );
+          else
+            tz = minZ;
+            goto( nil, ty, nil );
+            goto( nil, nil, tz );
+          end
+        end
+      end
+    end
+
+    if( ty > maxY ) then
+      goto( minX, nil, minZ );
+      north();
+      print( "Ending fuel: " .. turtle.getFuelLevel() )
+      return;
+    end
+    goto( tx, ty, tz );
+  end
 end
 
 function find(target)
@@ -712,75 +733,75 @@ function nextPoint( list, point )
 end
 
 function firstPointDense(model, point, verbose)
-	point = nil
-	for cx,ylist in pairs(model) do
-		for cy,zlist in pairs(ylist) do
-			for cz,action in pairs(zlist) do
-				if(action ~= 0) then
-					if(point == nil or
-					   cy < point[2] and cx <= point[1] and cz <= point[3] or
-					   cx < point[1] and cz <= point[3] or
-					   cz < point[3]
-					) then
-						point = {cx,cy,cz}
-					end
-				end
-			end
-		end
-	end
-	return point
+  point = nil
+  for cx,ylist in pairs(model) do
+    for cy,zlist in pairs(ylist) do
+      for cz,action in pairs(zlist) do
+        if(action ~= 0) then
+          if(point == nil or
+             cy < point[2] and cx <= point[1] and cz <= point[3] or
+             cx < point[1] and cz <= point[3] or
+             cz < point[3]
+          ) then
+            point = {cx,cy,cz}
+          end
+        end
+      end
+    end
+  end
+  return point
 end
 
 function nextPointDense(model, point, verbose)
-	if verbose == nil then verbose=false; end
-	plist = {}
+  if verbose == nil then verbose=false; end
+  plist = {}
 
-	for cx,ylist in pairs(model) do
-		for cy,zlist in pairs(ylist) do
-			for cz,action in pairs(zlist) do
-				if cz >= zskip and action ~= 0 then
-					table.insert( plist, {cx,cy,cz,action} )
-				end
-			end
-		end
-	end
-	-- Dense means we print in stripes, period.
-	-- Find nearest Point on this X and Z
-	-- else nearest Point this Z
-	-- else find min Y on min X on next Z
+  for cx,ylist in pairs(model) do
+    for cy,zlist in pairs(ylist) do
+      for cz,action in pairs(zlist) do
+        if cz >= zskip and action ~= 0 then
+          table.insert( plist, {cx,cy,cz,action} )
+        end
+      end
+    end
+  end
+  -- Dense means we print in stripes, period.
+  -- Find nearest Point on this X and Z
+  -- else nearest Point this Z
+  -- else find min Y on min X on next Z
 
-	sel_pt = nil;
-	for k,pt in pairs(plist) do
-		if(pt[1] == point[1] and
-		   pt[3] == point[3] and
-		   (sel_pt == nil or dist3d(pt,point) < dist3d(sel_pt,point))
-		) then
-			sel_pt = pt;
-		end
-	end
-	if( sel_pt ~= nil ) then return sel_pt; end
+  sel_pt = nil;
+  for k,pt in pairs(plist) do
+    if(pt[1] == point[1] and
+       pt[3] == point[3] and
+       (sel_pt == nil or dist3d(pt,point) < dist3d(sel_pt,point))
+    ) then
+      sel_pt = pt;
+    end
+  end
+  if( sel_pt ~= nil ) then return sel_pt; end
 
-	for k,pt in pairs(plist) do
-		if(pt[3] == point[3] and (
-			sel_pt == nil or
-			pt[1] < sel_pt[1] or
-			(pt[1] == sel_pt[1] and dist3d(pt,point) < dist3d(sel_pt,point))
-		)) then
-			sel_pt = pt;
-		end
-	end
-	if( sel_pt ~= nil ) then return sel_pt; end
+  for k,pt in pairs(plist) do
+    if(pt[3] == point[3] and (
+      sel_pt == nil or
+      pt[1] < sel_pt[1] or
+      (pt[1] == sel_pt[1] and dist3d(pt,point) < dist3d(sel_pt,point))
+    )) then
+      sel_pt = pt;
+    end
+  end
+  if( sel_pt ~= nil ) then return sel_pt; end
 
-	for k,pt in pairs(plist) do
-		if(pt[3] == point[3]+1 and (
-			sel_pt == nil or
-			pt[1] < sel_pt[1] or
-			(pt[1] == sel_pt[1] and pt[2] < sel_pt[2])
-		)) then
-			sel_pt = pt;
-		end
-	end
-	return sel_pt;
+  for k,pt in pairs(plist) do
+    if(pt[3] == point[3]+1 and (
+      sel_pt == nil or
+      pt[1] < sel_pt[1] or
+      (pt[1] == sel_pt[1] and pt[2] < sel_pt[2])
+    )) then
+      sel_pt = pt;
+    end
+  end
+  return sel_pt;
 end
 
 function dist3d( p1, p2 )
@@ -790,93 +811,93 @@ function dist3d( p1, p2 )
 end
 
 function printModelPoint(model, x, y, z, material, match, dryrun)
-	if(model[x][y][z-1] == -1) then
-		if not dryrun then turtle.digDown(); end
-		model[x][y][z-1] = 0;
-	elseif(model[x][y][z-1] == 1) then
-		if not dryrun then placeBlockDown(material,match); end
-		model[x][y][z-1] = 0;
-	end
-	if(model[x][y][z+1] == -1) then
-		if not dryrun then while turtle.digUp() do end; end
-		model[x][y][z+1] = 0;
-	end
-	if(model[x][y][z] == -1) then
-		model[x][y][z] = 0;
-	end
+  if(model[x][y][z-1] == -1) then
+    if not dryrun then turtle.digDown(); end
+    model[x][y][z-1] = 0;
+  elseif(model[x][y][z-1] == 1) then
+    if not dryrun then placeBlockDown(material,match); end
+    model[x][y][z-1] = 0;
+  end
+  if(model[x][y][z+1] == -1) then
+    if not dryrun then while turtle.digUp() do end; end
+    model[x][y][z+1] = 0;
+  end
+  if(model[x][y][z] == -1) then
+    model[x][y][z] = 0;
+  end
 end
 
 function printModel( model, zskip, dryrun, verbose, match, material, final, dense )
-	if( zskip == nil )    then zskip = 0;       end
-	if( dryrun == nil )   then dryrun = 0;      end
-	if( verbose == nil )  then verbose = false; end
-	if( match == nil or match == 0 ) then match = false; end
-	if( material == nil ) then material = 1;    end
-	if( final == nil )    then final = true;    end
-	if( dense == nil )    then dense = false;   end
+  if( zskip == nil )    then zskip = 0;       end
+  if( dryrun == nil )   then dryrun = 0;      end
+  if( verbose == nil )  then verbose = false; end
+  if( match == nil or match == 0 ) then match = false; end
+  if( material == nil ) then material = 1;    end
+  if( final == nil )    then final = true;    end
+  if( dense == nil )    then dense = false;   end
 
 
-	if( verbose and dense ) then print( "Using dense fill algorithm" ); end
+  if( verbose and dense ) then print( "Using dense fill algorithm" ); end
 
-	if( dense ) then
-		point = firstPointDense(model, {0,0,zskip}, verbose);
-	else
-		point = nextPoint(model, { 0,0,zskip });
-		refpoint = point;
-	end
+  if( dense ) then
+    point = firstPointDense(model, {0,0,zskip}, verbose);
+  else
+    point = nextPoint(model, { 0,0,zskip });
+    refpoint = point;
+  end
 
-	if(point == nil) then print("Error: No first point found"); return; end
+  if(point == nil) then print("Error: No first point found"); return; end
 
-	last_yield_time = os.time()
+  last_yield_time = os.time()
 
-	modX = 1; modY = 1;
+  modX = 1; modY = 1;
 
-	while( point ~= nil ) do
-		if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
-		if( verbose ) then print( table.concat( point, "," ) .. "=" .. model[point[1]][point[2]][point[3]] ); end
-		while(z ~= point[3]+1) do
-			if(z < point[3]+1) then
-				if dryrun then z = z + 1; else goto(nil,nil,z+1); end
-			else
-				if dryrun then z = z - 1; else goto(nil,nil,z-1); end
-			end
-			printModelPoint(model,x,y,z,material,match);
-		end
-		while(x ~= point[1]) do
-			if(x < point[1]) then
-				if dryrun then x = x + 1; else goto(x+1,nil,nil); end
-			else
-				if dryrun then x = x - 1; else goto(x-1,nil,nil); end
-			end
-			printModelPoint(model,x,y,z,material,match);
-		end
-		while(y ~= point[2]) do
-			if(y < point[2]) then
-				if dryrun then y = y + 1; else goto(nil,y+1,nil); end
-			else
-				if dryrun then y = y - 1; else goto(nil,y-1,nil); end
-			end
-			printModelPoint(model,x,y,z,material,match);
-		end
+  while( point ~= nil ) do
+    if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
+    if( verbose ) then print( table.concat( point, "," ) .. "=" .. model[point[1]][point[2]][point[3]] ); end
+    while(z ~= point[3]+1) do
+      if(z < point[3]+1) then
+        if dryrun then z = z + 1; else goto(nil,nil,z+1); end
+      else
+        if dryrun then z = z - 1; else goto(nil,nil,z-1); end
+      end
+      printModelPoint(model,x,y,z,material,match);
+    end
+    while(x ~= point[1]) do
+      if(x < point[1]) then
+        if dryrun then x = x + 1; else goto(x+1,nil,nil); end
+      else
+        if dryrun then x = x - 1; else goto(x-1,nil,nil); end
+      end
+      printModelPoint(model,x,y,z,material,match);
+    end
+    while(y ~= point[2]) do
+      if(y < point[2]) then
+        if dryrun then y = y + 1; else goto(nil,y+1,nil); end
+      else
+        if dryrun then y = y - 1; else goto(nil,y-1,nil); end
+      end
+      printModelPoint(model,x,y,z,material,match);
+    end
 
-	-- Find the next closest point from our reference.
-	-- If it's distance>2, instead find the next closest point from here.
-		if( dense ) then
-			point = nextPointDense(model, point, verbose)
-			if( point == nil ) then break; end
-		else
-			point = nextPoint( model, refpoint )
-			if( point == nil ) then break; end
-			if( dist3d( point, refpoint ) > 2 ) then
-				point = nextPoint( model, point );
-				refpoint = point;
-			end
-		end
-	end
+  -- Find the next closest point from our reference.
+  -- If it's distance>2, instead find the next closest point from here.
+    if( dense ) then
+      point = nextPointDense(model, point, verbose)
+      if( point == nil ) then break; end
+    else
+      point = nextPoint( model, refpoint )
+      if( point == nil ) then break; end
+      if( dist3d( point, refpoint ) > 2 ) then
+        point = nextPoint( model, point );
+        refpoint = point;
+      end
+    end
+  end
 
-	if( not dryrun and final ) then
-		goto( homeX,homeY, nil );
-		goto( nil, nil, 0 );
-		north();
-	end
+  if( not dryrun and final ) then
+    goto( homeX,homeY, nil );
+    goto( nil, nil, 0 );
+    north();
+  end
 end
