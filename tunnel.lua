@@ -22,7 +22,7 @@ function sloped_z(y,slope)
 end
 
 args = {...}
-opts = getopt( args, "xyzsmu" );
+opts = getopt( args, "xyzs" );
 
 if     tonumber(opts["x"]) == nil then print( "-x (width) is required" );  usage();
 elseif tonumber(opts["y"]) == nil then print( "-y (length) is required" ); usage();
