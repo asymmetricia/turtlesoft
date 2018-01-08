@@ -71,7 +71,7 @@ if opts["u"] ~= nil then
     maxX = tunnel_x + sloped(tunnel_y, hslope)
   end
 
-  minY = 0
+  minY = 1
   maxY = tunnel_y
 
   minZ = -1
@@ -121,7 +121,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, minZ, false, false, match, nil, true, false );
+  printModel( model, 0, false, false, match, nil, true, false );
 
   -- Left Wall
   model = {}
@@ -141,7 +141,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, minZ, false, false, match, nil, true, false );
+  printModel( model, 0, false, false, match, nil, true, false );
 
   -- Ceiling
   model = {}
@@ -161,7 +161,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, minZ, false, false, match, nil, true, false );
+  printModel( model, tunnel_z, false, false, match, nil, true, false );
 
   if (slope > 0) then
     goto(nil, nil, sloped(maxY, slope) + tunnel_y + 1);
