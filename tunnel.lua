@@ -83,7 +83,6 @@ if opts["u"] ~= nil then
     maxZ = tunnel_z + sloped(tunnel_z, slope)
   end
 
-  -- Floor
   model = {}
   for tx = minX, maxX do
     model[tx] = {}
@@ -93,6 +92,7 @@ if opts["u"] ~= nil then
     sleep(0);
   end
 
+  -- Floor
   for ty = minY, maxY do
     xmod = sloped(ty, hslope)
     zmod = sloped(ty, slope)
@@ -101,62 +101,20 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, minZ, false, false, match, nil, false, false );
-
-  -- Right Wall
-  model = {}
-  for tx = minX, maxX do
-    model[tx] = {}
-    for ty = minY, maxY do
-      model[tx][ty] = {}
-    end
-    sleep(0);
-  end
-
-  for ty = minY, maxY do
-    xmod = sloped(ty, hslope)
-    zmod = sloped(ty, slope)
-    for tz = 0, tunnel_z - 1 do
-      model[tunnel_x+xmod][ty][tz+zmod] = 1
-    end
-  end
-
-  printModel( model, minZ, false, false, match, nil, false, false );
-
-  goto(sloped(y,hslope)-1, nil, nil)
-
-  -- Left Wall
-  model = {}
-  for tx = minX, maxX do
-    model[tx] = {}
-    for ty = minY, maxY do
-      model[tx][ty] = {}
-    end
-    sleep(0);
-  end
-
+  -- Walls
   for ty = minY, maxY do
     xmod = sloped(ty, hslope)
     zmod = sloped(ty, slope)
     for tz = 0, tunnel_z - 1 do
       model[xmod-1][ty][tz+zmod] = 1
+      for tz = xmod, tunnel_x+xmod-1 do
+        model[tunnel_x+xmod][ty][tz+zmod] = -1
+      end
+      model[tunnel_x+xmod][ty][tz+zmod] = 1
     end
   end
-
-  printModel( model, minZ, false, false, match, nil, false, false );
-
-  goto(nil, nil, sloped(y,slope)+tunnel_z)
 
   -- Ceiling
-  model = {}
-  for tx = minX, maxX do
-    model[tx] = {}
-    for ty = minY, maxY do
-      model[tx][ty] = {}
-    end
-    sleep(0);
-  end
-
   for ty = minY, maxY do
     xmod = sloped(ty, hslope)
     zmod = sloped(ty, slope)
