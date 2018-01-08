@@ -438,6 +438,8 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
           if( tx < minX ) then
             tx = minX
             goto(tx, nil, nil);
+          else
+            tx = maxX
           end
         else
           minX = minX - 1
@@ -445,6 +447,8 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
           if( tx > maxX ) then
             tx = maxX
             goto(tx, nil, nil);
+          else
+            tx = minX
           end
         end
       end
@@ -483,6 +487,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
           end
         end
       end
+      goto(tx,nil,nil);
     end
 
     if( ty > maxY ) then
