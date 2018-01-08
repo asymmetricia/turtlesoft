@@ -719,17 +719,17 @@ function getopt( arg, options )
 end
 
 function nextPoint( list, point )
-        max_z = 0;
+        max_z = nil;
         for tx,rank in pairs(list) do
                 for ty,col in pairs(rank) do
                         for tz,v in pairs(col) do
-                                if( tz > max_z ) then
+                                if( max_z == nil or tz > max_z ) then
                                         max_z = tz;
                                 end
                         end
                 end
         end
-        best=nil; dist=9999999999999999999999;
+        best=nil; dist=nil;
         for tz = point[3], max_z do
                 for tx,rank in pairs(list) do
                         for ty,col in pairs(rank) do
@@ -864,7 +864,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
   end
 
   if(point == nil) then print("Error: No first point found"); return; end
-
+  print("starting from (" .. point[0] .. "," .. point[1] .. "," .. point[2] .. ")");
   last_yield_time = os.time()
 
   modX = 1; modY = 1;
