@@ -96,8 +96,15 @@ if opts["u"] ~= nil then
   for ty = minY, maxY do
     xmod = sloped(ty, hslope)
     zmod = sloped(ty, slope)
-    for tx = 0, tunnel_x - 1 do
+    from = 0
+    to   = tunnel_x - 1
+    if (hslope ~= 0 and slope ~= 0) then
+      from = -1
+      to   = tunnel_x
+    end
+    for tx = from, to do
       model[tx+xmod][ty][zmod-1] = 1
+      model[tx+xmod][ty][tunnel_z+zmod] = 1
     end
   end
 
@@ -111,15 +118,6 @@ if opts["u"] ~= nil then
         model[tx+xmod][ty][tz+zmod] = -1
       end
       model[tunnel_x+xmod][ty][tz+zmod] = 1
-    end
-  end
-
-  -- Ceiling
-  for ty = minY, maxY do
-    xmod = sloped(ty, hslope)
-    zmod = sloped(ty, slope)
-    for tx = 0, tunnel_x - 1 do
-      model[tx+xmod][ty][tunnel_z+zmod] = 1
     end
   end
 
