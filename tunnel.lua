@@ -8,8 +8,8 @@ end
 function usage()
 	print( "usage: tunnel -x <width> -y <length> -z <height> [-s <slope>] [-h <h-slope>] [-m] [-u]" );
 	print( "  Specify -m to enable block-matching. Specify -u for unsafe (but fast) tunnels." );
-	print( "	-s -- default slope is 0. otherwise, slope is number of blocks per Z level, positive for sloping up, negative for sloping down. 2-3 is a good value for general walkways.")
-	print( "  -h -- default hslope is 0. otherwise, slope is number of blocks forward before one block right (h > 0) or left (h < 0). 1 is 45-degree tunnel.")
+	print( "	-s -- def slope is 0. slope is num/blocks per Z, >0 is up, <0 is down. 2 is a good value for walkways.")
+	print( "  -h -- def hslope is 0. slope is num/blocks forward before one block right (h > 0) or left (h < 0). 1 is 45-degree tunnel.")
 	os.exit();
 end
 
