@@ -828,6 +828,9 @@ function dist3d( p1, p2 )
 end
 
 function printModelPoint(model, x, y, z, material, match, dryrun)
+  if(model[x] == nil or model[x][y] == nil) then
+    return
+  end
   if(model[x][y][z-1] == -1) then
     if not dryrun then turtle.digDown(); end
     model[x][y][z-1] = 0;
