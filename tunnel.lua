@@ -130,14 +130,19 @@ if opts["u"] ~= nil then
   goto(nil,nil,sloped(y,slope)+tunnel_z-1); placeBlockUp(1,match);
   goto(nil,nil,sloped(y,slope));
   while (y<tunnel_y) do
-    if hslope < 0 then
+    ty = y+1;
+    if( hslope > 0 ) then
       goto(sloped(ty,hslope),nil,nil);
-    end
-    if(slope<0) then
-      goto(sloped(ty,hslope),y+1,nil); goto(nil,nil,sloped(y,slope));
     else
-      goto(sloped(ty,hslope),nil,sloped(y+1,slope)); goto(nil,y+1,nil);
+      if( slope > 0 ) then
+        goto(nil, nil, sloped(ty,slope));
+      end
+      goto(nil,ty,nil);
     end
+    if( slope > 0 ) then
+      goto(nil, nil, sloped(ty,slope));
+    end
+    goto(sloped(ty,hslope),ty,sloped(ty,slope));
   end
   north();
 else
