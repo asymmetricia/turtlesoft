@@ -483,19 +483,19 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
           end
         end
 
-        if x < minX || x > maxX then
+        if( x < minX or x > maxX ) then
           goto(tx, nil, nil)
         end
-        if z < minZ || z > maxZ then
+        if( z < minZ or z > maxZ ) then
           goto(nil, nil, tz)
         end
         goto(nil, ty, nil)
         check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
-        if x ~= tx then
+        if( x ~= tx ) then
           goto(tx, nil, nil)
           check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
         end
-        if z ~= tz then
+        if( z ~= tz ) then
           goto(nil, nil, tz)
           check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
         end
