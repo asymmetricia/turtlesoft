@@ -314,6 +314,62 @@ function placeBlockDown( slot, match )
   end
 end
 
+function check_spot(minX, maxX, minY, maxY, minZ, maxZ, match)
+  if( z == minZ ) then
+    placeBlockDown( 1, match );
+  end
+  if( z == maxZ ) then
+    placeBlockUp( 1, match );
+  end
+
+  -- Optimize to reduce turns
+  --       ^   N = 0
+  -- W=3 <   > E = 1
+  --       v   S = 2
+  if( p == 2 ) then
+    if( modX == 1 ) then
+      west();
+    else
+      east();
+    end
+  end
+  if( p == 0 ) then
+    placeBlock( 1, match );
+    -- if modX is positive we'll be heading east, so face east last
+    if( modX == 1 ) then
+      if( x == minX ) then
+        west(); placeBlock( 1, match );
+      end
+      if( x == maxX ) then
+        east(); placeBlock( 1, match );
+      end
+    else
+      if( x == maxX ) then
+        east(); placeBlock( 1, match );
+      end
+      if( x == minX ) then
+        west(); placeBlock( 1, match );
+      end
+    end
+  elseif( p == 1 ) then
+    if( x == maxX ) then
+      placeBlock( 1, match );
+    end
+    north(); placeBlock( 1, match );
+    if( x == minX ) then
+      west(); placeBlock( 1, match );
+    end
+  elseif( p == 3 ) then
+    if( x == minX ) then
+      placeBlock( 1, match );
+    end
+    north(); placeBlock( 1, match );
+    if( x == maxX ) then
+      east(); placeBlock( 1, match );
+    end
+  end
+end
+
 -- Advance == 1   if turtle should move forward into first open block of tunnel,
 --         == nil if turtle is starting "in the wall" of last segment
 function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
@@ -348,7 +404,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
     if (slope < 0) then
       goto(nil,1,nil);
       goto(nil,nil,-1);
-      minZ = minZ - 1; maxZ = maxZ - 1;        
+      minZ = minZ - 1; maxZ = maxZ - 1;
     elseif (slope > 0) then
       goto(nil,nil,1);
       goto(nil,1,nil);
@@ -362,59 +418,7 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
   ty=y; tx=x; tz=z;
 
   while true do
-    if( z == minZ ) then
-      placeBlockDown( 1, match );
-    end
-    if( z == maxZ ) then
-      placeBlockUp( 1, match );
-    end
-
-    -- Optimize to reduce turns
-    --       ^   N = 0
-    -- W=3 <   > E = 1
-    --       v   S = 2
-    if( p == 2 ) then
-      if( modX == 1 ) then
-        west();
-      else
-        east();
-      end
-    end
-    if( p == 0 ) then
-      placeBlock( 1, match );
-      -- if modX is positive we'll be heading east, so face east last
-      if( modX == 1 ) then
-        if( x == minX ) then
-          west(); placeBlock( 1, match );
-        end
-        if( x == maxX ) then
-          east(); placeBlock( 1, match );
-        end
-      else
-        if( x == maxX ) then
-          east(); placeBlock( 1, match );
-        end
-        if( x == minX ) then
-          west(); placeBlock( 1, match );
-        end
-      end
-    elseif( p == 1 ) then
-      if( x == maxX ) then
-        placeBlock( 1, match );
-      end
-      north(); placeBlock( 1, match );
-      if( x == minX ) then
-        west(); placeBlock( 1, match );
-      end
-    elseif( p == 3 ) then
-      if( x == minX ) then
-        placeBlock( 1, match );
-      end
-      north(); placeBlock( 1, match );
-      if( x == maxX ) then
-        east(); placeBlock( 1, match );
-      end
-    end
+    check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
 
     -- Motion control
     tz = tz + modZ;
@@ -431,13 +435,14 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
       tx = tx - modX;
       ty = ty + modY;
       modX = modX * -1;
+
+      -- shift plane in x direction
       if( (ty <= maxY) and (hslope ~= 0) and ((ty - minY) % math.abs( hslope ) == 0) ) then
         if( hslope > 0 ) then
           minX = minX + 1
           maxX = maxX + 1
           if( tx < minX ) then
             tx = minX
-            goto(tx, nil, nil);
           else
             tx = maxX
           end
@@ -446,7 +451,6 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
           maxX = maxX - 1
           if( tx > maxX ) then
             tx = maxX
-            goto(tx, nil, nil);
           else
             tx = minX
           end
@@ -466,28 +470,36 @@ function tunnel( xdim, ydim, zdim, advance, slope, hslope, match )
           maxZ = maxZ + 1
           if( tz < minZ ) then
             tz = minZ;
-            goto( nil, nil, tz );
-            goto( nil, ty, nil );
           else
             tz = maxZ;
-            goto( nil, ty, nil );
-            goto( nil, nil, tz );
           end
         else
           minZ = minZ - 1
           maxZ = maxZ - 1
           if( tz > maxZ ) then
             tz = maxZ;
-            goto( nil, nil, tz );
-            goto( nil, ty, nil );
           else
             tz = minZ;
-            goto( nil, ty, nil );
-            goto( nil, nil, tz );
           end
         end
+
+        if x < minX || x > maxX then
+          goto(tx, nil, nil)
+        end
+        if z < minZ || z > maxZ then
+          goto(nil, nil, tz)
+        end
+        goto(nil, ty, nil)
+        check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
+        if x ~= tx then
+          goto(tx, nil, nil)
+          check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
+        end
+        if z ~= tz then
+          goto(nil, nil, tz)
+          check_spot(minX, maxX, minY, maxY, minZ, maxZ, match);
+        end
       end
-      goto(tx,nil,nil);
     end
 
     if( ty > maxY ) then
