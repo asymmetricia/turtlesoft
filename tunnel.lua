@@ -101,7 +101,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, minZ, false, false, match, nil, true, false );
+  printModel( model, minZ, false, false, match, nil, false, false );
 
   -- Right Wall
   model = {}
@@ -121,7 +121,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, 0, false, false, match, nil, true, false );
+  printModel( model, 0, false, false, match, nil, false, false );
 
   goto(sloped(y,hslope)-1, nil, nil)
 
@@ -143,7 +143,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, 0, false, false, match, nil, true, false );
+  printModel( model, 0, false, false, match, nil, false, false );
 
   goto(nil, nil, sloped(h,slope)+tunnel_z)
 
@@ -165,7 +165,7 @@ if opts["u"] ~= nil then
     end
   end
 
-  printModel( model, tunnel_z, false, false, match, nil, true, false );
+  printModel( model, tunnel_z, false, false, match, nil, false, false );
 
   if (slope > 0) then
     goto(nil, nil, sloped(maxY, slope) + tunnel_z + 1);
