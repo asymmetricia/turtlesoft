@@ -131,12 +131,12 @@ if opts["u"] ~= nil then
   goto(nil,nil,sloped(y,slope));
   while (y<tunnel_y) do
     if hslope < 0 then
-      goto(x+sloped(ty,hslope),nil,nil);
+      goto(sloped(ty,hslope),nil,nil);
     end
     if(slope<0) then
-      goto(x+sloped(ty,hslope),y+1,nil); goto(nil,nil,sloped(y,slope));
+      goto(sloped(ty,hslope),y+1,nil); goto(nil,nil,sloped(y,slope));
     else
-      goto(x+sloped(ty,hslope),nil,sloped(y+1,slope)); goto(nil,y+1,nil);
+      goto(sloped(ty,hslope),nil,sloped(y+1,slope)); goto(nil,y+1,nil);
     end
   end
   north();
