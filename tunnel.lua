@@ -7,7 +7,7 @@ end
 
 function usage()
 	print( "usage: tunnel -x <width> -y <length> -z <height> [-s <slope>] [-h <h-slope>] [-m] [-u]" );
-	print( "  Specify -m to enable block-matching. Specify -u for unsafe (but fast) tunnels." );
+	print( "  -m = block-matching, -u = unsafe & fast" );
 	print( "	-s -- def slope is 0. slope is num/blocks per Z, >0 is up, <0 is down. 2 is a good value for walkways.")
 	print( "  -h -- def hslope is 0. slope is num/blocks forward before one block right (h > 0) or left (h < 0). 1 is 45-degree tunnel.")
 	os.exit();
@@ -26,7 +26,7 @@ end
 args = {...}
 opts = getopt( args, "xyzsh" );
 
-if     tonumber(opts["x"]) == nil then print( "-x (width) is required" );  usage();
+if     tonumber(opts["x"]) == nil then print( "-x (width) is required" ); usage();
 elseif tonumber(opts["y"]) == nil then print( "-y (length) is required" ); usage();
 elseif tonumber(opts["z"]) == nil then print( "-z (height) is required" ); usage();
 end
@@ -59,14 +59,14 @@ match = false
 if opts["m"] ~= nil then print( "matching enabled." ); match = true; end
 
 if opts["u"] ~= nil then
-	if(slope ~= 0) then slope = 1 / slope; end
+	if(slope ~= 0)  then slope  = 1 / slope;  end
 	if(hslope ~= 0) then hslope = 1 / hslope; end
 	print("I, too, like to live dangerously.");
 
 	tx=0; ty=1; tz=0; dir=1;
 	-- Floor
-	while (tx < tunnel_x + hslope * tunnel_y) do
-		-- Note that tunnel runs form y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
+	while (tx < tunnel_x) do
+		-- Note that tunnel runs from y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
 			tz = sloped(ty,slope);
 			goto(tx+sloped(ty,hslope),ty,nil); goto(nil,nil,tz);
