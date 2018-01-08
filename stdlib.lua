@@ -864,7 +864,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
   end
 
   if(point == nil) then print("Error: No first point found"); return; end
-  print("starting from (" .. point[0] .. "," .. point[1] .. "," .. point[2] .. ")");
+  print("starting from (" .. point[1] .. "," .. point[2] .. "," .. point[3] .. ")");
   last_yield_time = os.time()
 
   modX = 1; modY = 1;
