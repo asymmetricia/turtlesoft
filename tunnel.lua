@@ -99,7 +99,7 @@ if opts["u"] ~= nil then
   while(tx > -1) do
     while((dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0)) do
       tz = sloped(ty,slope)+tunnel_z-1;
-      if (hslope < 0) then
+      if (hslope*dir < 0) then
         goto(tx+sloped(ty,hslope),nil,nil);
       end
       goto(tx+sloped(ty,hslope),ty,nil);
