@@ -63,87 +63,56 @@ if opts["u"] ~= nil then
   if(hslope ~= 0) then hslope = 1 / hslope; end
   print("I, too, like to live dangerously.");
 
-  tx=0; ty=1; tz=0; dir=1;
+  minX = -1
+  maxX = tunnel_x
+  if (hslope<0) then
+    minX = -1 - sloped(tunnel_y, hslope)
+  else
+    maxX = tunnel_x + sloped(tunnel_y, hslope)
+  end
+
+  minY = 0
+  maxY = tunnel_y
+
+  minZ = -1
+  maxZ = tunnel_z
+
+  if (slope<0) then
+    minZ = -1 - sloped(tunnel_y, slope)
+  else
+    maxZ = tunnel_z + sloped(tunnel_z, slope)
+  end
+
   -- Floor
-  while (tx < tunnel_x) do
-    -- Note that tunnel runs from y=1 to y=(tunnel_y), i.e., starts one ahead of turtle starting pos
-    while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-      tz = sloped(ty,slope);
-      goto(tx+sloped(ty,hslope),ty,nil); goto(nil,nil,tz);
-      placeBlockDown(1,match);
-      while turtle.digUp() do end
-      ty = ty + dir;
+  model = {}
+  for tx = minX, maxX do
+    model[tx] = {}
+    for ty = minY, maxY do
+      model[tx][ty] = {}
     end
-    ty = ty - dir;
-    dir = -1 * dir;
-    tx = tx + 1;
+    sleep(0);
   end
+
+  for ty = minY, maxY do
+    xmod = sloped(ty, hslope)
+    zmod = sloped(ty, slope)
+    for tx = minX+xmod, maxX+xmod do
+      model[tx][ty][zmod] = 1
+    end
+  end
+
+  printModel( model, minZ, false, false, match, nil, nil, false );
+
   -- Right Wall
-  tx=tunnel_x; level=1;
-  if dir == 1 then ty=1; else ty = tunnel_y; end
-  while (level <= tunnel_z) do -- We'll go _above_ target Z
-    while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-      tz = sloped(ty,slope) + level;
-      goto(tx+sloped(ty,hslope),ty,nil); goto(nil,nil,tz);
-      placeBlockDown(1,match);
-      ty = ty + dir;
-    end
-    ty = ty - dir;
-    dir = -1 * dir;
-    level = level + 1;
-  end
-  -- Roof
-  if dir == 1 then ty=1; else ty=tunnel_y; end
-  tx=tunnel_x-1;
-  if(slope>=0) then tz = math.floor((ty-1) * slope + tunnel_z - 1) else tz=math.ceil((ty-1)*slope + tunnel_z - 1); end
-  while(tx > -1) do
-    while((dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0)) do
-      tz = sloped(ty,slope)+tunnel_z-1;
-      if (hslope*dir < 0) then
-        goto(tx+sloped(ty,hslope),nil,nil);
-      end
-      goto(tx+sloped(ty,hslope),ty,nil);
-      goto(nil,nil,tz);
-      placeBlockUp(1,match);
-      if(tunnel_z>1) then while turtle.digDown() do end; end
-      ty = ty + dir;
-    end
-    ty = ty - dir;
-    dir = -1 * dir;
-    tx = tx - 1;
-  end
   -- Left Wall
-  tx = -1; level = 1;
-  if dir == 1 then ty=1; else ty = tunnel_y; end
-  while (level <= tunnel_z) do -- We'll go _above_ target Z
-    while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
-      tz = sloped(ty,slope)+level;
-      goto(tx+sloped(ty,hslope),ty,nil); goto(nil,nil,tz);
-      placeBlockDown(1,match);
-      ty = ty + dir;
-    end
-    ty = ty - dir;
-    dir = -1 * dir;
-    level = level + 1;
+  -- Ceiling
+
+  if (slope > 0) then
+    goto(nil, nil, sloped(maxY, slope) + tunnel_y + 1);
   end
-  goto(nil,nil,z+1); goto(sloped(ty,hslope),y,z);
-  goto(nil,nil,sloped(y,slope)+tunnel_z-1); placeBlockUp(1,match);
-  goto(nil,nil,sloped(y,slope));
-  while (y<tunnel_y) do
-    ty = y+1;
-    if( hslope > 0 ) then
-      goto(sloped(ty,hslope),nil,nil);
-    else
-      if( slope > 0 ) then
-        goto(nil, nil, sloped(ty,slope));
-      end
-      goto(nil,ty,nil);
-    end
-    if( slope > 0 ) then
-      goto(nil, nil, sloped(ty,slope));
-    end
-    goto(sloped(ty,hslope),ty,sloped(ty,slope));
-  end
+  goto(sloped(maxY, hslope), maxY, nil);
+  goto(nil, nil, z-2); placeBlockUp(1,match);
+  goto(nil, nil, sloped(maxY, slope));
   north();
 else
   tunnel( tunnel_x, tunnel_y, tunnel_z, 1, slope, hslope, match );
