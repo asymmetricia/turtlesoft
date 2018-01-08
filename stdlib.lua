@@ -873,9 +873,10 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
     if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
     if( verbose ) then print( table.concat( point, "," ) .. "=" .. model[point[1]][point[2]][point[3]] ); end
     while(z ~= point[3]+1) do
-      if(z < point[3]+1) then
+      while (z < point[3]+1) do
         if dryrun then z = z + 1; else goto(nil,nil,z+1); end
-      else
+      end
+      while (z > point[3]+1) do
         if dryrun then z = z - 1; else goto(nil,nil,z-1); end
       end
       printModelPoint(model,x,y,z,material,match);
