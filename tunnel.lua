@@ -97,7 +97,7 @@ if opts["u"] ~= nil then
     xmod = sloped(ty, hslope)
     zmod = sloped(ty, slope)
     for tx = 0, tunnel_x - 1 do
-      model[tx+xmod][ty][zmod] = 1
+      model[tx+xmod][ty][zmod-1] = 1
     end
   end
 
