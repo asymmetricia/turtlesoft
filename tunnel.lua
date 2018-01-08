@@ -129,7 +129,7 @@ if opts["u"] ~= nil then
     goto(nil, nil, sloped(maxY, slope) + tunnel_z + 1);
   end
   goto(sloped(maxY, hslope), maxY, nil);
-  goto(nil, nil, z-2); placeBlockUp(1,match);
+  goto(nil, nil, tunnel_z-1+sloped(maxY, slope)); placeBlockUp(1,match);
   goto(nil, nil, sloped(maxY, slope));
   north();
 else
