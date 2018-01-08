@@ -84,7 +84,6 @@ if opts["u"] ~= nil then
 	while (level <= tunnel_z) do -- We'll go _above_ target Z
 		while( (dir == 1 and ty <= tunnel_y) or (dir == -1 and ty > 0) ) do
 			tz = sloped(ty,slope) + level;
-			tx = sloped_x(ty, slope);
 			goto(tx+sloped(ty,hslope),ty,nil); goto(nil,nil,tz);
 			placeBlockDown(1,match);
 			ty = ty + dir;
