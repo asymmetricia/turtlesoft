@@ -145,7 +145,7 @@ if opts["u"] ~= nil then
 
   printModel( model, minZ, false, false, match, nil, false, false );
 
-  goto(nil, nil, sloped(h,slope)+tunnel_z)
+  goto(nil, nil, sloped(y,slope)+tunnel_z)
 
   -- Ceiling
   model = {}
