@@ -862,7 +862,7 @@ function printModel( model, zskip, dryrun, verbose, match, material, final, dens
   if( dense ) then
     point = firstPointDense(model, {0,0,zskip}, verbose);
   else
-    point = nextPoint(model, { 0,0,zskip });
+    point = nextPoint(model, { x,y,zskip });
     refpoint = point;
   end
 
