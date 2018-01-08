@@ -66,7 +66,7 @@ if opts["u"] ~= nil then
   minX = -1
   maxX = tunnel_x
   if (hslope<0) then
-    minX = -1 - sloped(tunnel_y, hslope)
+    minX = -1 + sloped(tunnel_y, hslope)
   else
     maxX = tunnel_x + sloped(tunnel_y, hslope)
   end
@@ -78,7 +78,7 @@ if opts["u"] ~= nil then
   maxZ = tunnel_z
 
   if (slope<0) then
-    minZ = -1 - sloped(tunnel_y, slope)
+    minZ = -1 + sloped(tunnel_y, slope)
   else
     maxZ = tunnel_z + sloped(tunnel_z, slope)
   end
