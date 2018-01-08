@@ -123,6 +123,8 @@ if opts["u"] ~= nil then
 
   printModel( model, 0, false, false, match, nil, true, false );
 
+  goto(sloped(y,hslope)-1, nil, nil)
+
   -- Left Wall
   model = {}
   for tx = minX, maxX do
@@ -142,6 +144,8 @@ if opts["u"] ~= nil then
   end
 
   printModel( model, 0, false, false, match, nil, true, false );
+
+  goto(nil, nil, sloped(h,slope)+tunnel_z)
 
   -- Ceiling
   model = {}
@@ -164,7 +168,7 @@ if opts["u"] ~= nil then
   printModel( model, tunnel_z, false, false, match, nil, true, false );
 
   if (slope > 0) then
-    goto(nil, nil, sloped(maxY, slope) + tunnel_y + 1);
+    goto(nil, nil, sloped(maxY, slope) + tunnel_z + 1);
   end
   goto(sloped(maxY, hslope), maxY, nil);
   goto(nil, nil, z-2); placeBlockUp(1,match);
