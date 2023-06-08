@@ -72,74 +72,74 @@ last_yield_time = os.time();
 theta_begin = (math.pi*2) * ( (which-1)/segs );
 theta_end   = (math.pi*2) * ( which/segs );
 for h_y_i = 0,steps do
-	h_y = hmax * h_y_i / steps;
-	if( opts[ "debug" ] ~= nil ) then print( "Voxelizing h_y = " .. h_y ); end
-	dz = math.floor( h_y + 0.5 );
+  h_y = hmax * h_y_i / steps;
+  if( opts[ "debug" ] ~= nil ) then print( "Voxelizing h_y = " .. h_y ); end
+  dz = math.floor( h_y + 0.5 );
     if( dz >= zskip + layers ) then
-		break;
+    break;
     end
-	if( dz >= zskip ) then
-		layer_radius_max = math.sqrt( h_a_squared + h_a_squared * ( h_y - hmin ) * ( h_y - hmin ) / h_b_squared );
-		if( opts[ "fill" ] ~= nil or opts[ "clear" ] ~= nil ) then layer_radius_min = 0.5; else layer_radius_min = layer_radius_max end;
-		layer_radius = layer_radius_max
-		while( layer_radius >= layer_radius_min ) do
-			x_end = math.floor( math.cos( theta_end ) * layer_radius + 0.5 );
-			y_end = math.floor( math.sin( theta_end ) * layer_radius + 0.5 );
-			if( segs ~= 1 ) then model[x_end][y_end][dz]=2; end;
-			theta = theta_begin;
-			while( theta < theta_end ) do
-				if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
-				dx = math.floor( math.cos( theta ) * layer_radius + 0.5);
-				dy = math.floor( math.sin( theta ) * layer_radius + 0.5);
-				if( model[dx][dy][dz] == nil or model[dx][dy][dz] == -1 ) then
-					if( opts[ "clear" ] ~= nil and layer_radius ~= layer_radius_max ) then
-						model[dx][dy][dz] = -1;
-					else
-						model[dx][dy][dz] = 1;
-					end
-				end
-				theta = theta + (theta_end-theta_begin)/steps;
-			end
-			layer_radius = layer_radius - 0.5;
-		end
-	end
+  if( dz >= zskip ) then
+    layer_radius_max = math.sqrt( h_a_squared + h_a_squared * ( h_y - hmin ) * ( h_y - hmin ) / h_b_squared );
+    if( opts[ "fill" ] ~= nil or opts[ "clear" ] ~= nil ) then layer_radius_min = 0.5; else layer_radius_min = layer_radius_max end;
+    layer_radius = layer_radius_max
+    while( layer_radius >= layer_radius_min ) do
+      x_end = math.floor( math.cos( theta_end ) * layer_radius + 0.5 );
+      y_end = math.floor( math.sin( theta_end ) * layer_radius + 0.5 );
+      if( segs ~= 1 ) then model[x_end][y_end][dz]=2; end;
+      theta = theta_begin;
+      while( theta < theta_end ) do
+        if( os.time() > last_yield_time ) then sleep(0); last_yield_time = os.time(); end
+        dx = math.floor( math.cos( theta ) * layer_radius + 0.5);
+        dy = math.floor( math.sin( theta ) * layer_radius + 0.5);
+        if( model[dx][dy][dz] == nil or model[dx][dy][dz] == -1 ) then
+          if( opts[ "clear" ] ~= nil and layer_radius ~= layer_radius_max ) then
+            model[dx][dy][dz] = -1;
+          else
+            model[dx][dy][dz] = 1;
+          end
+        end
+        theta = theta + (theta_end-theta_begin)/steps;
+      end
+      layer_radius = layer_radius - 0.5;
+    end
+  end
 end
 print( "Done!" );
 
 if( opts[ "dump" ] ) then
-	for ty=rbase,-rbase,-1 do
-		s = "";
-		for tx=-rbase,rbase do
-			if( model[tx][ty][zskip] == 1 ) then
-				s = s .. 1;
-			elseif( model[tx][ty][zskip] == -1 ) then
-				s = s .. '_';
-			elseif( model[tx][ty][zskip] == 3 ) then
-				s = s .. '*';
-			else
-				s = s .. 0;
-			end
-		end
-		print( s );
-	end
+  for ty=rbase,-rbase,-1 do
+    s = "";
+    for tx=-rbase,rbase do
+      if( model[tx][ty][zskip] == 1 ) then
+        s = s .. 1;
+      elseif( model[tx][ty][zskip] == -1 ) then
+        s = s .. '_';
+      elseif( model[tx][ty][zskip] == 3 ) then
+        s = s .. '*';
+      else
+        s = s .. 0;
+      end
+    end
+    print( s );
+  end
 end
 
 print( "Counting voxels..." );
 count=0; clear_count=0;
 for tx,r in pairs( model ) do
-	for ty,c in pairs(r) do
-		for tz,v in pairs(c) do
-			if( v == 1 ) then
-				count = count+1;
-			else
-				clear_count = clear_count+1;
-			end
-		end
-	end
+  for ty,c in pairs(r) do
+    for tz,v in pairs(c) do
+      if( v == 1 ) then
+        count = count+1;
+      else
+        clear_count = clear_count+1;
+      end
+    end
+  end
 end
 
 print( "Hyperbolic Structure will require " .. count .. " blocks total." );
 if( clear_count > 0 ) then
-	print( "Will clear " .. count .. " blocks." );
+  print( "Will clear " .. count .. " blocks." );
 end
 printModel( model, zskip, dryrun, opts[ "verbose" ], match );

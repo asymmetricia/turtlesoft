@@ -1,9 +1,8 @@
-local response = http.get( "https://raw.githubusercontent.com/asymmetricia/turtlesoft/master/stdlib.lua" );
+local response = http.get( "https://raw.githubusercontent.com/asymmetricia/turtlesoft/main/stdlib.lua" );
 if response then
-	local sResponse = response.readAll(); response.close(); local file = fs.open( "/stdlib", "w" ); file.write( sResponse ); file.close();
+  local sResponse = response.readAll(); response.close(); local file = fs.open( "/stdlib", "w" ); file.write( sResponse ); file.close();
 else
-	print( "Error retrieving stdlib" );
-	exit();
+  error( "Error retrieving stdlib" );
 end
 
 if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
@@ -11,7 +10,7 @@ if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 args = {...}
 opts = getopt( args, "" );
 
-base_url = "https://raw.githubusercontent.com/asymmetricia/turtlesoft/master/";
+base_url = "https://raw.githubusercontent.com/asymmetricia/turtlesoft/main/";
 
 files = {}
 files["/d"]        = "dome.lua";
@@ -30,9 +29,9 @@ files["/w"]        = "wall.lua";
 files["/reac"]     = "rc/rc.lua";
 
 for f,u in pairs( files ) do
-	if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
-		print( "Retrieving " .. base_url .. u );
-		fs.delete( f );
-		httpDownload( base_url .. u, f );
-	end
+  if( not ( opts[ "soft" ] and fs.exists( f ) ) ) then
+    print( "Retrieving " .. base_url .. u );
+    fs.delete( f );
+    httpDownload( base_url .. u, f );
+  end
 end

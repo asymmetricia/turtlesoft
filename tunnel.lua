@@ -1,8 +1,7 @@
 if( fs.exists( "/stdlib" ) ) then
   if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
-  print( "tunnel: error: /stdlib missing" );
-  os.exit();
+  error( "tunnel: error: /stdlib missing" );
 end
 
 function usage()
@@ -10,7 +9,6 @@ function usage()
   print( "  -m = block-matching, -u = unsafe & fast" );
   print( "  -s -- def slope is 0. slope is num/blocks per Z, >0 is up, <0 is down. 2 is a good value for walkways.")
   print( "  -h -- def hslope is 0. slope is num/blocks forward before one block right (h > 0) or left (h < 0). 1 is 45-degree tunnel.")
-  os.exit();
 end
 
 function sloped(y,slope)
@@ -26,9 +24,9 @@ end
 args = {...}
 opts = getopt( args, "xyzsh" );
 
-if     tonumber(opts["x"]) == nil then print( "-x (width) is required" ); usage();
-elseif tonumber(opts["y"]) == nil then print( "-y (length) is required" ); usage();
-elseif tonumber(opts["z"]) == nil then print( "-z (height) is required" ); usage();
+if     tonumber(opts["x"]) == nil then print( "-x (width) is required" ); usage(); return;
+elseif tonumber(opts["y"]) == nil then print( "-y (length) is required" ); usage(); return;
+elseif tonumber(opts["z"]) == nil then print( "-z (height) is required" ); usage(); return;
 end
 
 tunnel_x = tonumber(opts["x"]);
@@ -41,8 +39,8 @@ if opts["s"] ~= nil then
     slope = tonumber(opts["s"])
   else
     print( "-s (slope) must be numeric and non-zero" );
-    usage();
-  end  
+    usage(); return;
+  end
 end
 
 hslope = 0
@@ -51,7 +49,7 @@ if opts["h"] ~= nil then
     hslope = tonumber(opts["h"])
   else
     print( "-h (h-slope) must be numeric and non-zero" );
-    usage();
+    usage(); return;
   end
 end
 

@@ -1,15 +1,14 @@
 if( fs.exists( "/stdlib" ) ) then
-	if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
+  if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
-	print( "dome: error: /stdlib missing" );
-	exit();
+  error( "dome: error: /stdlib missing" );
 end
 
 args = {...}
 if( table.getn( args ) < 2 or table.getn( args ) > 4 ) then
-	print( "usage: roof <x> <y> [<n>] [<match>]" );
-	print( "	<n> -- only fill every n'th square" );
-	exit();
+  print( "usage: roof <x> <y> [<n>] [<match>]" );
+  print( "  <n> -- only fill every n'th square" );
+  return;
 end
 
 tx=0;    ty=0;   tz=0;
@@ -22,26 +21,26 @@ if( tonumber(args[1]) < 0 ) then modX = -1; end
 if( tonumber(args[2]) < 0 ) then modY = -1; end
 
 while true do
-	placeBlockUp( 1, match );
+  placeBlockUp( 1, match );
 
-	if( (x/n) % 2 == 0 ) then
-		-- even X
-		ty=ty+modY*n;
-		if( ty*modY >= tonumber(args[2])*modY ) then
-			ty=ty-modY*n;
-			tx=tx+modX*n;
-		end
-	else
-		-- odd X
-		ty=ty-modY*n;
-		if( ty*modY < 0 ) then
-			ty=ty+modY*n;
-			tx=tx+modX*n;
-		end
-	end
-	if( tx*modX >= tonumber(args[1])*modX ) then
-		goto( 0, 0, 0 ); north();
-		break;
-	end
-	goto( tx, ty, tz );
+  if( (x/n) % 2 == 0 ) then
+    -- even X
+    ty=ty+modY*n;
+    if( ty*modY >= tonumber(args[2])*modY ) then
+      ty=ty-modY*n;
+      tx=tx+modX*n;
+    end
+  else
+    -- odd X
+    ty=ty-modY*n;
+    if( ty*modY < 0 ) then
+      ty=ty+modY*n;
+      tx=tx+modX*n;
+    end
+  end
+  if( tx*modX >= tonumber(args[1])*modX ) then
+    goto( 0, 0, 0 ); north();
+    break;
+  end
+  goto( tx, ty, tz );
 end

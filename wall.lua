@@ -1,14 +1,12 @@
 if( fs.exists( "/stdlib" ) ) then
-	if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
+  if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
-  print( "wall: error: /stdlib missing" );
-  exit();
+  error( "wall: error: /stdlib missing" );
 end
 
 args = {...}
 if( table.getn( args ) < 3 or table.getn( args ) > 4 ) then
-  print( "usage: wall {left,right} <y> <z> [<match>]" );
-  exit();
+  error( "usage: wall {left,right} <y> <z> [<match>]" );
 end
 
 if( table.getn( args ) < 4 ) then

@@ -96,9 +96,8 @@ function newMineArea( dimX, dimY, dimZ, zskip )
                         end
                         if not checkSpace() then
                                 if( zmax > 0 ) then zmax = zmax+2; end
-                                print( "NO ROOM IN INVENTORY AFTER " .. zmax .. " FULL LEVELS" );
                                 north();
-                                exit();
+                                error( "NO ROOM IN INVENTORY AFTER " .. zmax .. " FULL LEVELS" );
                         else
                                 goto( tx, ty, tz );
                         end
@@ -527,97 +526,108 @@ function find(target)
                         end
                 end
         end
-        print( "NO MATERIAL (" .. x .. ", " .. y .. ", " .. z .. ")" );
+        err="NO MATERIAL (" .. x .. ", " .. y .. ", " .. z .. ")";
         goto( home_x, home_y, nil );
         goto( nil, nil, home_z );
         north();
-        exit();
+        error(err);
 end
 
 function checkFuel()
         if( turtle.getFuelLevel() > (math.abs(x)-home_x)+(math.abs(y)-home_y)+(math.abs(z)-home_z)+10 ) then
                 return 1;
         end
-        print( "INSUFFICIENT FUEL (" .. x .. ", " .. y .. ", " .. z .. ")" );
+        err = "INSUFFICIENT FUEL (" .. x .. ", " .. y .. ", " .. z .. ")";
         goto( home_x, home_y, home_z ); north();
-        exit();
+        error(err);
 end
 
 function goto(tx,ty,tz)
-        if( tx == nil ) then
-                tx = x;
-        end
-        if( ty == nil ) then
-                ty = y;
-        end
-        if( tz == nil ) then
-                tz = z;
-        end
-        if( tx ~= home_x or ty ~= home_y or tz ~= home_z ) then
-                checkFuel();
-        end
-        while( z < tz ) do
-                if( turtle.up() ) then
-                        z=z+1;
-                else
-                        turtle.digUp();
-                end
-        end
-        while( z > tz ) do
-                if( turtle.down() ) then
-                        z=z-1;
-                else
-                        turtle.digDown();
-                end
-        end
-        while( y < ty ) do
-                if( p == 2 and turtle.back() ) then
-                        y=y+1;
-                else
-                        north();
-                        if turtle.forward() then
-                                y=y+1;
-                        else
-                                turtle.dig();
-                        end
-                end
-        end
-        while( y > ty ) do
-                if( p == 0 and turtle.back() ) then
-                        y=y-1;
-                else
-                        south();
-                        if turtle.forward() then
-                                y=y-1;
-                        else
-                                turtle.dig();
-                        end
-                end
-        end
-        while( x < tx ) do
-                if( p == 3 and turtle.back() ) then
-                        x=x+1;
-                else
-                        east();
-                        if turtle.forward() then
-                                x=x+1;
-                        else
-                                turtle.dig();
-                        end
-                end
-        end
-        while( x > tx ) do
-                if( p == 1 and turtle.back() ) then
-                        x=x-1;
-                else
-                        west();
-                        if turtle.forward() then
-                                x=x-1;
-                        else
-                                turtle.dig();
-                        end
-                end
-        end
+  move_sleep = 1; -- ticks
+  if( tx == nil ) then
+    tx = x;
+  end
+  if( ty == nil ) then
+    ty = y;
+  end
+  if( tz == nil ) then
+    tz = z;
+  end
+  if( tx ~= home_x or ty ~= home_y or tz ~= home_z ) then
+    checkFuel();
+  end
+  while( z < tz ) do
+    if( turtle.up() ) then
+      z=z+1;
+      os.sleep(move_sleep * 0.05);
+    else
+      turtle.digUp();
+    end
+  end
+  while( z > tz ) do
+    if( turtle.down() ) then
+      z=z-1;
+      os.sleep(move_sleep * 0.05);
+    else
+      turtle.digDown();
+    end
+  end
+  while( y < ty ) do
+    if( p == 2 and turtle.back() ) then
+      y=y+1;
+      os.sleep(move_sleep * 0.05);
+    else
+      north();
+      if turtle.forward() then
+        y=y+1;
+        os.sleep(move_sleep * 0.05);
+      else
+        turtle.dig();
+      end
+    end
+  end
+  while( y > ty ) do
+    if( p == 0 and turtle.back() ) then
+      y=y-1;
+      os.sleep(move_sleep * 0.05);
+    else
+      south();
+      if turtle.forward() then
+        y=y-1;
+        os.sleep(move_sleep * 0.05);
+      else
+        turtle.dig();
+      end
+    end
+  end
+  while( x < tx ) do
+    if( p == 3 and turtle.back() ) then
+      x=x+1;
+      os.sleep(move_sleep * 0.05);
+    else
+      east();
+      if turtle.forward() then
+        x=x+1;
+        os.sleep(move_sleep * 0.05);
+      else
+        turtle.dig();
+      end
+    end
+  end
+  while( x > tx ) do
+    if( p == 1 and turtle.back() ) then
+      x=x-1;
+      os.sleep(move_sleep * 0.05);
+    else
+      west();
+      if turtle.forward() then
+        x=x-1;
+        os.sleep(move_sleep * 0.05);
+      else
+        turtle.dig();
+      end
+    end
+  end
 end
 
 function north()
