@@ -543,7 +543,7 @@ function checkFuel()
 end
 
 function goto(tx,ty,tz)
-  move_sleep = 1; -- ticks
+  move_sleep = 2; -- ticks
   if( tx == nil ) then
     tx = x;
   end
