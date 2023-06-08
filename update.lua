@@ -1,4 +1,4 @@
-local response = http.get( "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/stdlib.lua" );
+local response = http.get( "https://raw.githubusercontent.com/asymmetricia/turtlesoft/master/stdlib.lua" );
 if response then
 	local sResponse = response.readAll(); response.close(); local file = fs.open( "/stdlib", "w" ); file.write( sResponse ); file.close();
 else
@@ -11,7 +11,7 @@ if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 args = {...}
 opts = getopt( args, "" );
 
-base_url = "https://raw.githubusercontent.com/pdbogen/turtlesoft/master/";
+base_url = "https://raw.githubusercontent.com/asymmetricia/turtlesoft/master/";
 
 files = {}
 files["/d"]        = "dome.lua";
