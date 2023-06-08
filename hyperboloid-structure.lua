@@ -1,29 +1,28 @@
 if( fs.exists( "/stdlib" ) ) then
-	if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
+  if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
-	print( "dome: error: /stdlib missing" );
-	exit();
+  error( "dome: error: /stdlib missing" );
 end
 
 args = {...}
 opts = getopt( args, "rznxysw" );
 if( opts[ "h" ] ) then
-	print( "usage: hypstruc --rbase=<rbase> --rmin=<rmin> --hmin=<hmin> --hmax=<hmax>" );
-	print( "       rbase is the radius of the base; rmin is the minimum radius. hmin is the height at which this minimum occurs, and hmax is the overall height of the structure." );
-	print( "	Optinal options: [-z <Zskip>] [-n <Nlayers>] [-m] [-d] [-x <startX>] [-y <startY>] [-s <segments>] [-w <which segment>]" );
-	print( "	-z Start at (N+1) layer, e.g., -z 1 skips layer 0" );
-	print( "	-n Draw only <Nlayers> layers." );
-	print( "	-m match" );
-	print( "	-d dryrun" );
-	print( "	-x Turtle begins at (x,y) instead of center" );
-	print( "	-y" );
-	print( "	--fill fill the structure" );
-	print( "	--clear clear the inside of the structure			" );
-	print( "	-s, -w -- only draw a slice. E.g., -s 2 means north half, south half, -w 1 says draw north" );
-	exit();
-end	
+  print( "usage: hypstruc --rbase=<rbase> --rmin=<rmin> --hmin=<hmin> --hmax=<hmax>" );
+  print( "       rbase is the radius of the base; rmin is the minimum radius. hmin is the height at which this minimum occurs, and hmax is the overall height of the structure." );
+  print( "  Optinal options: [-z <Zskip>] [-n <Nlayers>] [-m] [-d] [-x <startX>] [-y <startY>] [-s <segments>] [-w <which segment>]" );
+  print( "  -z Start at (N+1) layer, e.g., -z 1 skips layer 0" );
+  print( "  -n Draw only <Nlayers> layers." );
+  print( "  -m match" );
+  print( "  -d dryrun" );
+  print( "  -x Turtle begins at (x,y) instead of center" );
+  print( "  -y" );
+  print( "  --fill fill the structure" );
+  print( "  --clear clear the inside of the structure      " );
+  print( "  -s, -w -- only draw a slice. E.g., -s 2 means north half, south half, -w 1 says draw north" );
+  return;
+end
 
-zskip=0;      match=0; 
+zskip=0;      match=0;
 dryrun=false; x=0;     y=0;
 segs=1;       which=1;
 
@@ -53,11 +52,11 @@ homeY=y;
 print( "Allocating memory..." );
 model = {}
 for tx = -rbase,rbase do
-	model[tx] = {}
-	for ty = -rbase,rbase do
-		model[tx][ty] = {}
-	end
-	sleep(0);
+  model[tx] = {}
+  for ty = -rbase,rbase do
+    model[tx][ty] = {}
+  end
+  sleep(0);
 end
 print( "Done!" );
 

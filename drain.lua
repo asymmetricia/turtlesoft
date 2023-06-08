@@ -1,16 +1,15 @@
 if( fs.exists( "/stdlib" ) ) then
-	if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
+  if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
-	print( "drain: error: /stdlib missing" );
-	exit();
+  error( "drain: error: /stdlib missing" );
 end
 
 args = {...}
 if( table.getn( args ) < 3 or table.getn( args ) > 5 ) then
-	print( "usage: drain <x> <y> <depth> [<wall>] [<match>]" )
-	print( "  progressively fill downward to drain lakes. depth 1 means the turtle will not leave the Z it starts on." )
-	print( "  if wall is set, walls will be filled in too. if match is set, walls will match slot 1." )
-	exit()
+  print( "usage: drain <x> <y> <depth> [<wall>] [<match>]" )
+  print( "  progressively fill downward to drain lakes. depth 1 means the turtle will not leave the Z it starts on." )
+  print( "  if wall is set, walls will be filled in too. if match is set, walls will match slot 1." )
+  return;
 end
 
 wall  = table.getn(args) >= 4

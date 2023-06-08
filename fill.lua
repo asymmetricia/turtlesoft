@@ -1,38 +1,36 @@
 if( fs.exists( "/stdlib" ) ) then
-	if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
+  if dofile == nil then shell.run("/stdlib") else dofile( "/stdlib" ); end
 else
-	print( "dome: error: /stdlib missing" );
-	exit();
+  error( "dome: error: /stdlib missing" );
 end
 
 args = {...}
 if( table.getn( args ) < 2 or table.getn( args ) > 5 ) then
-	print( "usage: fill <x> <y> [<depth>] [<n>] [<match>]" );
-	print( "       n, if provided, will be the interval to fill. 7 is good for torches." );
-	print( "       match, if 1, will indicate that the floor will be replaced with the slot 1 item if it doesn't match" );
-	exit();
+  print( "usage: fill <x> <y> [<depth>] [<n>] [<match>]" );
+  print( "       n, if provided, will be the interval to fill. 7 is good for torches." );
+  print( "       match, if 1, will indicate that the floor will be replaced with the slot 1 item if it doesn't match" );
+  return;
 end
 
 if( table.getn( args ) > 2 ) then
-	depth = tonumber(args[3])
-	if( depth < 1 ) then
-		print( "depth must be greater than 0" );
-		exit();
-	end
+  depth = tonumber(args[3])
+  if( depth < 1 ) then
+    error( "depth must be greater than 0" );
+  end
 else
-	depth = 1
+  depth = 1
 end
 
 if( table.getn( args ) > 3 ) then
-	n = tonumber(args[4])
+  n = tonumber(args[4])
 else
-	n = 1
+  n = 1
 end
 
 if( table.getn( args ) > 4 ) then
-	match = true
+  match = true
 else
-	match = false
+  match = false
 end
 
 tx=0; ty=0;
@@ -44,54 +42,54 @@ dir=1;
 goto( nil, nil, -(depth-1) );
 
 while true do
-	placeBlockDown( 1, match );
+  placeBlockDown( 1, match );
 
-	-- Calculate next position
-	if( dir == 1 ) then
-		if( (x/n) % 2 == 0 ) then
-			-- even X
-			ty=ty+modY*n;
-			if( ty*modY >= tonumber(args[2])*modY ) then
-				ty=ty-modY*n;
-				tx=tx+modX*n;
-			end
-		else
-			-- odd X
-			ty=ty-modY*n;
-			if( ty*modY < 0 ) then
-				ty=ty+modY*n;
-				tx=tx+modX*n;
-			end
-		end
-	else
-		if( (x/n) % 2 == 0 ) then
-			ty = ty - modY*n;
-			if( ty*modY < 0 ) then
-				ty = ty + modY*n;
-				tx = tx - modX*n;
-			end
-		else
-			ty = ty + modY*n;
-			if( ty*modY >= tonumber(args[2])*modY ) then
-				ty = ty - modY*n;
-				tx = tx - modX*n;
-			end
-		end
-	end
+  -- Calculate next position
+  if( dir == 1 ) then
+    if( (x/n) % 2 == 0 ) then
+      -- even X
+      ty=ty+modY*n;
+      if( ty*modY >= tonumber(args[2])*modY ) then
+        ty=ty-modY*n;
+        tx=tx+modX*n;
+      end
+    else
+      -- odd X
+      ty=ty-modY*n;
+      if( ty*modY < 0 ) then
+        ty=ty+modY*n;
+        tx=tx+modX*n;
+      end
+    end
+  else
+    if( (x/n) % 2 == 0 ) then
+      ty = ty - modY*n;
+      if( ty*modY < 0 ) then
+        ty = ty + modY*n;
+        tx = tx - modX*n;
+      end
+    else
+      ty = ty + modY*n;
+      if( ty*modY >= tonumber(args[2])*modY ) then
+        ty = ty - modY*n;
+        tx = tx - modX*n;
+      end
+    end
+  end
 
-	-- We end if the column is out-of-bounds..
-	if( ( tx*modX >= tonumber(args[1])*modX and dir == 1 ) or ( tx*modX < 0 and dir == -1 ) ) then
-		-- And we were are the top layer
-		if( z == 0 ) then
-			goto( 0, 0, 0 );
-			north();
-			break;
-		end
-		-- Otherwise, just move up a layer.
-		goto( nil, nil, z+1 );
-		tx = tx - dir*modX*n;
-		dir = dir * -1;
-	end
+  -- We end if the column is out-of-bounds..
+  if( ( tx*modX >= tonumber(args[1])*modX and dir == 1 ) or ( tx*modX < 0 and dir == -1 ) ) then
+    -- And we were are the top layer
+    if( z == 0 ) then
+      goto( 0, 0, 0 );
+      north();
+      break;
+    end
+    -- Otherwise, just move up a layer.
+    goto( nil, nil, z+1 );
+    tx = tx - dir*modX*n;
+    dir = dir * -1;
+  end
 
-	goto( tx, ty, nil );
+  goto( tx, ty, nil );
 end
