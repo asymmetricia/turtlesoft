@@ -534,16 +534,16 @@ function find(target)
 end
 
 function checkFuel()
-        if( turtle.getFuelLevel() > (math.abs(x)-home_x)+(math.abs(y)-home_y)+(math.abs(z)-home_z)+10 ) then
-                return 1;
-        end
-        err = "INSUFFICIENT FUEL (" .. x .. ", " .. y .. ", " .. z .. ")";
-        goto( home_x, home_y, home_z ); north();
-        error(err);
+  if( turtle.getFuelLevel() > (math.abs(x)-home_x)+(math.abs(y)-home_y)+(math.abs(z)-home_z)+10 ) then
+    return 1;
+  end
+  err = "INSUFFICIENT FUEL (" .. x .. ", " .. y .. ", " .. z .. ")";
+  goto( home_x, home_y, home_z ); north();
+  error(err);
 end
 
 function goto(tx,ty,tz)
-  move_sleep = 4; -- ticks
+  move_sleep = 0; -- ticks
   if( tx == nil ) then
     tx = x;
   end
