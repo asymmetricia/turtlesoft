@@ -5,7 +5,7 @@ else
 end
 
 args = {...}
-if( table.getn( args ) != 1) then
+if( table.getn( args ) ~= 1) then
   error( "usage: birch <n>\nPlace turtle above sapling level one back from first tree position" );
 end
 
