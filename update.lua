@@ -13,6 +13,7 @@ opts = getopt( args, "" );
 base_url = "https://raw.githubusercontent.com/asymmetricia/turtlesoft/main/";
 
 files = {}
+files["/birch"]    = "birch.lua";
 files["/d"]        = "dome.lua";
 files["/drain"]    = "drain.lua";
 files["/f"]        = "fill.lua";
