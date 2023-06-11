@@ -51,6 +51,7 @@ else
       end
     end
     if( dx+1 <= max*5 ) then
+      dx = dx+1
       for dy=max*5+1,1,-1 do
         goto(dx,dy,0);
         if( (dy - 1 + dx*2) % 5 == 0 ) then
