@@ -43,6 +43,7 @@ else
   newMineArea(max*5+1, max*5+1, 7, 0);
   for dx=0,max*5,2 do
     for dy=1, max*5+1 do
+      goto(dx,dy,0);
       if( (dy - 1 + dx*2) % 5 == 0 ) then
         placeBlockDown(2,1);
       else
