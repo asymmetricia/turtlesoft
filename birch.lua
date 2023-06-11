@@ -26,13 +26,13 @@ for dx=0,max*5,10 do
   end
   if (dx+5 <= max) then
     for dy=max*5+1,1,-10 do
-      goto(dx, dy, 7);     -- goto next tree
-      goto(dx, dy, 0);     -- mine out the tree
+      goto(dx+5, dy, 7);     -- goto next tree
+      goto(dx+5, dy, 0);     -- mine out the tree
       placeBlockDown(1,1); -- place a sapling
       if( dy-5 >= 1) then
-        goto(dx, dy-5, 0);   -- mine out the tree
+        goto(dx+5, dy-5, 0);   -- mine out the tree
         placeBlockDown(1,1); -- place a sapling
-        goto(dx, dy-5, 7);   -- move to next tree
+        goto(dx+5, dy-5, 7);   -- move to next tree
       end
     end
   end
