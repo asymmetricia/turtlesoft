@@ -24,7 +24,7 @@ for dx=0,max*5,10 do
       placeBlockDown(1,1); -- place a sapling
     end
   end
-  if (dx+5 <= max) then
+  if (dx+5 <= max*5) then
     for dy=max*5+1,1,-10 do
       goto(dx+5, dy, 7);     -- goto next tree
       goto(dx+5, dy, 0);     -- mine out the tree
