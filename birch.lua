@@ -47,6 +47,7 @@ else
         placeBlockDown(2,1);
       else
         placeBlockDown(1,1);
+      end
     end
   end
 end
