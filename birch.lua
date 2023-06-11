@@ -50,6 +50,16 @@ else
         placeBlockDown(1,1);
       end
     end
+    if( dx+1 <= max*5 ) then
+      for dy=max*5+1,1,-1 do
+        goto(dx,dy,0);
+        if( (dy - 1 + dx*2) % 5 == 0 ) then
+          placeBlockDown(2,1);
+        else
+          placeBlockDown(1,1);
+        end
+      end
+    end
   end
 end
 
