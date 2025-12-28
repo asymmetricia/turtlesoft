@@ -786,7 +786,7 @@ function nextPointDense(model, point, verbose)
   for cx,ylist in pairs(model) do
     for cy,zlist in pairs(ylist) do
       for cz,action in pairs(zlist) do
-        if cz >= zskip and action ~= 0 then
+        if action ~= 0 then
           table.insert( plist, {cx,cy,cz,action} )
         end
       end
