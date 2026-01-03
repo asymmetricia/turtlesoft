@@ -63,29 +63,16 @@ function compact(order,early)
 end
 
 -- safe digging with inventory management
-function dig(forward, up, down, keep1)
+-- returns true if dig succeeded (or nothing to do), false if out of space
+-- (caller should return and unload)
+function dig(forward, up, down)
   -- fast path out if there's nothing to do
   if( not ( ( forward and turtle.detect() ) or ( down and turtle.detectDown() ) or ( up and turtle.detectUp() ) ) ) then
-    return;
+    return true;
   end
 
   if( not checkSpace() ) then
-    goto(home_x, home_y, z);
-    goto(home_x, home_y, home_z);
-    south();
-    if( turtle.detect() ) then
-      for s=1,16 do
-        if (not keep1 or s > 1) then
-          turtle.select(s);
-          turtle.drop();
-        end
-      end
-    end
-    north();
-  end
-
-  if( not checkSpace() ) then
-    error( "NO ROOM IN INVENTORY AND NO CHEST OR FULL CHEST SOUTH OF ORIGIN" );
+    return false;
   end
 
   if( up ) then
