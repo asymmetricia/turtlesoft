@@ -10,17 +10,27 @@ if( table.getn( args ) < 2 or table.getn( args ) > 2 ) then
 end
 
 for ty=0,tonumber(args[2]) do
+  -- advance and dig up/down/forward
   goto(0, ty, 1);
   dig(true, true, true, true);
+
   if( ty % 3 == 0 ) then
     for tx=0,tonumber(args[1]) do
+      -- advance sideways
       goto(tx, ty, 1);
       east();
+
+      -- dig out
       dig(tx < tonumber(args[1]), true, true, true);
+
+      -- place torch on sevens
       if( tx % 7 == 0 ) then
         placeBlockDown(1, true);
       end
     end
+
+    -- reset to row start
+    goto(0, ty, 1);
   end
 end
 
