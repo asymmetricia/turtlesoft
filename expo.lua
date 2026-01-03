@@ -10,29 +10,18 @@ if( table.getn( args ) < 2 or table.getn( args ) > 2 ) then
 end
 
 for ty=0,tonumber(args[2]),3 do
-  -- dig out sideways
-  newMineArea( tonumber(args[1]), 1, 3, 0 );
-
-  -- return to row origin
-  goto(0,ty,0);
-
-  -- dig out straight
-  newMineArea( 1, 3, 3, 0 );
-
-  -- place torches
-  for tx=0,tonumber(args[1]),7 do
+  for tx=0,tonumber(args[1]) do
     goto(tx, ty, 1);
-    placeBlockDown(1, true);
+    east();
+    dig(true, true, true, true);
+    if( tx % 7 == 0 ) then
+      placeBlockDown(1, true);
+    end
   end
-
-  -- return to row origin
-  goto(0,ty,1);
-
-  -- advanaced forward
-  goto(0,ty+3,1);
-
-  -- reset downward
-  goto(0,ty+3,0);
+  goto(0, ty, 1);
 end
+
+goto(0, tonumber(args[2])+1, 1);
+goto(0, tonumber(args[2])+1, 0);
 
 north();

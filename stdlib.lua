@@ -62,6 +62,52 @@ function compact(order,early)
         return countFree;
 end
 
+-- safe digging with inventory management
+function dig(forward, up, down, keep1)
+  if( not checkSpace() ) then
+    goto(home_x, home_y, z);
+    goto(home_x, home_y, home_z);
+    south();
+    if( turtle.detect() ) then
+      for s=1,16 do
+        if (not keep1 or s > 1) then
+          turtle.select(s);
+          turtle.drop();
+        end
+      end
+    end
+    north();
+  end
+
+  if( not checkSpace() ) then
+    error( "NO ROOM IN INVENTORY AND NO CHEST OR FULL CHEST SOUTH OF ORIGIN" );
+  end
+
+  if( up ) then
+    if( turtle.detectUp() ) then
+      turtle.digUp()
+      return dig(forward, up, down)
+    end
+    return dig(forward, false, down)
+  end
+
+  if( down ) then
+    if( turtle.detectDown() ) then
+      turtle.digDown()
+      return dig(forward, up, down)
+    end
+    return dig(forward, up, false)
+  end
+
+  if( forward ) then
+    if( turtle.detect() ) then
+      turtle.dig()
+      return dig(forward, up, down)
+    end
+    return dig(false, up, down)
+  end
+end
+
 function newMineArea( dimX, dimY, dimZ, zskip )
         modX=1; modY=1; modZ=1;
         if( dimX < 0 ) then modX = -1; end
