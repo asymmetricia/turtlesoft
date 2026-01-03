@@ -16,6 +16,7 @@ files = {}
 files["/birch"]    = "birch.lua";
 files["/d"]        = "dome.lua";
 files["/drain"]    = "drain.lua";
+files["/expo"]     = "expo.lua";
 files["/f"]        = "fill.lua";
 files["/hypstruc"] = "hyperboloid-structure.lua";
 files["/m"]        = "mine.lua";
