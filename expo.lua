@@ -29,7 +29,9 @@ for ty=0,tonumber(args[2]) do
       end
     end
 
-    -- reset to row start
+    -- reset to row start, run along top for convenience
+    goto(x, y, 2);
+    goto(0, ty, 2);
     goto(0, ty, 1);
   end
 end
