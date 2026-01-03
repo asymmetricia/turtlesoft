@@ -9,16 +9,19 @@ if( table.getn( args ) < 2 or table.getn( args ) > 2 ) then
   error( "usage: expo <x> <y>" );
 end
 
-for ty=0,tonumber(args[2]),3 do
-  for tx=0,tonumber(args[1]) do
-    goto(tx, ty, 1);
-    east();
-    dig(tx < tonumber(args[1]), true, true, true);
-    if( tx % 7 == 0 ) then
-      placeBlockDown(1, true);
+for ty=0,tonumber(args[2]) do
+  goto(0, ty, 1);
+  dig(true, true, true, true);
+  if( ty % 3 == 0 ) then
+    for tx=0,tonumber(args[1]) do
+      goto(tx, ty, 1);
+      east();
+      dig(tx < tonumber(args[1]), true, true, true);
+      if( tx % 7 == 0 ) then
+        placeBlockDown(1, true);
+      end
     end
   end
-  goto(0, ty, 1);
 end
 
 goto(0, tonumber(args[2])+1, 1);
