@@ -64,6 +64,11 @@ end
 
 -- safe digging with inventory management
 function dig(forward, up, down, keep1)
+  -- fast path out if there's nothing to do
+  if( not ( ( forward and turtle.detect() ) or ( down and turtle.detectDown() ) or ( up and turtle.detectUp() ) ) ) then
+    return;
+  end
+
   if( not checkSpace() ) then
     goto(home_x, home_y, z);
     goto(home_x, home_y, home_z);
