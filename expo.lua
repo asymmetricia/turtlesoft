@@ -13,7 +13,7 @@ for ty=0,tonumber(args[2]),3 do
   for tx=0,tonumber(args[1]) do
     goto(tx, ty, 1);
     east();
-    dig(true, true, true, true);
+    dig(tx < tonumber(args[1]), true, true, true);
     if( tx % 7 == 0 ) then
       placeBlockDown(1, true);
     end
